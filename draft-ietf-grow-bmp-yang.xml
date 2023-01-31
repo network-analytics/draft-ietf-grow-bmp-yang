@@ -1,0 +1,325 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+]>
+<?xml-stylesheet type="text/xsl" href="rfc2629.xslt" ?>
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc category="std" ipr="trust200902" docName="draft-ietf-grow-bmp-yang-01">
+  <front>
+    <title abbrev="BMP YANG Module">BMP YANG Module</title>
+    <author fullname="Camilo Cardona" initials="C" surname="Cardona ">
+      <organization>NTT</organization>
+      <address>
+        <postal>
+          <street>164-168, Carrer de Numancia</street>
+
+          <city>Barcelona</city>
+
+          <code>08029</code>
+
+          <country>Spain</country>
+        </postal>
+
+        <email>camilo@ntt.net</email>
+      </address>
+    </author>
+    <author fullname="Paolo Lucente" initials="P." surname="Lucente">
+      <organization>NTT</organization>
+      <address>
+        <postal>
+          <street>Siriusdreef 70-72</street>
+          <city>Hoofddorp</city>
+          <region>WT</region>
+          <code>2132</code>
+          <country>Netherlands</country>
+        </postal>
+        <email>paolo@ntt.net</email>
+      </address>
+    </author>
+    <author fullname="Thomas Graf" initials="T." surname="Graf">
+      <organization>Swisscom</organization>
+      <address>
+        <postal>
+          <street>Binzring 17</street>
+          <city>Zurich 8045</city>
+          <country>Switzerland</country>
+        </postal>
+        <email>thomas.graf@swisscom.com</email>
+      </address>
+    </author>     
+    <author fullname="Benoit Claise" initials="B" surname="Claise">
+      <organization>Huawei</organization>
+      <address>
+        <email>benoit.claise@huawei.com</email>
+      </address>
+    </author> 
+    <date/>
+    <area>OPS</area>
+    <workgroup>GROW</workgroup>
+    <abstract>
+      <t> 
+        This document proposes a YANG module for BMP (BGP Monitoring Protocol) configuration and monitoring.
+        A complementary RPC triggers a refresh of the session of a BMP station.
+      </t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Terminology" anchor="terminology">
+       <t>
+         The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+         NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+         "MAY", and "OPTIONAL" in this document are to be interpreted as
+         described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/>
+         when, and only when, they appear in all capitals, as shown here.
+      </t>    
+       <t>
+           Routing Information Bases, peers, monitoring stations are defined in  <xref target="RFC7854"/>.
+      </t>    
+    </section>   
+    <section title="Introduction" anchor="introduction">
+       <t>
+              This document specifies a YANG module for configuring and
+           monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/>.  The model
+           provides parameters for defining BMP monitoring stations, the
+           selection of the BGP Routing Information Bases (RIBs), provides
+           operational metrics and enables to reset BMP monitoring sessions.
+       </t> 
+    </section>  
+
+    <section title="Model summary" anchor="model_summary">
+       <t>
+           The BMP YANG model provides the methods for managing BMP monitoring stations. It includes:
+      </t>     
+      <t> 
+        <list style="symbols">
+          <t> 
+              Connectivity parameters, including station IP address and destination port.
+          </t>
+          <t> 
+              BMP session parameters, such as defining the BMP initiation message
+              or the interval for statistics messages.
+          </t>
+          <t> 
+              BGP Data sources. The model requires the explicit configuration
+              of the Network instance, RIBs and address family to send to each monitoring
+              station. For Adj-RIB-in and Adj-RIB-out, both post and pre policy,
+              the model also requires to reference the peer.
+              In those RIBs, the value "all_peers" can be used if the
+              operators desire to receive data of all peers.
+          </t>
+          <t> 
+              Per BMP station status and statistics, such as established status, number 
+              of route-monitoring messages, number of route-mirroring messages, number 
+              of peer-down and peer-up messages, number of initiation messages.
+          </t>
+          <t> 
+              BMP session reset RPC action.
+          </t>
+        </list>
+      </t>     
+    </section>
+
+    <section title="Base ietf-bmp YANG module">
+      <section title="Tree View" anchor="ietf-bmp-tree-view">
+        <t>
+        The following tree diagram provides an overview of the ietf-bmp.yang
+            data model.
+        </t>
+        <t>
+          <figure>
+            <artwork><![CDATA[
+INSERT_TEXT_FROM_FILE(ietf-bmp-trees.txt)
+           ]]></artwork>
+          </figure>
+        </t> 
+      </section>    
+
+      <section title="YANG Module" anchor="ietf-bmp">
+        <t>&lt;CODE BEGINS> file "ietf-bmp@2022-01-27.yang"</t>
+          <figure>
+            <artwork><![CDATA[
+INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
+            ]]></artwork>
+          </figure>
+        <t>&lt;CODE ENDS></t>
+      </section> 
+    </section>  
+                    
+    <section title="Security Considerations" anchor="security-considerations">
+      <t> 
+         The YANG module specified in this document defines a schema for data
+          that is designed to be accessed via network management protocols such
+          as NETCONF <xref target="RFC6241"/> or RESTCONF <xref
+          target="RFC8040"/>. The lowest NETCONF layer is the secure transport
+          layer, and the mandatory-to-implement secure transport is Secure
+          Shell (SSH) <xref target="RFC6242"/>. The lowest RESTCONF layer is
+          HTTPS, and the mandatory-to-implement secure transport is TLS <xref
+          target="RFC8446"/>. The NETCONF Access Control Model (NACM) <xref
+              target="RFC8341"/> provides the means to restrict access for
+          NETCONF or RESTCONF users to a preconfigured subset of all
+          available NETCONF or RESTCONF protocol operations and content. 
+      </t>
+      <t>
+         BGP data is sensible for security considerations. The model described
+          in this document could be used to send BGP information to malicious
+          BMP stations. Write access to this model SHOULD therefore be
+          properly protected. 
+      </t>
+      <t>
+          The session-reset action can demand considerable amount of resources
+          from network elements. It SHOULD thus be protected from illegal access.
+      </t>
+    </section>
+
+    <section title="IANA Considerations" anchor="iana-considerations">
+      <section title="The IETF XML Registry">
+      	<t>
+      	   This document registers a URIs in the IETF XML 
+      	   registry <xref target="RFC3688"/>.  Following the format in 
+           <xref target="RFC3688"/>, the following registrations are
+           requested:</t>
+        <t>
+          <figure>
+          	<artwork>
+   URI: urn:ietf:params:xml:ns:yang:ietf-bmp
+   Registrant Contact: The IESG.
+   XML: N/A, the requested URI is an XML namespace.
+             </artwork>
+           </figure>
+         </t>
+      </section>
+      <section title="The YANG Module Name Registration">
+        <t>
+           This document registers the following YANG module in the "
+           YANG Module Names" registry  
+           registry <xref target="RFC6020"/>:</t>
+        <t>
+          <figure>
+            <artwork>
+   Name: ietf-bmp
+   Namespace: urn:ietf:params:xml:ns:yang:ietf-bmp
+   Prefix: bmp
+   Reference: [This RFC-to-be]
+             </artwork>
+           </figure>
+         </t>
+      </section>
+    </section>
+
+    <section title="Open Issues">
+      <t>
+        <list counter="a">
+          <t>Shall we leverage other IETF models to specify TCP parameters?</t>
+          <t>The security considerations section will have to be aligned with 
+              https://trac.ietf.org/trac/ops/wiki/yang-security-guidelines</t>
+        </list>
+      </t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References"> 
+      <?rfc include="reference.RFC.2119"?>
+      <?rfc include="reference.RFC.3688"?>
+      <?rfc include="reference.RFC.6241"?>
+      <?rfc include="reference.RFC.6242"?>
+      <?rfc include="reference.RFC.6991"?>
+      <?rfc include="reference.RFC.7854"?>
+      <?rfc include="reference.RFC.8671"?>
+      <?rfc include="reference.RFC.9069"?>
+      <?rfc include="reference.RFC.8040"?>
+      <?rfc include="reference.RFC.8174"?>
+      <?rfc include="reference.RFC.8349"?>
+      <?rfc include="reference.RFC.8446"?>
+      <?rfc include="reference.RFC.8341"?>
+      <?rfc include="reference.RFC.6020"?>
+      <?rfc include="reference.RFC.8529"?>
+      <?rfc include="reference.RFC.1191"?>
+      <?rfc include="reference.RFC.8177"?>
+      <?rfc include='reference.I-D.ietf-idr-bgp-model'?>
+      <?rfc include='reference.I-D.ietf-netconf-tcp-client-server'?>
+    </references>
+<!--
+    <references title="Informative References">
+    </references>
+        -->
+    <?rfc needLines="100"?>
+
+<!--   
+    <section title="Changes between revisions">
+      </t>   
+      <t>v00 - v01
+        <list style="symbols">
+          <t>Placeholder: xxx</t>
+          <t>Placeholder: yyy</t>
+        </list>
+      </t>
+    </section>    
+  -->
+
+    <section title="Examples">
+        <t>This section shows an example of a BMP configuration using the model.
+        In the example, the device will send information from the global
+        network instance, the adj-rib-out-pre RIB, IPv4 AFI, and only from
+        peers that are external.
+    </t>
+        <t><figure>
+            <artwork><![CDATA[
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+    <stations>
+      <station>
+        <id>1</id>
+        <connection>
+          <active>
+            <network-instance>global</network-instance>
+            <station-address>203.0.113.1</station-address>
+            <station-port>49192</station-port>
+            <local-address>203.0.113.2</local-address>
+          </active>
+        </connection>
+        <bmp-sources>
+          <network-instances>
+            <network-instance>
+              <network-instance-id>global</network-instance-id>
+              <adj-rib-in-pre>
+                <enabled>true</enabled>
+                <address-families>
+                  <address-family>
+                      <name xmlns:bt="urn:ietf:params:xml:ns:yang:\/
+                      ietf-bgp-types">bt:ipv4-unicast</name>
+                    <peers>external</peers>
+                  </address-family>
+                </address-families>
+              </adj-rib-out-pre>
+            </network-instance>
+          </network-instances>
+        </bmp-sources>
+      </station>
+    </stations>
+</bmp>
+]]></artwork>         
+    </figure></t>
+    </section>
+
+    <section title="Acknowledgements" numbered="no">
+        <t>
+          The authors would like to thank Yimin Shen, Jeff Haas, Pierre Vander
+            Vorst, and Tom Petch for their review and feedback.
+        </t>
+    </section>
+
+  </back>
+</rfc>
+<!-- Local Variables: -->
+<!-- fill-column:72 -->
+<!-- End: -->
+
