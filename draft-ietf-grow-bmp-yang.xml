@@ -12,7 +12,7 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc category="std" ipr="trust200902" docName="draft-ietf-grow-bmp-yang-01">
+<rfc category="std" ipr="trust200902" docName="draft-ietf-grow-bmp-yang-latest">
   <front>
     <title abbrev="BMP YANG Module">BMP YANG Module</title>
     <author fullname="Camilo Cardona" initials="C" surname="Cardona ">
@@ -82,7 +82,8 @@
          when, and only when, they appear in all capitals, as shown here.
       </t>    
        <t>
-           Routing Information Bases, peers, monitoring stations are defined in  <xref target="RFC7854"/>.
+           Routing Information Bases, peers, monitoring stations, and
+           initiation messages are defined in <xref target="RFC7854"/>.
       </t>    
     </section>   
     <section title="Introduction" anchor="introduction">
@@ -102,16 +103,18 @@
       <t> 
         <list style="symbols">
           <t> 
-              Connectivity parameters, including station IP address and destination port.
+              Connectivity parameters, including monitoring station IP
+              address(es) and destination port(s).
           </t>
           <t> 
               BMP session parameters, such as defining the BMP initiation message
               or the interval for statistics messages.
           </t>
           <t> 
-              BGP Data sources. The model requires the explicit configuration
-              of the Network instance, RIBs and address family to send to each monitoring
-              station. For Adj-RIB-in and Adj-RIB-out, both post and pre policy,
+              BGP data sources.  The model requires the explicit configuration
+              of the network instance, RIBs, and address family to send to each
+              monitoring station.
+              For Adj-RIB-in and Adj-RIB-out, both pre and post policy,
               the model also requires to reference the peer.
               In those RIBs, the value "all_peers" can be used if the
               operators desire to receive data of all peers.
