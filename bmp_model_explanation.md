@@ -67,8 +67,8 @@ For an active connection, the IP address and port of the monitoring station, tog
 
 ```
 bmp monitoring-stations monitoring-station 1 session-stats discontinuity-time 2015-06-19T16:01:27.384-07:00
- connection active station-address 1.1.1.1
- connection active station-port 5799
+ connection active station-address 192.0.2.1
+ connection active station-port 57992
  connection active local-address 127.0.0.1
 !
 ```
@@ -89,9 +89,9 @@ network-instances network-instance test
 !
 bmp monitoring-stations monitoring-station 2 session-stats discontinuity-time 2015-06-19T16:01:27.384-07:00
  connection passive network-instance test
- connection passive station-address 1.1.1.1
- connection passive local-address 1.1.1.1
- connection passive local-port 10000
+ connection passive station-address 192.0.2.1
+ connection passive local-address 192.0.2.2
+ connection passive local-port 57993
 !
 ```
 > Question to authors: The model right now is lacking a way of enforcing monitoring stations connectivity details to be unique. Since the key is the id, Camilo finds no way of forcing an unique monitoring station ip/port for active, and for passive an unique monitoring station ip if no port is provided, and an unique monitoring station ip/port if the port is provided. Right now the model is not optimal cause you can have two monitoring stations have the same ip/port for active, for instance. The YANG unique keywork does not work with the choice container so we cannot do anything about it. This complications is what leds me to ask if we can only have active, but I would also like to know how to model the whole behaviour correctly.
@@ -457,14 +457,14 @@ In the previous example, address families ipv6 and ipv4 are configured to send a
    !
   !
   adj-rib-in-pre address-families address-family ipv4-unicast
-   peers peer 1.1.1.1
+   peers peer 198.51.100.1
     filters policy-filter export-policy [ test_policy ]
    !
    peers peer external
    !
   !
 ```
-In this example, the global network instance enables the adj-rib-in-pre. In this RIB, the  ipv4 unicast address family is configured for all external peers. We assume peer 1.1.1.1 is external, but its BGP configuration is not shown in the snippet.  Peer 1.1.1.1, however, has a specific configuration: it announces everything but prefixes matching the test_policy list. Note that there is a default accept-route default policy in the model.
+In this example, the global network instance enables the adj-rib-in-pre. In this RIB, the  ipv4 unicast address family is configured for all external peers. We assume peer 198.51.100.1 is external, but its BGP configuration is not shown in the snippet.  Peer 198.51.100.1, however, has a specific configuration: it announces everything but prefixes matching the test_policy list. Note that there is a default accept-route default policy in the model.
 
 ### Route monitoring configurations - example three
 

@@ -13,13 +13,6 @@ module ietf-bmp {
       "RFC 6991: Common YANG Data Types";
   }
 
-  //import ietf-routing {
-  //  prefix rt;
-  //  reference
-  //    "RFC 8349, A YANG Data Model for Routing Management
-  //     (NMDA Version).";
-  //}
-
   import ietf-bgp-types {
     prefix bt;
     reference
@@ -27,14 +20,6 @@ module ietf-bmp {
        RFC-EDITOR: please update XXX with the RFC ID assigned 
        to I-D.ietf-idr-bgp-model";
   }
-
-  //import ietf-bgp {
-  //  prefix bgp;
-  //  reference
-  //    "RFC BBBB: BGP YANG module for Service Provider Network.
-  //     RFC-EDITOR: please update XXX with the RFC ID assigned 
-  //     to I-D.ietf-idr-bgp-model";
-  //}
 
   import ietf-netconf-acm {
     prefix nacm;
@@ -155,6 +140,7 @@ module ietf-bmp {
       description
         "Maximum segment size for the TCP connections.";
     }
+
     // Taken from the bgp yang module
     leaf mtu-discovery {
         type boolean;
