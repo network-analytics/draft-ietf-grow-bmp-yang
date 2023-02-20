@@ -353,15 +353,7 @@ module ietf-bmp {
   grouping bmp-peer-ribs-filter {
     description
       "Leaves for configuring RIBs where
-       origin/destination peers are well defined.";
-
-    leaf enabled {
-      type boolean;
-      default true;
-      description
-        "Enables route monitoring messages
-        for the specified RIB";
-    }
+       origin/destination peers are defined.";
 
     container address-families {
       description
@@ -515,13 +507,7 @@ module ietf-bmp {
           reference 
             "RFC9069: Support for Local RIB in the BGP Monitoring
             Protocol (BMP), Section 3.";
-          leaf enabled {
-            type boolean;
-            default true;
-            description
-              "Enables route monitoring messages
-              for the local-rib";
-          }
+
           container address-families {
             description
               "List of address families to enable for
@@ -654,11 +640,15 @@ module ietf-bmp {
           container bmp-statistics-report  {
             description "Configuration of the statistics report";
             reference "RFC7854:  BGP Monitoring Protocol, Section 4.8";
+
+            presence "Enables the BMP statistics report";
+
             leaf statistics-interval {
+              mandatory true;
               type uint32;
               units "seconds";
               description
-                "Default Interval for statistic message.";
+                "Interval for statistic report message.";
             }
 
           }

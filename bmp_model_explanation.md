@@ -69,11 +69,9 @@ For an active connection, the IP address and port of the monitoring station, tog
 bmp monitoring-stations monitoring-station 1 session-stats discontinuity-time 2015-06-19T16:01:27.384-07:00
  connection active station-address 192.0.2.1
  connection active station-port 57992
- connection active local-address 127.0.0.1
+ connection active local-address 192.0.2.2
 !
 ```
-
-> Question to authors: Maybe allow dns names in active connections? 
 
 See in the example that there is no network instance defined, so the connection is using the global one.
 
@@ -94,7 +92,6 @@ bmp monitoring-stations monitoring-station 2 session-stats discontinuity-time 20
  connection passive local-port 57993
 !
 ```
-> Question to authors: The model right now is lacking a way of enforcing monitoring stations connectivity details to be unique. Since the key is the id, Camilo finds no way of forcing an unique monitoring station ip/port for active, and for passive an unique monitoring station ip if no port is provided, and an unique monitoring station ip/port if the port is provided. Right now the model is not optimal cause you can have two monitoring stations have the same ip/port for active, for instance. The YANG unique keywork does not work with the choice container so we cannot do anything about it. This complications is what leds me to ask if we can only have active, but I would also like to know how to model the whole behaviour correctly.
 
 ## TCP options
 
@@ -173,7 +170,7 @@ key-chains key-chain bmp-key-chain
 Other options for the connection to the  BMP monitoring station.
 
 * Initial-delay: a value in seconds that the device must hold back before starting the connection to the station. 
-> Question to authors: Find a non-propietary reference for this? Tim Fiola asked for it, and it seems harmless, but it would be nice to have a reference with the benefits.
+> Question to authors: Find a non-propietary reference for the initial-delay? Tim Fiola asked for it, and it seems harmless, but it would be nice to have a reference with the benefits.
 * Backoff time. Configuration of the backoff time strategy after failing to connect to the monitoring station. The model includes a basic exponential backoff with a default initial backoff of 30 seconds and a maximum of 720 seconds, as suggested by RFC7854 Section 3.2.
 
 ```
@@ -191,7 +188,7 @@ The bmp-data container defines the configuration parameters for the data that th
 The bmp model currently defines options for the initiation message, the statistics report, and the routing monitoring. The first two have simple configurations options and are shortly described next. The Routing monitoring is the most complex of all and it is detailed in its own section.
 
 * initiation-message: Content for a information TLV type-0 for identitification of the device. See RFC7854 Section 4.3 and 4.4
-* Statistics-interval: The interval of the statistics report.  See RFC7854 Section 4.8.
+* Statistics-interval: The statistics report is enabled by the presence of the bmp-statistics-report container. The statistics-interval is mandatory if the bmp-statistics-report container exists, and defines the interval of the statistics report.  See RFC7854 Section 4.8. 
 
 ```
 bmp monitoring-stations monitoring-station 1
@@ -330,7 +327,6 @@ We show a few examples of configuring RIB-Types and Address families next. We wi
 ```
 bmp monitoring-stations monitoring-station 1
  bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
-  adj-rib-in-pre enabled
   adj-rib-in-pre address-families address-family ipv6-unicast
    < Configuration F >
   !
@@ -339,14 +335,12 @@ bmp monitoring-stations monitoring-station 1
   !
  !
  bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-global-ni
-  adj-rib-in-pre enabled
   adj-rib-in-pre address-families address-family ipv6-unicast
    < Configuration H >
   !
   adj-rib-in-pre address-families address-family ipv4-unicast
    < Configuration I >
   !
-  adj-rib-in-post enabled
   adj-rib-in-post address-families address-family ipv6-unicast
    < Configuration J >
   !
@@ -358,7 +352,6 @@ bmp monitoring-stations monitoring-station 1
   disabled
  !
  bmp-data bmp-route-monitoring network-instances network-instance network-instance-two
-  adj-rib-out-post enabled
   adj-rib-out-post address-families address-family ipv4-unicast
    < Configuration L >
   !
@@ -378,7 +371,6 @@ If an operator only wants to configure the ipv4/ipv6 of adj-rib-pre-in for the g
 
 ```
  bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-global-ni
-  adj-rib-in-pre enabled
   adj-rib-in-pre address-families address-family ipv6-unicast
    < config for ipv6-unicast >
   !
@@ -433,7 +425,6 @@ We present examples of full configurations next.
 
 ```
  bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
-  adj-rib-in-pre enabled
   adj-rib-in-pre address-families address-family ipv6-unicast
    peers peer bmp-peer-types-all-peers
    !
@@ -470,7 +461,6 @@ In this example, the global network instance enables the adj-rib-in-pre. In this
 
 ```
  bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
-  adj-rib-in-pre enabled
   adj-rib-in-pre address-families address-family ipv6-unicast
    peers peer bmp-peer-types-all-peers
    !
