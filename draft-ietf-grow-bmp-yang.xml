@@ -270,47 +270,183 @@ INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
   -->
 
     <section title="Examples">
-        <t>This section shows an example of a BMP configuration using the model.
-        In the example, the device will send information from the global
-        network instance, the adj-rib-out-pre RIB, IPv4 AFI, and only from
-        peers that are external.
-    </t>
+        <t>This sections shows some examples of BMP configuration using the
+            model.</t>
+        <section title="Example one">
+            <t>In this example, the device connects to a monitoring station
+            using an active connection. 
+            The devices sends route monitoring messages for the global
+            instance, the adj-rib-out-pre RIB, the IPv4/IPv6 address family,
+            and external peers.
+            </t>
         <t><figure>
             <artwork><![CDATA[
 <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-    <stations>
-      <station>
-        <id>1</id>
-        <connection>
-          <active>
-            <network-instance>global</network-instance>
-            <station-address>203.0.113.1</station-address>
-            <station-port>49192</station-port>
-            <local-address>203.0.113.2</local-address>
-          </active>
-        </connection>
-        <bmp-sources>
-          <network-instances>
-            <network-instance>
-              <network-instance-id>global</network-instance-id>
-              <adj-rib-in-pre>
-                <enabled>true</enabled>
-                <address-families>
-                  <address-family>
-                      <name xmlns:bt="urn:ietf:params:xml:ns:yang:\/
-                      ietf-bgp-types">bt:ipv4-unicast</name>
-                    <peers>external</peers>
-                  </address-family>
-                </address-families>
-              </adj-rib-out-pre>
-            </network-instance>
-          </network-instances>
-        </bmp-sources>
-      </station>
-    </stations>
+<monitoring-stations>
+  <monitoring-station>
+    <id>1</id>
+    <connection>
+      <active>
+        <station-address>192.0.2.1</station-address>
+        <station-port>57992</station-port>
+        <local-address>192.0.2.2</local-address>
+      </active>
+    </connection>
+    <bmp-data>
+      <bmp-route-monitoring>
+        <network-instances>
+          <network-instance>
+              <network-instance-id>
+                      bmp-ni-types-global-ni</network-instance-id>
+            <adj-rib-in-pre>
+              <address-families>
+                <address-family>
+                    <address-family-id 
+                xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">
+                            bt:ipv6-unicast</address-family-id>
+                  <peers>
+                    <peer>
+                      <peer-id>external</peer-id>
+                    </peer>
+                  </peers>
+                </address-family>
+                <address-family>
+                    <address-family-id 
+               xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">
+                            bt:ipv4-unicast</address-family-id>
+                  <peers>
+                    <peer>
+                      <peer-id>external</peer-id>
+                    </peer>
+                  </peers>
+                </address-family>
+              </address-families>
+            </adj-rib-in-pre>
+          </network-instance>
+        </network-instances>
+      </bmp-route-monitoring>
+    </bmp-data>
+  </monitoring-station>
+</monitoring-stations>
 </bmp>
 ]]></artwork>         
     </figure></t>
+    </section>
+        <section title="Example two">
+            <t>In the next example, the device connects to a monitoring station
+            using a passive connection, over the network-instance monitoring.
+            The configuration of route monitoring messages is more complex than
+            in the previous example.  It shows how to combine the configuration
+            of general identities of network instances and peers (e.g.
+            bmp-ni-types-all-ni for NI, external for peers), and individual
+            configurations to support a more complex requirement. This is what
+                the example expects to configure:</t>
+        <t>
+        <list style="symbols">
+            <t> For the global network instance,
+            the device sends updates for adj-rib-in-pre, address families IPv4
+            and IPv6. It sends updates for all external peers except peer
+            128.66.1.1, which is disabled.</t>
+        <t>Network instance monitoring is disabled for route monitoring messages. </t>
+        <t>For the rest of network
+            instances, we are enabling messages from adj-rib-in-pre, address
+                families IPv4/IPv6, and for all peers.</t>
+        </list>
+        </t>
+        <t><figure>
+            <artwork><![CDATA[
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+    <monitoring-stations>
+      <monitoring-station>
+        <id>2</id>
+        <connection>
+          <passive>
+            <network-instance>monitoring</network-instance>
+            <station-address>192.0.2.1</station-address>
+            <local-address>192.0.2.2</local-address>
+            <local-port>57993</local-port>
+          </passive>
+        </connection>
+        <bmp-data>
+          <bmp-route-monitoring>
+            <network-instances>
+              <network-instance>
+                  <network-instance-id>
+                          bmp-ni-types-all-ni</network-instance-id>
+                <adj-rib-in-pre>
+                  <address-families>
+                    <address-family>
+                        <address-family-id 
+                  xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">
+                                bt:ipv6-unicast</address-family-id>
+                      <peers>
+                        <peer>
+                          <peer-id>bmp-peer-types-all-peers</peer-id>
+                        </peer>
+                      </peers>
+                    </address-family>
+                    <address-family>
+                        <address-family-id 
+                  xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">
+                                bt:ipv4-unicast</address-family-id>
+                      <peers>
+                        <peer>
+                          <peer-id>bmp-peer-types-all-peers</peer-id>
+                        </peer>
+                      </peers>
+                    </address-family>
+                  </address-families>
+                </adj-rib-in-pre>
+              </network-instance>
+              <network-instance>
+                  <network-instance-id>
+                          bmp-ni-types-global-ni</network-instance-id>
+                <adj-rib-in-pre>
+                  <address-families>
+                    <address-family>
+                        <address-family-id 
+                 xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">
+                                bt:ipv6-unicast</address-family-id>
+                      <peers>
+                        <peer>
+                          <peer-id>128.66.1.1</peer-id>
+                          <enabled>false</enabled>
+                        </peer>
+                        <peer>
+                          <peer-id>external</peer-id>
+                        </peer>
+                      </peers>
+                    </address-family>
+                    <address-family>
+                        <address-family-id 
+                xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">
+                                bt:ipv4-unicast</address-family-id>
+                      <peers>
+                        <peer>
+                          <peer-id>128.66.1.1</peer-id>
+                          <enabled>false</enabled>
+                        </peer>
+                        <peer>
+                          <peer-id>external</peer-id>
+                        </peer>
+                      </peers>
+                    </address-family>
+                  </address-families>
+                </adj-rib-in-pre>
+              </network-instance>
+              <network-instance>
+                <network-instance-id>monitoring</network-instance-id>
+                <enabled>false</enabled>
+              </network-instance>
+            </network-instances>
+          </bmp-route-monitoring>
+        </bmp-data>
+      </monitoring-station>
+    </monitoring-stations>
+  </bmp>
+]]></artwork>         
+    </figure></t>
+    </section>
     </section>
 
     <section title="Acknowledgements" numbered="no">

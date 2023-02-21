@@ -105,8 +105,8 @@ module ietf-bmp {
 
   identity bmp-peer-types {
     description 
-    "Enum values for multiple selecting peer's Routing Information Bases (RIB) 
-    for configuration.";
+    "Enum values for multiple selecting peer's 
+    Routing Information Bases (RIB) for configuration.";
   }
   
   identity bmp-peer-types-all-peers {
@@ -220,18 +220,20 @@ module ietf-bmp {
         in section 3.2 of RFC 7854";
       case active {
         description
-          "The device starts the connection to the monitoring station";
+          "The device starts the connection to the monitoring 
+          station";
         container active {
           description
-            "The device starts the connection to the monitoring station";
+            "The device starts the connection to 
+            the monitoring station";
           leaf network-instance {
             type leafref {
               path "/ni:network-instances/ni:network-instance/"
                  + "ni:name";
             }
             description 
-              "If present, specifies the network instance used to reach the
-              monitoring station.";
+              "If present, specifies the network instance 
+              used to reach the monitoring station.";
           }
           leaf station-address {
             type inet:ip-address;
@@ -275,8 +277,8 @@ module ietf-bmp {
                  + "ni:name";
             }
             description 
-              "If present, specifies the network instance used to reach the
-              monitoring station.";
+              "If present, specifies the network instance 
+              used to reach the monitoring station.";
           }
           leaf station-address {
             type inet:ip-address;
@@ -287,8 +289,8 @@ module ietf-bmp {
           leaf station-port {
             type inet:port-number;
             description
-              "Optional value identifying the origin port of the connection, 
-              if provided it MUST match";
+              "Optional value identifying the origin port of 
+              the connection, if provided it MUST match";
           }
           leaf local-address {
             type inet:ip-address;
@@ -377,7 +379,9 @@ module ietf-bmp {
         //   description
         //     "Name of the address family";
         // }
-        // However, since is not aware if we are doing global, and individual NT or a default, we cannot contraint it to this.
+        // However, since is not aware if we are doing global, 
+        // and individual NT or a default, we cannot 
+        // contraint it to this.
         leaf address-family-id {
           type identityref {
             base bt:afi-safi-type;
@@ -575,7 +579,8 @@ module ietf-bmp {
 
           container tcp-options {
             description
-             "TCP options for the connection to the monitoring station";
+             "TCP options for the connection to the monitoring 
+             station";
             uses bmp-tcp-options;
           }
 
@@ -634,19 +639,22 @@ module ietf-bmp {
             description
               "User defined message to append to the
                initiation message";
-            reference "RFC7854:  BGP Monitoring Protocol, Section 4.3 and 4.4";
+            reference "RFC7854:  BGP Monitoring Protocol, 
+              Section 4.3 and 4.4";
           }
 
           container bmp-statistics-report  {
-            description "Configuration of the statistics report";
-            reference "RFC7854:  BGP Monitoring Protocol, Section 4.8";
-
             presence "Enables the BMP statistics report";
 
+            description "Configuration of the statistics report";
+            reference "RFC7854:  BGP Monitoring Protocol, 
+              Section 4.8";
+
+
             leaf statistics-interval {
-              mandatory true;
               type uint32;
               units "seconds";
+              mandatory true;
               description
                 "Interval for statistic report message.";
             }
