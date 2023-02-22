@@ -4,6 +4,8 @@ The next are the examples of the draft in cisco style to check with NCS. Currenl
 - Active connection to a station. 
 - Route monitoring enabled in "global" network instance
 - adj-rib-in-pre enabled for ipv4 and ipv6 only for external peers 
+
+```
 bmp monitoring-stations monitoring-station 1 session-stats discontinuity-time 2015-06-19T16:01:27.384-07:00
  connection active station-address 192.0.2.1
  connection active station-port 57992
@@ -16,6 +18,7 @@ bmp monitoring-stations monitoring-station 1 session-stats discontinuity-time 20
   adj-rib-in-pre address-families address-family ipv4-unicast
    peers peer external
    !
+```
 
 # Example 2
 
@@ -24,7 +27,7 @@ bmp monitoring-stations monitoring-station 1 session-stats discontinuity-time 20
 - Route monutoring disabled for monitoring network instance disabled
 - Route monutoring enabled in all other network instances for adj-rib-in-pre only, ipv4, ipv6 all peers
 
-
+```
 network-instances network-instance monitoring
 network-instances network-instance customer1
 network-instances network-instance customer2
@@ -55,4 +58,4 @@ bmp monitoring-stations monitoring-station 2 session-stats discontinuity-time 20
   adj-rib-in-pre address-families address-family ipv4-unicast
    peers peer bmp-peer-types-all-peers
    !
-  
+ ``` 
