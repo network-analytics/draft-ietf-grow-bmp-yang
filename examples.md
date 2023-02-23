@@ -1,4 +1,6 @@
-The next are the examples of the draft in cisco style to check with NCS. Currenlty we need to manually load everyting in the ncs system (which is per se complciated). We need to figure out how to do the validation better.
+The next are the examples of the draft in cisco style to check with NCS. Currenlty we need to manually load everyting in the ncs system (which is complicated). We need to figure out how to do a better validation pipeline.
+
+> Camilo's note: My current issue is dealing with network-instances over yanglint, need to read about it to see how to make it work.
 
 # Example 1
 - Active connection to a station. 
