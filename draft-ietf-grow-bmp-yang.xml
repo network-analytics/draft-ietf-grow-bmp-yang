@@ -67,7 +67,7 @@
     <abstract>
       <t> 
         This document proposes a YANG module for BMP (BGP Monitoring Protocol) configuration and monitoring.
-        A complementary RPC triggers a refresh of the session of a BMP station.
+        A complementary RPC triggers a refresh of the session of a BMP monitoring station.
       </t>
     </abstract>
   </front>
@@ -90,9 +90,9 @@
        <t>
               This document specifies a YANG module for configuring and
            monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/>.  The model
-           provides parameters for defining BMP monitoring stations, the
-           selection of the BGP Routing Information Bases (RIBs), provides
-           operational metrics and enables to reset BMP monitoring sessions.
+           provides parameters for defining sessions to BMP monitoring stations; the
+           selection of the BGP Routing Information Bases (RIBs) for Route Monitoring Messages; provides
+           operational metrics  and enables reseting of BMP monitoring sessions.
        </t> 
     </section>  
 
@@ -111,12 +111,13 @@
               or the interval for statistics messages.
           </t>
           <t> 
-              BGP data sources.  The model requires the explicit configuration
+              BGP data sources for Route Monitoring Messages.  
+              The model requires the explicit configuration
               of the network instance, RIBs, and address family to send to each
-              monitoring station.
+              monitoring station over Route Monitoring Messages.
               For Adj-RIB-in and Adj-RIB-out, both pre and post policy,
               the model also requires to reference the peer.
-              In those RIBs, the value "all_peers" can be used if the
+              In those RIBs, the identity "bmp-peer-types-all-peers" can be used if the
               operators desire to receive data of all peers.
           </t>
           <t> 
@@ -221,7 +222,6 @@ INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
     <section title="Open Issues">
       <t>
         <list counter="a">
-          <t>Shall we leverage other IETF models to specify TCP parameters?</t>
           <t>The security considerations section will have to be aligned with 
               https://trac.ietf.org/trac/ops/wiki/yang-security-guidelines</t>
         </list>
