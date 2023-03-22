@@ -1,4 +1,4 @@
-# BGP YANG MODEL
+# BMP YANG MODEL
 
 The next text describes the details of the BMP yang model. The purpose of this text it to provide as much information as possible of the requirements of the authors for the model, and provide examples of configurations for different scenarios. We hope the text helps:
 
