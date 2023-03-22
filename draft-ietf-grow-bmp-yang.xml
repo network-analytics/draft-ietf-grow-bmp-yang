@@ -12,7 +12,7 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc category="std" ipr="trust200902" docName="draft-ietf-grow-bmp-yang-01">
+<rfc category="std" ipr="trust200902" docName="draft-ietf-grow-bmp-yang-latest">
   <front>
     <title abbrev="BMP YANG Module">BMP YANG Module</title>
     <author fullname="Camilo Cardona" initials="C" surname="Cardona ">
@@ -67,7 +67,7 @@
     <abstract>
       <t> 
         This document proposes a YANG module for BMP (BGP Monitoring Protocol) configuration and monitoring.
-        A complementary RPC triggers a refresh of the session of a BMP station.
+        A complementary RPC triggers a refresh of the session of a BMP monitoring station.
       </t>
     </abstract>
   </front>
@@ -82,16 +82,17 @@
          when, and only when, they appear in all capitals, as shown here.
       </t>    
        <t>
-           Routing Information Bases, peers, monitoring stations are defined in  <xref target="RFC7854"/>.
+           Routing Information Bases, peers, monitoring stations, and
+           initiation messages are defined in <xref target="RFC7854"/>.
       </t>    
     </section>   
     <section title="Introduction" anchor="introduction">
        <t>
               This document specifies a YANG module for configuring and
            monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/>.  The model
-           provides parameters for defining BMP monitoring stations, the
-           selection of the BGP Routing Information Bases (RIBs), provides
-           operational metrics and enables to reset BMP monitoring sessions.
+           provides parameters for defining sessions to BMP monitoring stations; the
+           selection of the BGP Routing Information Bases (RIBs) for Route Monitoring Messages; provides
+           operational metrics  and enables reseting of BMP monitoring sessions.
        </t> 
     </section>  
 
@@ -102,18 +103,21 @@
       <t> 
         <list style="symbols">
           <t> 
-              Connectivity parameters, including station IP address and destination port.
+              Connectivity parameters, including monitoring station IP
+              address(es) and destination port(s).
           </t>
           <t> 
               BMP session parameters, such as defining the BMP initiation message
               or the interval for statistics messages.
           </t>
           <t> 
-              BGP Data sources. The model requires the explicit configuration
-              of the Network instance, RIBs and address family to send to each monitoring
-              station. For Adj-RIB-in and Adj-RIB-out, both post and pre policy,
+              BGP data sources for Route Monitoring Messages.  
+              The model requires the explicit configuration
+              of the network instance, RIBs, and address family to send to each
+              monitoring station over Route Monitoring Messages.
+              For Adj-RIB-in and Adj-RIB-out, both pre and post policy,
               the model also requires to reference the peer.
-              In those RIBs, the value "all_peers" can be used if the
+              In those RIBs, the identity "bmp-peer-types-all-peers" can be used if the
               operators desire to receive data of all peers.
           </t>
           <t> 
@@ -218,7 +222,6 @@ INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
     <section title="Open Issues">
       <t>
         <list counter="a">
-          <t>Shall we leverage other IETF models to specify TCP parameters?</t>
           <t>The security considerations section will have to be aligned with 
               https://trac.ietf.org/trac/ops/wiki/yang-security-guidelines</t>
         </list>
@@ -267,47 +270,48 @@ INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
   -->
 
     <section title="Examples">
-        <t>This section shows an example of a BMP configuration using the model.
-        In the example, the device will send information from the global
-        network instance, the adj-rib-out-pre RIB, IPv4 AFI, and only from
-        peers that are external.
-    </t>
+        <t>This sections shows some examples of BMP configuration using the
+            model.</t>
+        <section title="Example one">
+            <t>In this example, the device connects to a monitoring station
+            using an active connection. 
+            The devices sends route monitoring messages for the global
+            instance, the adj-rib-out-pre RIB, the IPv4/IPv6 address family,
+            and external peers.
+            </t>
         <t><figure>
             <artwork><![CDATA[
-<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-    <stations>
-      <station>
-        <id>1</id>
-        <connection>
-          <active>
-            <network-instance>global</network-instance>
-            <station-address>203.0.113.1</station-address>
-            <station-port>49192</station-port>
-            <local-address>203.0.113.2</local-address>
-          </active>
-        </connection>
-        <bmp-sources>
-          <network-instances>
-            <network-instance>
-              <network-instance-id>global</network-instance-id>
-              <adj-rib-in-pre>
-                <enabled>true</enabled>
-                <address-families>
-                  <address-family>
-                      <name xmlns:bt="urn:ietf:params:xml:ns:yang:\/
-                      ietf-bgp-types">bt:ipv4-unicast</name>
-                    <peers>external</peers>
-                  </address-family>
-                </address-families>
-              </adj-rib-out-pre>
-            </network-instance>
-          </network-instances>
-        </bmp-sources>
-      </station>
-    </stations>
-</bmp>
+INSERT_TEXT_FROM_FILE(example_one.xml)
 ]]></artwork>         
     </figure></t>
+    </section>
+        <section title="Example two">
+            <t>In the next example, the device connects to a monitoring station
+            using a passive connection, over the network-instance monitoring.
+            The configuration of route monitoring messages is more complex than
+            in the previous example.  It shows how to combine the configuration
+            of general identities of network instances and peers (e.g.
+            bmp-ni-types-all-ni for NI, external for peers), and individual
+            configurations to support a more complex requirement. This is what
+                the example expects to configure:</t>
+        <t>
+        <list style="symbols">
+            <t> For the global network instance,
+            the device sends updates for adj-rib-in-pre, address families IPv4
+            and IPv6. It sends updates for all external peers except peer
+            128.66.1.1, which is disabled.</t>
+        <t>Network instance monitoring is disabled for route monitoring messages. </t>
+        <t>For the rest of network
+            instances, we are enabling messages from adj-rib-in-pre, address
+                families IPv4/IPv6, and for all peers.</t>
+        </list>
+        </t>
+        <t><figure>
+            <artwork><![CDATA[
+INSERT_TEXT_FROM_FILE(example_two.xml)
+]]></artwork>         
+    </figure></t>
+    </section>
     </section>
 
     <section title="Acknowledgements" numbered="no">
