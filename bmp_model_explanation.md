@@ -61,6 +61,8 @@ The device should contain enough information to properly indentify a TCP connect
 
 We describe each type of connection option next, and provide examples of their configuration.  
 
+> Question to authors: Should we have a container with the IP connectivity 4-tuple + the network instance for easy reference?
+
 ### Active connection
 
 For an active connection, the IP address and port of the monitoring station, together with the local address MUST be provided. One can optionally provide the local port for establishing the connection. If the monitoring station is connected over a network-instance instead of the global one, this one must also be specified. An example of configuration is included next.
