@@ -62,7 +62,7 @@
     <workgroup>GROW</workgroup>
     <abstract>
       <t> 
-        This document proposes a YANG module for the configuration and monitoring of BMP (BGP Monitoring Protocol).
+        This document proposes a YANG module for the configuration and monitoring of the BGP Monitoring Protocol (BMP).
         A complementary RPC triggers a refresh of the session of a BMP monitoring station.
       </t>
     </abstract>
@@ -672,7 +672,7 @@ bmp monitoring-stations monitoring-station 1
     </section> 
 
     <section title="Session reset action">
-        <t>The action "session-reset" resets a session with a monitoring station.</t>
+        <t>The "session-reset" actio resets a session with a monitoring station.</t>
     </section> 
 
     </section>  
