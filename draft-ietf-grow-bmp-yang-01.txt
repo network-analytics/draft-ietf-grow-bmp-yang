@@ -5,11 +5,11 @@
 GROW                                                          C. Cardona
 Internet-Draft                                                P. Lucente
 Intended status: Standards Track                                     NTT
-Expires: 3 December 2023                                         T. Graf
+Expires: 23 December 2023                                        T. Graf
                                                                 Swisscom
                                                                B. Claise
                                                                   Huawei
-                                                             1 June 2023
+                                                            21 June 2023
 
 
                             BMP YANG Module
@@ -18,7 +18,7 @@ Expires: 3 December 2023                                         T. Graf
 Abstract
 
    This document proposes a YANG module for the configuration and
-   monitoring of BMP (BGP Monitoring Protocol).  A complementary RPC
+   monitoring of the BGP Monitoring Protocol (BMP).  A complementary RPC
    triggers a refresh of the session of a BMP monitoring station.
 
 Status of This Memo
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 December 2023.
+   This Internet-Draft will expire on 23 December 2023.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Cardona, et al.          Expires 3 December 2023                [Page 1]
+Cardona, et al.         Expires 23 December 2023                [Page 1]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -73,7 +73,7 @@ Table of Contents
    2.  Model description . . . . . . . . . . . . . . . . . . . . . .   3
      2.1.  IP Connectivity . . . . . . . . . . . . . . . . . . . . .   3
        2.1.1.  Active connection . . . . . . . . . . . . . . . . . .   3
-       2.1.2.  Passive connecction . . . . . . . . . . . . . . . . .   4
+       2.1.2.  Passive connection  . . . . . . . . . . . . . . . . .   4
      2.2.  TCP Options . . . . . . . . . . . . . . . . . . . . . . .   4
      2.3.  Other BMP connectivity options  . . . . . . . . . . . . .   6
      2.4.  BMP data  . . . . . . . . . . . . . . . . . . . . . . . .   7
@@ -89,18 +89,18 @@ Table of Contents
      2.6.  Session reset action  . . . . . . . . . . . . . . . . . .  17
    3.  Base ietf-bmp YANG module . . . . . . . . . . . . . . . . . .  17
      3.1.  Tree View . . . . . . . . . . . . . . . . . . . . . . . .  17
-     3.2.  YANG Module . . . . . . . . . . . . . . . . . . . . . . .  21
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .  37
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  38
-     5.1.  The IETF XML Registry . . . . . . . . . . . . . . . . . .  38
-     5.2.  The YANG Module Name Registration . . . . . . . . . . . .  38
-   6.  Open Issues . . . . . . . . . . . . . . . . . . . . . . . . .  38
-   7.  Normative References  . . . . . . . . . . . . . . . . . . . .  38
-   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  40
-     A.1.  Example one . . . . . . . . . . . . . . . . . . . . . . .  41
-     A.2.  Example two . . . . . . . . . . . . . . . . . . . . . . .  42
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  44
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  44
+     3.2.  YANG Module . . . . . . . . . . . . . . . . . . . . . . .  18
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .  18
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
+     5.1.  The IETF XML Registry . . . . . . . . . . . . . . . . . .  18
+     5.2.  The YANG Module Name Registration . . . . . . . . . . . .  18
+   6.  Open Issues . . . . . . . . . . . . . . . . . . . . . . . . .  19
+   7.  Normative References  . . . . . . . . . . . . . . . . . . . .  19
+   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  21
+     A.1.  Example one . . . . . . . . . . . . . . . . . . . . . . .  21
+     A.2.  Example two . . . . . . . . . . . . . . . . . . . . . . .  21
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  22
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Cardona, et al.          Expires 3 December 2023                [Page 2]
+Cardona, et al.         Expires 23 December 2023                [Page 2]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -132,7 +132,7 @@ Internet-Draft               BMP YANG Module                   June 2023
    parameters for defining the session to BMP monitoring stations; the
    selection of the BGP Routing Information Bases (RIBs) for Route
    Monitoring Messages; provides operational metrics and enables
-   reseting of BMP monitoring sessions.
+   resetting of BMP monitoring sessions.
 
    The BMP yang model is placed at the root of the YANG tree.  At its
    upper level, the BMP model lists each monitoring station.  Every
@@ -165,7 +165,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023                [Page 3]
+Cardona, et al.         Expires 23 December 2023                [Page 3]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -182,9 +182,9 @@ Internet-Draft               BMP YANG Module                   June 2023
    Note in the example from Figure 1 that there is no network instance
    defined, so the connection is using the global network instance.
 
-2.1.2.  Passive connecction
+2.1.2.  Passive connection
 
-   In a passive connection, The IP of the monitoring station, the local
+   In a passive connection, the IP of the monitoring station, the local
    address and local port for the incoming connection must be specified.
    If the port of the monitoring station is provided, it MUST match the
    incoming connection.  If the monitoring station is connected through
@@ -221,7 +221,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023                [Page 4]
+Cardona, et al.         Expires 23 December 2023                [Page 4]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -277,7 +277,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023                [Page 5]
+Cardona, et al.         Expires 23 December 2023                [Page 5]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -333,7 +333,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023                [Page 6]
+Cardona, et al.         Expires 23 December 2023                [Page 6]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -365,7 +365,7 @@ Internet-Draft               BMP YANG Module                   June 2023
    Section 2.4.1.
 
    *  Initiation-message: Content for an information TLV type-0 for
-      identitification of the device.  See 4.3 and Section 4.4 of
+      identification of the device.  See 4.3 and Section 4.4 of
       [RFC7854]
    *  Statistics-interval: The statistics report is enabled by the
       presence of the bmp-statistics-report container.  The statistics-
@@ -389,7 +389,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023                [Page 7]
+Cardona, et al.         Expires 23 December 2023                [Page 7]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -411,10 +411,10 @@ Internet-Draft               BMP YANG Module                   June 2023
       for different network instances differently.  For example, they
       might want to receive different address families from the global
       network instance than in L3 VPN network instances.
-   *  In contrast to the previous points. some opetarors might want a
+   *  In contrast to the previous points. some operators might want a
       simple configuration that covers multiple cases (e.g. same config
       for all peers, or same config for all network instances).  This
-      would not only make configuartions look smaller and concise, but
+      would not only make configurations look smaller and concise, but
       will reduce the need for reconfiguring devices when you add a new
       peer or add a new network instance (which happens frequently on
       some type of networks).
@@ -433,8 +433,8 @@ Internet-Draft               BMP YANG Module                   June 2023
    *  Address Family
    *  Peers
 
-   Abscense of the routing routing monitoring container will disable the
-   routing monitoring messages to the monitoring station.
+   Absence of the routing monitoring container will disable the routing
+   monitoring messages to the monitoring station.
 
    We'll offer an introduction to these hierarchies before going over
    them with detail.
@@ -445,18 +445,18 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023                [Page 8]
+Cardona, et al.         Expires 23 December 2023                [Page 8]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
 
    The RIB types (e.g.  Adj-RIB-IN, etc/OUT and local RIB) and Address
    families the number of types is low, and their configuration should
-   not change frequenlty.  Therefore, they are configured explicitly in
+   not change frequently.  Therefore, they are configured explicitly in
    the model.  That is, the model does not provide a way of providing a
    default configuration for these or configuring them in groups.
 
-   On the other hand, Network instaces and peers require greater
+   On the other hand, Network instances and peers require greater
    flexibility.
 
    For network instances, the model should configure not only the
@@ -481,7 +481,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
    *  The configuration should be simple for cases where only the
       "global" routing instance is enabled.
-   *  The model should provide ways of configuring all Netwrok instances
+   *  The model should provide ways of configuring all Network instances
       (kind of a default config for any Network instance that is
       configured in the device).
    *  The model should provide a way of configuring network instances
@@ -492,7 +492,7 @@ Internet-Draft               BMP YANG Module                   June 2023
    *  The model should provide ways of configuring all peers, kind of a
       default.  This would be the most common case.
    *  The model should provide ways of configuring type of peers.  For
-      instance, only send routes from ebgp peers.
+      instance, only send routes from eBGP peers.
    *  The model should provide ways of configuring individual peers.
       For instance, turn a route-policy filtering prefix for a specific
       peer, or turning off a peer that is noisy yet not important.
@@ -501,7 +501,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023                [Page 9]
+Cardona, et al.         Expires 23 December 2023                [Page 9]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -557,7 +557,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023               [Page 10]
+Cardona, et al.         Expires 23 December 2023               [Page 10]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -589,7 +589,7 @@ Internet-Draft               BMP YANG Module                   June 2023
    explicit configuration.  The global network instance and network-
    instance-two get Configuration B and Configuration C, respectively.
    The network-instance-one instance disables the routing monitoring
-   messages for that network instnace.
+   messages for that network instance.
 
    !
    bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
@@ -613,7 +613,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023               [Page 11]
+Cardona, et al.         Expires 23 December 2023               [Page 11]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -640,9 +640,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 2.4.1.3.  Address families
 
-   Address families are configured explicitily within each RIB-TYPE
-   using a list.  The key is of type `ietf-bgp-types:afi-safi-type`
-   without any further constraint.
+   Address families are configured explicitly within each RIB-TYPE using
+   a list.  The key is of type `ietf-bgp-types:afi-safi-type` without
+   any further constraint.
 
    An empty configuration or absence of an address family disables
    route-messages for it.  Operators can also disable the address-family
@@ -669,7 +669,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023               [Page 12]
+Cardona, et al.         Expires 23 December 2023               [Page 12]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -717,15 +717,15 @@ Internet-Draft               BMP YANG Module                   June 2023
    *  For the global network instance, adj-rib-in-pre and adj-rib-in-
       post RIBs are enabled.  In each of them IPv4 and IPv6 address
       families are configured.  The configuration can be the same or
-      not, depending on the requirements of the operattors.  Any other
-      RIB and address famlies are disabled.
+      not, depending on the requirements of the operators.  Any other
+      RIB and address families are disabled.
    *  Network instance one is disabled, meaning that routing monitoring
-      messagages are disabled for that network instance.
+      messages are disabled for that network instance.
 
 
 
 
-Cardona, et al.          Expires 3 December 2023               [Page 13]
+Cardona, et al.         Expires 23 December 2023               [Page 13]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -733,7 +733,7 @@ Internet-Draft               BMP YANG Module                   June 2023
    *  Network instance "network-instance-two" has adj-rib-out-post
       enabled, but only address family ipv4-unicast is configured.  The
       ipv6-unicast will not be configured for this instance.
-   *  For all other network intanaces, adj-rib-in-pre with ipv4 and ipv6
+   *  For all other network instances, adj-rib-in-pre with IPv4 and IPv6
       address families are configured, thanks to the configuration of
       bmp-ni-types-all-ni
 
@@ -764,8 +764,8 @@ Internet-Draft               BMP YANG Module                   June 2023
 
    *  An individual peer, using a remote address.  The model currently
       does not check if the remote address exists, that would be a
-      responsability of the device.
-   *  A group of peers matching a BGP type. i.e. ebgp peers.
+      responsibility of the device.
+   *  A group of peers matching a BGP type. i.e. eBGP peers.
    *  One or more peers defined by an `bmp-peer-types` identity.  The
       BMP model currently provides the `bmp-peer-types-all-peers`
       identity which select all peers.  For simple cases, this is the
@@ -781,7 +781,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023               [Page 14]
+Cardona, et al.         Expires 23 December 2023               [Page 14]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -791,14 +791,14 @@ Internet-Draft               BMP YANG Module                   June 2023
    *  If there is a peer instance identified with the `bmp-peer-types-
       all-peers`, it would be configured using this instance.
    *  Finally, if no instance covers the peer, the data from this peer
-      should not be transmited to the monitoring station.
+      should not be transmitted to the monitoring station.
 
    An empty configuration of a peer type disables route-messages for it.
    Operators can also disable the address-family route monitoring
    messages by marking the "enabled" leaf as False.
 
-   Any aditional bmp-peer-types identity created SHOULD describe how to
-   unambiguoslly select a peer when there are conflicting options
+   Any additional bmp-peer-types identity created SHOULD describe how to
+   unambiguously select a peer when there are conflicting options
    (multiple options covering the peer).
 
    We'll provide examples of the peers configuration after describing
@@ -807,7 +807,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 2.4.1.5.  Filtering route-monitoring messages
 
    The local rib, and the peer containers within the rest of rib types,
-   include a filter container.  This container includes mechanims to
+   include a filter container.  This container includes mechanisms to
    filter route-monitoring messages for the specific RIB.
 
    The policy-filter can include a routing policy that, if existing,
@@ -819,11 +819,11 @@ Internet-Draft               BMP YANG Module                   June 2023
    policy.  An operator can change it to a reject-route, if required.
 
    The policies created with the routing-policy can perform a large
-   variaty of actions routes, and can filter them based on multiple
+   variety of actions routes, and can filter them based on multiple
    characteristics.  For the consistency of the data in the monitoring
-   station, The route policies actions SHOULD be restritcted to
-   accepting or rejecting routes.  Furthermore, the conditions SHOULD
-   only match prefix sets.
+   station, the route policies actions SHOULD be restricted to accepting
+   or rejecting routes.  Furthermore, the conditions SHOULD only match
+   prefix sets.
 
    We present examples of full configurations next.
 
@@ -831,13 +831,13 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 2.4.1.6.1.  Example one
 
-   In this example, address families IPv6 and Iv4 are configured to send
-   all peers.  This is an example of a simple configuration
+   In this example, address families IPv6 and IPv4 are configured to
+   send all peers.  This is an example of a simple configuration
 
 
 
 
-Cardona, et al.          Expires 3 December 2023               [Page 15]
+Cardona, et al.         Expires 23 December 2023               [Page 15]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -893,7 +893,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.          Expires 3 December 2023               [Page 16]
+Cardona, et al.         Expires 23 December 2023               [Page 16]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
@@ -902,8 +902,8 @@ Internet-Draft               BMP YANG Module                   June 2023
 
    In this example, all network instances have adj-rib-in-pre with IPv6
    and IPv4 configured receiving all peers. network-instance-one is
-   disabled, and network-instance-two is announing only the local-rib/
-   ipv4 unicast routes.
+   disabled, and network-instance-two is announcing only the local-rib/
+   IPv4 unicast routes.
 
    !
     bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
@@ -926,7 +926,7 @@ Internet-Draft               BMP YANG Module                   June 2023
    !
 
          Figure 14: Applying a general configuration to all network
-         instances, except of two, which are configured specifally.
+        instances, except of two, which are configured specifically.
 
 2.5.  Session stats
 
@@ -935,7 +935,7 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 2.6.  Session reset action
 
-   The action "session-reset" resets a session with a monitoring
+   The "session-reset" action resets a session with a monitoring
    station.
 
 3.  Base ietf-bmp YANG module
@@ -945,1110 +945,20 @@ Internet-Draft               BMP YANG Module                   June 2023
    The following tree diagram provides an overview of the ietf-bmp.yang
    data model.
 
+   INSERT_TEXT_FROM_FILE(ietf-bmp-trees.txt)
 
 
 
-
-Cardona, et al.          Expires 3 December 2023               [Page 17]
+Cardona, et al.         Expires 23 December 2023               [Page 17]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
-
-   =============== NOTE: '\\' line wrapping per RFC 8792 ===============
-
-   module: ietf-bmp
-     +--rw bmp
-        +--rw monitoring-stations
-           +--rw monitoring-station* [id]
-              +--rw id               string
-              +--rw connection
-              |  +--rw (passive-or-active)?
-              |  |  +--:(active)
-              |  |  |  +--rw active
-              |  |  |     +--rw network-instance?   leafref
-              |  |  |     +--rw station-address     inet:ip-address
-              |  |  |     +--rw station-port        inet:port-number
-              |  |  |     +--rw local-address       inet:ip-address
-              |  |  |     +--rw local-port?         inet:port-number
-              |  |  +--:(passive)
-              |  |     +--rw passive
-              |  |        +--rw network-instance?   leafref
-              |  |        +--rw station-address     inet:ip-address
-              |  |        +--rw station-port?       inet:port-number
-              |  |        +--rw local-address       inet:ip-address
-              |  |        +--rw local-port          inet:port-number
-              |  +--rw tcp-options
-              |  |  +--rw maximum-segment-size?    uint16
-              |  |  +--rw mtu-discovery?           boolean
-              |  |  +--rw keepalives! {keepalives-supported}?
-              |  |  |  +--rw idle-time         uint16
-              |  |  |  +--rw max-probes        uint16
-              |  |  |  +--rw probe-interval    uint16
-              |  |  +--rw secure-session-enable?   boolean
-              |  |  +--rw secure-session
-              |  |     +--rw (authentication)?
-              |  |        +--:(ao)
-              |  |        |  +--rw ao-keychain?
-              |  |        |          key-chain:key-chain-ref
-              |  |        +--:(md5)
-              |  |           +--rw md5-keychain?
-              |  |                   key-chain:key-chain-ref
-              |  +--rw initial-delay?   uint32
-              |  +--rw backoff
-              |     +--rw (backoff-options)?
-              |        +--:(simple-exponential)
-              |           +--rw simple-exponential
-              |              +--rw initial-backoff?   uint32
-              |              +--rw maximum-backoff?   uint32
-              +--rw bmp-data
-              |  +--rw initiation-message?      string
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 18]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-              |  +--rw bmp-statistics-report!
-              |  |  +--rw statistics-interval    uint32
-              |  +--rw bmp-route-monitoring
-              |     +--rw network-instances
-              |        +--rw network-instance* [network-instance-id]
-              |           +--rw network-instance-id    union
-              |           +--rw enabled?               boolean
-              |           +--rw adj-rib-in-pre
-              |           |  +--rw address-families
-              |           |     +--rw address-family*
-              |           |             [address-family-id]
-              |           |        +--rw address-family-id
-              |           |        |       identityref
-              |           |        +--rw enabled?
-              |           |        |       boolean
-              |           |        +--rw peers
-              |           |           +--rw peer* [peer-id]
-              |           |              +--rw peer-id    union
-              |           |              +--rw enabled?   boolean
-              |           |              +--rw filters
-              |           |                 +--rw policy-filter
-              |           |                    +--rw export-policy*    \
-   \       leafref
-              |           |                    +--rw default-export-pol\
-   \icy?
-              |           |                            rt-pol:default-p\
-   \olicy-type
-              |           +--rw adj-rib-in-post
-              |           |  +--rw address-families
-              |           |     +--rw address-family*
-              |           |             [address-family-id]
-              |           |        +--rw address-family-id
-              |           |        |       identityref
-              |           |        +--rw enabled?
-              |           |        |       boolean
-              |           |        +--rw peers
-              |           |           +--rw peer* [peer-id]
-              |           |              +--rw peer-id    union
-              |           |              +--rw enabled?   boolean
-              |           |              +--rw filters
-              |           |                 +--rw policy-filter
-              |           |                    +--rw export-policy*    \
-   \       leafref
-              |           |                    +--rw default-export-pol\
-   \icy?
-              |           |                            rt-pol:default-p\
-   \olicy-type
-              |           +--rw local-rib
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 19]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-              |           |  +--rw address-families
-              |           |     +--rw address-family*
-              |           |             [address-family-id]
-              |           |        +--rw address-family-id
-              |           |        |       identityref
-              |           |        +--rw filters
-              |           |           +--rw policy-filter
-              |           |              +--rw export-policy*          \
-   \ leafref
-              |           |              +--rw default-export-policy?
-              |           |                      rt-pol:default-policy-\
-   \type
-              |           +--rw adj-rib-out-pre
-              |           |  +--rw address-families
-              |           |     +--rw address-family*
-              |           |             [address-family-id]
-              |           |        +--rw address-family-id
-              |           |        |       identityref
-              |           |        +--rw enabled?
-              |           |        |       boolean
-              |           |        +--rw peers
-              |           |           +--rw peer* [peer-id]
-              |           |              +--rw peer-id    union
-              |           |              +--rw enabled?   boolean
-              |           |              +--rw filters
-              |           |                 +--rw policy-filter
-              |           |                    +--rw export-policy*    \
-   \       leafref
-              |           |                    +--rw default-export-pol\
-   \icy?
-              |           |                            rt-pol:default-p\
-   \olicy-type
-              |           +--rw adj-rib-out-post
-              |              +--rw address-families
-              |                 +--rw address-family*
-              |                         [address-family-id]
-              |                    +--rw address-family-id
-              |                    |       identityref
-              |                    +--rw enabled?
-              |                    |       boolean
-              |                    +--rw peers
-              |                       +--rw peer* [peer-id]
-              |                          +--rw peer-id    union
-              |                          +--rw enabled?   boolean
-              |                          +--rw filters
-              |                             +--rw policy-filter
-              |                                +--rw export-policy*    \
-   \       leafref
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 20]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-              |                                +--rw default-export-pol\
-   \icy?
-              |                                        rt-pol:default-p\
-   \olicy-type
-              +--ro session-stats
-              |  +--ro discontinuity-time
-              |  |       yang:date-and-time
-              |  +--ro established-session?               boolean
-              |  +--ro total-route-monitoring-messages?   uint64
-              |  +--ro total-statistics-messages?         uint64
-              |  +--ro total-peer-down-messages?          uint64
-              |  +--ro total-peer-up-messages?            uint64
-              |  +--ro total-initiation-messages?         uint64
-              |  +--ro total-route-mirroring-messages?    uint64
-              +--rw actions
-                 +---x session-reset
-                    +--ro output
-                       +--ro (outcome)?
-                          +--:(success)
-                          |  +--ro success?   empty
-                          +--:(failure)
-                             +--ro failure?   string
 
 3.2.  YANG Module
 
    <CODE BEGINS> file "ietf-bmp@2022-01-27.yang"
 
-   module ietf-bmp {
-     yang-version 1.1;
-     namespace "urn:ietf:params:xml:ns:yang:ietf-bmp";
-     prefix bmp;
-
-     import ietf-yang-types {
-        prefix yang;
-      }
-
-     import ietf-inet-types {
-       prefix inet;
-       reference
-         "RFC 6991: Common YANG Data Types";
-     }
-
-     import ietf-bgp-types {
-       prefix bt;
-       reference
-         "RFC AAAA: BGP YANG module for Service Provider Network.
-          RFC-EDITOR: please update XXX with the RFC ID assigned
-          to I-D.ietf-idr-bgp-model";
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 21]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-     }
-
-     import ietf-netconf-acm {
-       prefix nacm;
-       reference
-         "RFC 8341: Network Configuration Access Control Model";
-     }
-
-     import ietf-tcp-common {
-       prefix "tcpcmn";
-       reference
-         "I-D.ietf-netconf-tcp-client-server: YANG Groupings for TCP
-          Clients and TCP Servers.";
-     }
-
-     import ietf-network-instance {
-       prefix "ni";
-       reference
-       "RFC 8529: YANG Data Model for Network Instances";
-     }
-
-     import ietf-routing-policy {
-       prefix "rt-pol";
-       reference
-       "RFC 9067: A YANG Data Model for Routing Policy";
-
-     }
-
-     import ietf-key-chain {
-          prefix key-chain;
-          reference
-            "RFC 8177: YANG Key Chain.";
-     }
-
-     organization
-       "IETF GROW Working Group";
-     contact
-       "WG Web:   <https://datatracker.ietf.org/wg/grow/>
-        WG List:  <mailto:grow@ietf.org>
-
-        Author:  Camilo Cardona
-           <mailto:camilo@ntt.net>
-
-        Author:  Paolo Lucente
-           <mailto:cpaolo@ntt.net>
-
-        Author:  Thomas Graf
-           <mailto:thomas.graf@swisscom.com>
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 22]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-        Author:  Benoit Claise
-           <mailto:benoit.claise@huawei.com>";
-     description
-       "This module specifies a structure for BMP
-        (BGP Monitoring Protocol) configuration and monitoring.
-
-        The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
-        'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED',
-        'NOT RECOMMENDED', 'MAY', and 'OPTIONAL' in this document
-        are to be interpreted as described in BCP 14 (RFC 2119)
-        (RFC 8174) when, and only when, they appear in all
-        capitals, as shown here.
-
-        Copyright (c) 2022 IETF Trust and the persons identified as
-        authors of the code.  All rights reserved.
-
-        Redistribution and use in source and binary forms, with or
-        without modification, is permitted pursuant to, and subject to
-        the license terms contained in, the Revised BSD License set
-        forth in Section 4.c of the IETF Trust's Legal Provisions
-        Relating to IETF Documents
-        (https://trustee.ietf.org/license-info).
-
-        This version of this YANG module is part of RFC 9196
-        (https://www.rfc-editor.org/info/rfc9196); see the RFC itself
-        for full legal notices.";
-
-     revision 2022-10-18 {
-       description
-         "initial version";
-       reference
-         "RFC YYYY: BMP YANG Module
-         RFC-EDITOR: please update YYYY with this RFC ID";
-     }
-
-     identity bmp-peer-types {
-       description
-       "Enum values for multiple selecting peer's
-       Routing Information Bases (RIB) for configuration.";
-     }
-
-     identity bmp-peer-types-all-peers {
-       base bmp-peer-types;
-       description
-       "This identity selects all peer's RIBs.
-       When used, it act as a 'default' configuration.";
-     }
-
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 23]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-     identity bmp-ni-types {
-       description "Enum values for selecting multiple Network instances
-       for configuration";
-     }
-
-     identity bmp-ni-types-all-ni {
-       base bmp-ni-types;
-       description "The identify is an explicit way
-         of selecting all network instances.";
-     }
-
-     identity bmp-ni-types-global-ni {
-       base bmp-ni-types;
-       description "Selects the global network instance";
-     }
-
-     grouping bmp-tcp-options {
-       description
-         "TCP options for the connection to the station";
-       leaf maximum-segment-size {
-         type uint16;
-         description
-           "Maximum segment size for the TCP connections.";
-       }
-
-       // Taken from the bgp yang module
-       leaf mtu-discovery {
-           type boolean;
-           description
-             "Turns path mtu discovery for the  TCP sessions
-             on (true) or off (false).";
-           reference
-             "RFC 1191: Path MTU discovery.";
-         }
-       uses tcpcmn:tcp-common-grouping;
-
-       // taken from the bgp yang module
-       leaf secure-session-enable {
-          type boolean;
-          default "false";
-          description
-            "Does this session need to be secured?";
-       }
-
-      container secure-session {
-        when "../secure-session-enable = 'true'";
-        description
-          "Container for describing how a particular BMP session
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 24]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-           is to be secured.";
-
-         choice authentication {
-          case ao {
-            leaf ao-keychain {
-              type key-chain:key-chain-ref;
-              description
-                "Reference to the key chain that will be used by
-                 this model. Applicable for TCP-AO and TCP-MD5
-                 only";
-              reference
-                "RFC 8177: YANG Key Chain.";
-            }
-            description
-              "Uses TCP-AO to secure the session. Parameters for
-               those are defined as a grouping in the TCP YANG
-               model.";
-            reference
-              "RFC 5925 - The TCP Authentication Option.";
-         }
-
-          case md5 {
-            leaf md5-keychain {
-              type key-chain:key-chain-ref;
-              description
-                "Reference to the key chain that will be used by
-                 this model. Applicable for TCP-AO and TCP-MD5
-                 only";
-              reference
-                "RFC 8177: YANG Key Chain.";
-            }
-            description
-              "Uses TCP-MD5 to secure the session. Parameters for
-               those are defined as a grouping in the TCP YANG
-               model.";
-            reference
-              "RFC 5925: The TCP Authentication Option.";
-          }
-          description
-            "Choice of TCP authentication.";
-         }
-      }
-
-
-     }
-
-     grouping bmp-ip-connection {
-       description
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 25]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-         "common elements for defining connectivity
-          to a BMP monitoring station";
-       choice passive-or-active {
-         description
-           "Choice for active or passive connection as described
-           in section 3.2 of RFC 7854";
-         case active {
-           description
-             "The device starts the connection to the monitoring
-             station";
-           container active {
-             description
-               "The device starts the connection to
-               the monitoring station";
-             leaf network-instance {
-               type leafref {
-                 path "/ni:network-instances/ni:network-instance/"
-                    + "ni:name";
-               }
-               description
-                 "If present, specifies the network instance
-                 used to reach the monitoring station.
-                 If not provided, the global network instance is used.";
-             }
-             leaf station-address {
-               type inet:ip-address;
-               mandatory true;
-               description
-                 "Destination IP address of monitoring station";
-             }
-             leaf station-port {
-               type inet:port-number;
-               mandatory true;
-               description
-                 "Destination port of the station";
-             }
-             leaf local-address {
-               type inet:ip-address;
-               mandatory true;
-               description
-                 "Local IP address to source active connection";
-             }
-             leaf local-port {
-               type inet:port-number;
-               description
-                 "Optional Local port for active connection";
-             }
-
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 26]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-           }
-
-         }
-
-         case passive {
-           description
-             "The device waits for the connection
-             in a local endpoint";
-           container passive {
-             description
-               "The device waits for the connection
-               in a local endpoint";
-             leaf network-instance {
-               type leafref {
-                 path "/ni:network-instances/ni:network-instance/"
-                    + "ni:name";
-               }
-               description
-                 "If present, specifies the network instance
-                 used to reach the monitoring station.
-                 If not provided, the global network instance is used.";
-             }
-             leaf station-address {
-               type inet:ip-address;
-               mandatory true;
-               description
-                 "address of the station";
-             }
-             leaf station-port {
-               type inet:port-number;
-               description
-                 "Optional value identifying the origin port of
-                 the connection, if provided it MUST match";
-             }
-             leaf local-address {
-               type inet:ip-address;
-               mandatory true;
-               description
-                 "Local IP address to wait for the connection";
-             }
-             leaf local-port {
-               type inet:port-number;
-               mandatory true;
-               description
-                 "Local port to wait for the connection";
-             }
-
-           }
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 27]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-         }
-       }
-     }
-
-     grouping bmp-source-configuration {
-       description
-       "Group containing some general characteristics for configuring
-       a BMP source";
-
-       container filters {
-         description
-         "Includes containers specifying filters for deciding
-         which routes to export to the station";
-         container policy-filter {
-             description
-             "Filter routes based on a policy.
-             The policy SHOULD not perform any action besides
-             filtering routes.
-             The policy SHOULD only contain accept and reject
-             routes, and the matching conditions SHOULD only
-             match prefix sets.";
-             leaf-list export-policy {
-              type leafref {
-                path "/rt-pol:routing-policy/"
-                   + "rt-pol:policy-definitions/"
-                   + "rt-pol:policy-definition/rt-pol:name";
-                require-instance true;
-              }
-              ordered-by user;
-              description
-                 "List of policy names in sequence used to select
-                 routes to be exported to station.";
-            }
-            leaf default-export-policy {
-              type rt-pol:default-policy-type;
-              default "accept-route";
-              description
-                "Explicitly set a default policy if no policy
-                definition in the export policy chain
-                is satisfied.";
-            }
-         }
-       }
-     }
-
-     grouping bmp-peer-ribs-filter {
-       description
-         "Leaves for configuring RIBs where
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 28]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-          origin/destination peers are defined.";
-
-       container address-families {
-         description
-           "container for lists of address-families";
-         list address-family {
-           key "address-family-id";
-           description
-             "List of address families.
-              The name of the address family, as defined
-              in the BGP model is used for keying.";
-
-           // If we knew the network instance,
-           // we could list the AF directly from the configured
-           // ones, as we for instance show next for the global one.
-           // leaf name {
-           //   type leafref {
-           //     path "/rt:routing/rt:control-plane-protocols/"
-           //        + "rt:control-plane-protocol/bgp:bgp/"
-           //        + "bgp:global/bgp:afi-safis/bgp:afi-safi/bgp:name";
-           //   }
-           //   description
-           //     "Name of the address family";
-           // }
-           // However, since is not aware if we are doing global,
-           // and individual NT or a default, we cannot
-           // contraint it to this.
-           leaf address-family-id {
-             type identityref {
-               base bt:afi-safi-type;
-             }
-             description
-             "Address family id to configure";
-           }
-
-           leaf enabled {
-             type boolean;
-             default true;
-             description
-               "Enables route monitoring messages
-               for the address family";
-           }
-
-           container peers {
-             description
-             "Identification of peers
-             for which we send BMP data to the collector";
-             list peer {
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 29]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-               key "peer-id";
-               description
-               "Identification of peers
-               for which we send BMP data to the collector";
-               leaf peer-id {
-                 type union {
-                   // inet:ip-address reflects a neighbor
-                   // but since the model is not aware of
-                   // the ni, it doesn not know from where to get it
-                   // e.g. if we knew were were referencing
-                   //      the global instance, we could do:
-                   // type leafref {
-                   //   path "/rt:routing/rt:control-plane-protocols/"
-                   //   + "rt:control-plane-protocol/bgp:bgp/"
-                   //   + "bgp:neighbors/bgp:neighbor/"
-                   //   + "bgp:remote-address";
-                   // }
-                   type inet:ip-address;
-                   type bt:peer-type;
-                   type identityref {
-                     base bmp-peer-types;
-                   }
-                 }
-                 description
-                   "Peers can be identified by a remote-address,
-                    by the bgp type of the peers,
-                    or by an enum value corresponding to groups
-                    of peers.  This way an operator can
-                    select, for example, all external peers,
-                    all internal peers, or all peers.";
-               }
-
-               leaf enabled {
-                 type boolean;
-                 default true;
-                 description
-                   "Enables routing monitoring messages
-                   for the peer(s).";
-               }
-               uses bmp-source-configuration;
-
-             }
-           }
-         }
-       }
-     }
-
-     grouping bmp-route-monitoring-sources {
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 30]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-       description
-         "Route monitoring sources";
-       reference "RFC7854:  BGP Monitoring Protocol, Section 5.";
-
-       container network-instances {
-         description
-         "container for lists of network-instances";
-         list network-instance {
-           key "network-instance-id";
-           description
-             "Network instance to monitory using BMP.";
-
-           leaf network-instance-id {
-             type union {
-               type leafref {
-                 path "/ni:network-instances/ni:network-instance/"
-                    + "ni:name";
-               }
-               type identityref {
-                 base bmp-ni-types;
-               }
-             }
-             description
-               "Identification of a network-instance.
-               Network instances can be identified
-               directly by their path or use an identity to
-               identify one or a group of them
-               (e.g. bmp-ni-types-all-ni for all of them)";
-
-           }
-
-
-           leaf enabled {
-             type boolean;
-             default true;
-             description
-               "Enables routing monitoring
-               messages for the network instance.";
-           }
-
-           container adj-rib-in-pre {
-             description
-               "Configuration for the adj-rib-in pre-policy";
-             reference
-               "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
-             uses bmp-peer-ribs-filter;
-           }
-           container adj-rib-in-post {
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 31]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-             description
-               "Configuration for the adj-rib-in post-policy";
-             reference
-               "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
-             uses bmp-peer-ribs-filter;
-           }
-           container local-rib {
-             description
-               "Configuration for the local-rib";
-             reference
-               "RFC9069: Support for Local RIB in the BGP Monitoring
-               Protocol (BMP), Section 3.";
-
-             container address-families {
-               description
-                 "List of address families to enable for
-                  local-rib.";
-               list address-family {
-                 key "address-family-id";
-                 description
-                  "Address family to enable for local-rib";
-                 leaf address-family-id {
-                   type identityref {
-                     base bt:afi-safi-type;
-                   }
-                   description
-                   "Address family id to enable for local-rib";
-                 }
-                 uses bmp-source-configuration;
-               }
-             }
-           }
-           container adj-rib-out-pre {
-             description
-               "Configuration for the adj-rib-out pre-policy";
-             uses bmp-peer-ribs-filter;
-             reference
-               "RFC8671: Support for Adj-RIB-Out in the BGP Monitoring
-               Protocol (BMP) , Section 3.";
-           }
-           container adj-rib-out-post {
-             description
-               "Configuration for the adj-rib-out post-policy";
-             uses bmp-peer-ribs-filter;
-             reference
-               "RFC8671: Support for Adj-RIB-Out in the BGP Monitoring
-               Protocol (BMP) , Section 3.";
-           }
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 32]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-         }
-
-       }
-
-     }
-
-
-     container bmp {
-       description
-         "Main level for BMP configuration ";
-       container monitoring-stations {
-         description
-           "Container for the list of BMP monitoring stations";
-         list monitoring-station {
-           key "id";
-           description
-             "Configuration for a BMP monitoring station.";
-           leaf id {
-             type string;
-             description
-               "Identification string for the monitoring station";
-           }
-           // Connection, missing tcp tuning params
-           // like keep-alives, segment sizes, etc.
-           container connection {
-             description
-               "Connection details for the monitoring station";
-             uses bmp-ip-connection;
-
-             container tcp-options {
-               description
-                "TCP options for the connection to the monitoring
-                station";
-               uses bmp-tcp-options;
-             }
-
-             leaf initial-delay {
-               type uint32;
-               units "seconds";
-               default 0;
-               description
-                 "Initial delay of the connection to the station";
-             }
-
-
-             container backoff {
-               description
-                 "Configures the backoff strategy after a connection
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 33]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-                 retry";
-               reference "RFC7854 Section 3.2";
-               choice backoff-options {
-                 description
-                   "Options for backoff strategies";
-                 reference "RFC7854 Section 3.2";
-                 case simple-exponential {
-                   description
-                     "Simple exponential backoff with limits.";
-                   container simple-exponential {
-                     description
-                       "Simple exponential backoff with limits.
-                       Starts with the initial backoff and doubles
-                       the backoff of every retry until reaching the
-                       maximum backoff";
-                     leaf initial-backoff {
-                       type uint32;
-                       units "seconds";
-                       default 30;
-                       description
-                         "Initial backoff time";
-                     }
-                     leaf maximum-backoff {
-                       type uint32;
-                       units "seconds";
-                       default 720;
-                       description
-                         "Maximum backoff time";
-                     }
-                   }
-                 }
-               }
-             }
-           }
-
-           container bmp-data {
-             description
-               "Configuration of BMP data";
-
-             leaf initiation-message {
-               type string;
-               description
-                 "User defined message to append to the
-                  initiation message";
-               reference "RFC7854:  BGP Monitoring Protocol,
-                 Section 4.3 and 4.4";
-             }
-
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 34]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-             container bmp-statistics-report  {
-               presence "Enables the BMP statistics report";
-
-               description "Configuration of the statistics report";
-               reference "RFC7854:  BGP Monitoring Protocol,
-                 Section 4.8";
-
-
-               leaf statistics-interval {
-                 type uint32;
-                 units "seconds";
-                 mandatory true;
-                 description
-                   "Interval for statistic report message.";
-               }
-
-             }
-
-             container bmp-route-monitoring {
-               description
-                 "Configuration of the data sources for
-                 route-monitoring messages";
-               uses bmp-route-monitoring-sources;
-             }
-           }
-
-           container session-stats {
-             config false;
-             description
-               "stats and operational values for the station";
-
-             leaf discontinuity-time {
-                type yang:date-and-time;
-                mandatory true;
-                description
-                  "The time on the most recent occasion at which any
-                  one or more of this station's counters suffered a
-                  discontinuity.  If no such discontinuities have
-                  occurred since the last re-initialization of the
-                  local management subsystem, then this node contains
-                  the time the local management subsystem
-                  re-initialized itself.";
-              }
-
-             leaf established-session {
-               type boolean;
-               description
-                 "Value indicating if the session is currently
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 35]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-                  established";
-             }
-             leaf total-route-monitoring-messages {
-               type uint64;
-               description
-                 "Number of route-monitoring messages sent since last
-                  successful connection";
-             }
-             leaf total-statistics-messages {
-               type uint64;
-               description
-                 "Number of statistics messages sent since last
-                  successful connection";
-             }
-             leaf total-peer-down-messages {
-               type uint64;
-               description
-                 "Number of peer-down messages sent since last
-                  successful connection";
-             }
-             leaf total-peer-up-messages {
-               type uint64;
-               description
-                 "Number of peer-up messages sent since last successful
-                  connection";
-             }
-             leaf total-initiation-messages {
-               type uint64;
-               description
-                 "Number of initiation messages sent since last
-                  successful connection";
-             }
-             leaf total-route-mirroring-messages {
-               type uint64;
-               description
-                 "Number of route-mirroring messages sent since last
-                  successful connection";
-             }
-           }
-
-
-           container actions {
-             nacm:default-deny-all;
-             description
-               "Container with the actions for the BMP operation";
-             action session-reset {
-               description
-                 "Resets the session for a station.";
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 36]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-               output {
-                 choice outcome {
-                   description
-                     "Output of the reset operation. Either a success or
-                      failure. For the latter, the reason for the
-                      error is provided.";
-                   leaf success {
-                     type empty;
-                     description
-                       "Reset successful";
-                   }
-                   leaf failure {
-                     type string;
-                     description
-                       "Reset could not be performed.
-                       Reason is included in the field";
-                   }
-                 }
-               }
-             }
-           }
-
-         }
-
-
-
-       }
-
-
-     }
-   }
+   INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
 
    <CODE ENDS>
 
@@ -2064,15 +974,6 @@ Internet-Draft               BMP YANG Module                   June 2023
    provides the means to restrict access for NETCONF or RESTCONF users
    to a preconfigured subset of all available NETCONF or RESTCONF
    protocol operations and content.
-
-
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 37]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
 
    BGP data is sensible for security considerations.  The model
    described in this document could be used to send BGP information to
@@ -2100,6 +1001,15 @@ Internet-Draft               BMP YANG Module                   June 2023
    This document registers the following YANG module in the " YANG
    Module Names" registry registry [RFC6020]:
 
+
+
+
+
+Cardona, et al.         Expires 23 December 2023               [Page 18]
+
+Internet-Draft               BMP YANG Module                   June 2023
+
+
       Name: ietf-bmp
       Namespace: urn:ietf:params:xml:ns:yang:ietf-bmp
       Prefix: bmp
@@ -2122,14 +1032,6 @@ Internet-Draft               BMP YANG Module                   June 2023
    [I-D.ietf-netconf-tcp-client-server]
               Watsen, K. and M. Scharf, "YANG Groupings for TCP Clients
               and TCP Servers", Work in Progress, Internet-Draft, draft-
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 38]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
               ietf-netconf-tcp-client-server-16, 17 April 2023,
               <https://datatracker.ietf.org/doc/html/draft-ietf-netconf-
               tcp-client-server-16>.
@@ -2157,6 +1059,13 @@ Internet-Draft               BMP YANG Module                   June 2023
               (NETCONF)", RFC 6241, DOI 10.17487/RFC6241, June 2011,
               <https://www.rfc-editor.org/info/rfc6241>.
 
+
+
+Cardona, et al.         Expires 23 December 2023               [Page 19]
+
+Internet-Draft               BMP YANG Module                   June 2023
+
+
    [RFC6242]  Wasserman, M., "Using the NETCONF Protocol over Secure
               Shell (SSH)", RFC 6242, DOI 10.17487/RFC6242, June 2011,
               <https://www.rfc-editor.org/info/rfc6242>.
@@ -2177,14 +1086,6 @@ Internet-Draft               BMP YANG Module                   June 2023
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 39]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
 
    [RFC8177]  Lindem, A., Ed., Qu, Y., Yeung, D., Chen, I., and J.
               Zhang, "YANG Data Model for Key Chains", RFC 8177,
@@ -2210,6 +1111,17 @@ Internet-Draft               BMP YANG Module                   June 2023
               DOI 10.17487/RFC8529, March 2019,
               <https://www.rfc-editor.org/info/rfc8529>.
 
+
+
+
+
+
+
+Cardona, et al.         Expires 23 December 2023               [Page 20]
+
+Internet-Draft               BMP YANG Module                   June 2023
+
+
    [RFC8671]  Evens, T., Bayraktar, S., Lucente, P., Mi, P., and S.
               Zhuang, "Support for Adj-RIB-Out in the BGP Monitoring
               Protocol (BMP)", RFC 8671, DOI 10.17487/RFC8671, November
@@ -2229,19 +1141,6 @@ Appendix A.  Examples
    This sections shows some examples of BMP configuration using the
    model.
 
-
-
-
-
-
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 40]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
 A.1.  Example one
 
    In this example, the device connects to a monitoring station using an
@@ -2249,65 +1148,7 @@ A.1.  Example one
    the global instance, the adj-rib-out-pre RIB, the IPv4/IPv6 address
    family, and external peers.
 
-   =============== NOTE: '\' line wrapping per RFC 8792 ================
-
-   <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-   <monitoring-stations>
-     <monitoring-station>
-       <id>1</id>
-       <connection>
-         <active>
-           <station-address>192.0.2.1</station-address>
-           <station-port>57992</station-port>
-           <local-address>192.0.2.2</local-address>
-         </active>
-       </connection>
-       <bmp-data>
-         <bmp-route-monitoring>
-           <network-instances>
-             <network-instance>
-                 <network-instance-id>
-                         bmp-ni-types-global-ni</network-instance-id>
-               <adj-rib-in-pre>
-                 <address-families>
-                   <address-family>
-                       <address-family-id
-                   xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types\
-   ">
-                               bt:ipv6-unicast</address-family-id>
-                     <peers>
-                       <peer>
-                         <peer-id>external</peer-id>
-                       </peer>
-                     </peers>
-                   </address-family>
-                   <address-family>
-                       <address-family-id
-                  xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">
-                               bt:ipv4-unicast</address-family-id>
-                     <peers>
-                       <peer>
-                         <peer-id>external</peer-id>
-                       </peer>
-                     </peers>
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 41]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-                   </address-family>
-                 </address-families>
-               </adj-rib-in-pre>
-             </network-instance>
-           </network-instances>
-         </bmp-route-monitoring>
-       </bmp-data>
-     </monitoring-station>
-   </monitoring-stations>
-   </bmp>
+   INSERT_TEXT_FROM_FILE(example_one.xml)
 
 A.2.  Example two
 
@@ -2330,118 +1171,14 @@ A.2.  Example two
    *  For the rest of network instances, we are enabling messages from
       adj-rib-in-pre, address families IPv4/IPv6, and for all peers.
 
-   =============== NOTE: '\' line wrapping per RFC 8792 ================
-
-   <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-       <monitoring-stations>
-         <monitoring-station>
-           <id>2</id>
-           <connection>
-             <passive>
-               <network-instance>monitoring</network-instance>
-               <station-address>192.0.2.1</station-address>
-               <local-address>192.0.2.2</local-address>
-               <local-port>57993</local-port>
-             </passive>
-           </connection>
-           <bmp-data>
-             <bmp-route-monitoring>
 
 
-
-Cardona, et al.          Expires 3 December 2023               [Page 42]
+Cardona, et al.         Expires 23 December 2023               [Page 21]
 
 Internet-Draft               BMP YANG Module                   June 2023
 
 
-               <network-instances>
-                 <network-instance>
-                     <network-instance-id>
-                             bmp-ni-types-all-ni</network-instance-id>
-                   <adj-rib-in-pre>
-                     <address-families>
-                       <address-family>
-                           <address-family-id
-                     xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-typ\
-   es">
-                                   bt:ipv6-unicast</address-family-id>
-                         <peers>
-                           <peer>
-                             <peer-id>bmp-peer-types-all-peers</peer-id>
-                           </peer>
-                         </peers>
-                       </address-family>
-                       <address-family>
-                           <address-family-id
-                     xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-typ\
-   es">
-                                   bt:ipv4-unicast</address-family-id>
-                         <peers>
-                           <peer>
-                             <peer-id>bmp-peer-types-all-peers</peer-id>
-                           </peer>
-                         </peers>
-                       </address-family>
-                     </address-families>
-                   </adj-rib-in-pre>
-                 </network-instance>
-                 <network-instance>
-                     <network-instance-id>
-                             bmp-ni-types-global-ni</network-instance-i\
-   d>
-                   <adj-rib-in-pre>
-                     <address-families>
-                       <address-family>
-                           <address-family-id
-                    xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-type\
-   s">
-                                   bt:ipv6-unicast</address-family-id>
-                         <peers>
-                           <peer>
-                             <peer-id>128.66.1.1</peer-id>
-                             <enabled>false</enabled>
-                           </peer>
-                           <peer>
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 43]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
-                             <peer-id>external</peer-id>
-                           </peer>
-                         </peers>
-                       </address-family>
-                       <address-family>
-                           <address-family-id
-                   xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types\
-   ">
-                                   bt:ipv4-unicast</address-family-id>
-                         <peers>
-                           <peer>
-                             <peer-id>128.66.1.1</peer-id>
-                             <enabled>false</enabled>
-                           </peer>
-                           <peer>
-                             <peer-id>external</peer-id>
-                           </peer>
-                         </peers>
-                       </address-family>
-                     </address-families>
-                   </adj-rib-in-pre>
-                 </network-instance>
-                 <network-instance>
-                   <network-instance-id>monitoring</network-instance-id>
-                   <enabled>false</enabled>
-                 </network-instance>
-               </network-instances>
-             </bmp-route-monitoring>
-           </bmp-data>
-         </monitoring-station>
-       </monitoring-stations>
-     </bmp>
+   INSERT_TEXT_FROM_FILE(example_two.xml)
 
 Acknowledgements
 
@@ -2456,14 +1193,6 @@ Authors' Addresses
    08029 Barcelona
    Spain
    Email: camilo@ntt.net
-
-
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 44]
-
-Internet-Draft               BMP YANG Module                   June 2023
 
 
    Paolo Lucente
@@ -2500,21 +1229,4 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Cardona, et al.          Expires 3 December 2023               [Page 45]
+Cardona, et al.         Expires 23 December 2023               [Page 22]

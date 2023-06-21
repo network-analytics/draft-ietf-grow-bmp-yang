@@ -88,7 +88,7 @@
            monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/>.  The model
            provides parameters for defining the session to BMP monitoring stations; the
            selection of the BGP Routing Information Bases (RIBs) for Route Monitoring Messages; provides
-           operational metrics and enables reseting of BMP monitoring sessions.
+           operational metrics and enables resetting of BMP monitoring sessions.
        </t> 
 
        <t>The BMP yang model is placed at the root of the YANG tree.  At its
@@ -135,8 +135,8 @@ bmp monitoring-stations monitoring-station 1 session-stats discontinuity-time 20
                 that there is no network instance defined, so the connection is
                 using the global network instance.</t>
     </section>
-      <section title="Passive connecction">
-        <t>In a passive connection, The IP of the monitoring station, the local address and local port
+      <section title="Passive connection">
+        <t>In a passive connection, the IP of the monitoring station, the local address and local port
             for the incoming connection must be specified. If the port of the
             monitoring station is provided, it MUST match the incoming
             connection. If the monitoring station is connected through a
@@ -274,7 +274,7 @@ bmp monitoring-stations monitoring-station 1
 
       <t>
         <ul spacing="compact">
-            <li>Initiation-message: Content for an information TLV type-0 for identitification of the device. See <xref target="RFC7854" section="4.3" sectionFormat="bare"/> and <xref target="RFC7854" section="4.4" sectionFormat="of"/></li> 
+            <li>Initiation-message: Content for an information TLV type-0 for identification of the device. See <xref target="RFC7854" section="4.3" sectionFormat="bare"/> and <xref target="RFC7854" section="4.4" sectionFormat="of"/></li> 
             <li>Statistics-interval: The statistics report is enabled by the presence of the bmp-statistics-report container. The statistics-interval is mandatory if the bmp-statistics-report container exists and defines the interval of the statistics report. See <xref target="RFC7854" section="4.8" sectionFormat="of"/>.</li>
         </ul>
       </t>
@@ -304,7 +304,7 @@ bmp monitoring-stations monitoring-station 1
         <ul spacing="compact">
             <li>Operators might not want to receive all routes from all RIBs in a network device. For instance, some devices contain a considerable amount of data that might overwhelm the monitoring station. In this cases, operators might want to only collect information from an arbitrary subset of RIBs, address families, peers.</li>
             <li>Operators might want to configure the route monitoring messages for different network instances differently. For example, they might want to receive different address families from the global network instance than in L3 VPN network instances. </li>
-            <li>In contrast to the previous points. some opetarors might want a simple configuration that covers multiple cases (e.g. same config for all peers, or same config for all network instances).  This would not only make configuartions look smaller and concise, but will reduce the need for reconfiguring devices when you add a new peer or add a new network instance (which happens frequently on some type of networks). </li>
+            <li>In contrast to the previous points. some operators might want a simple configuration that covers multiple cases (e.g. same config for all peers, or same config for all network instances).  This would not only make configurations look smaller and concise, but will reduce the need for reconfiguring devices when you add a new peer or add a new network instance (which happens frequently on some type of networks). </li>
         </ul>
       </t>
 
@@ -321,13 +321,13 @@ bmp monitoring-stations monitoring-station 1
         </ul>
       </t>
 
-      <t>Abscense of the routing routing monitoring container will disable the routing monitoring messages to the monitoring station.</t>
+      <t>Absence of the routing monitoring container will disable the routing monitoring messages to the monitoring station.</t>
 
       <t>We'll offer an introduction to these hierarchies before going over them with detail.</t>
 
-      <t>The RIB types (e.g. Adj-RIB-IN, etc/OUT and local RIB) and Address families the number of types is low, and their configuration should not change frequenlty. Therefore, they are configured explicitly in the model. That is, the model does not provide a way of providing a default configuration for these or configuring them in groups.</t>
+      <t>The RIB types (e.g. Adj-RIB-IN, etc/OUT and local RIB) and Address families the number of types is low, and their configuration should not change frequently. Therefore, they are configured explicitly in the model. That is, the model does not provide a way of providing a default configuration for these or configuring them in groups.</t>
 
-      <t>On the other hand, Network instaces and peers require greater flexibility.</t>
+      <t>On the other hand, Network instances and peers require greater flexibility.</t>
 
       <t>For network instances, the model should configure not only the "global" network instance (the main one configured under the /ietf-routing:routing), but also other network instances configured under the /ietf-network-instance:network-instances/. Also, network instances can change frequently in networks with customer connecting to Virtual Private Networks. To not force operators to change configuration at every change, the model provides methods for  defining a "default" configuration for network instances. However, to provide control over the configuration, each network instance can be configured independently, if needed.</t>
 
@@ -340,16 +340,16 @@ bmp monitoring-stations monitoring-station 1
       <t>
         <ul spacing="compact">
           <li>The configuration should be simple for cases where only the "global" routing instance is enabled.</li>
-          <li>The model should  provide ways of configuring all Netwrok instances (kind of a default config for any Network instance that is configured in the device).</li>
+          <li>The model should  provide ways of configuring all Network instances (kind of a default config for any Network instance that is configured in the device).</li>
           <li>The model should provide a way of configuring network instances individually.</li>
         </ul>
       </t>
 
       <t>For peers:</t>
       <t>
-        <ul spacing="compact">
+       <ul spacing="compact">
             <li>The model should provide ways of configuring all peers, kind of a default. This would be the most common case.</li>
-            <li>The model should provide ways of configuring type of peers. For instance, only send routes from ebgp peers.</li>
+            <li>The model should provide ways of configuring type of peers. For instance, only send routes from eBGP peers.</li>
             <li>The model should provide ways of configuring individual peers. For instance, turn a route-policy filtering prefix for a specific peer, or turning off a peer that is noisy yet not important.</li>
         </ul>
       </t>
@@ -407,7 +407,7 @@ bmp monitoring-stations monitoring-station 1
           </figure>
         </t> 
 
-        <t>In example from <xref target="example_netins_one"/>, we have a "default" configuration (Configuration A) applied to any network instance without any explicit configuration. The global network instance and network-instance-two get Configuration B and Configuration C, respectively. The network-instance-one instance disables the routing monitoring messages for that network instnace. </t>
+        <t>In example from <xref target="example_netins_one"/>, we have a "default" configuration (Configuration A) applied to any network instance without any explicit configuration. The global network instance and network-instance-two get Configuration B and Configuration C, respectively. The network-instance-one instance disables the routing monitoring messages for that network instance.</t>
 
 
         <t>
@@ -450,7 +450,7 @@ bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-al
     </section>
     <section title="Address families">
 
-    <t>Address families are configured explicitily within each RIB-TYPE using a list. The key is of type `ietf-bgp-types:afi-safi-type` without any further constraint.</t>
+    <t>Address families are configured explicitly within each RIB-TYPE using a list. The key is of type `ietf-bgp-types:afi-safi-type` without any further constraint.</t>
 
     <t>An empty configuration or absence of an address family disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
 
@@ -501,10 +501,10 @@ bmp monitoring-stations monitoring-station 1
 
       <t>
         <ul spacing="compact">
-            <li>For the global network instance, adj-rib-in-pre and adj-rib-in-post RIBs are enabled. In each of them IPv4 and IPv6 address families are configured. The configuration can be the same or not, depending on the requirements of the operattors. Any other RIB and address famlies are disabled.</li>
-            <li>Network instance one is disabled, meaning that routing monitoring messagages are disabled for that network instance.</li>
+            <li>For the global network instance, adj-rib-in-pre and adj-rib-in-post RIBs are enabled. In each of them IPv4 and IPv6 address families are configured. The configuration can be the same or not, depending on the requirements of the operators. Any other RIB and address families are disabled.</li>
+            <li>Network instance one is disabled, meaning that routing monitoring messages are disabled for that network instance.</li>
             <li>Network instance "network-instance-two" has adj-rib-out-post enabled, but only address family ipv4-unicast is configured. The ipv6-unicast will not be configured for this instance.</li>
-            <li>For all other network intanaces, adj-rib-in-pre with ipv4 and ipv6 address families are configured, thanks to the configuration of bmp-ni-types-all-ni</li>
+            <li>For all other network instances, adj-rib-in-pre with IPv4 and IPv6 address families are configured, thanks to the configuration of bmp-ni-types-all-ni</li>
         </ul>
       </t>
 
@@ -537,8 +537,8 @@ bmp monitoring-stations monitoring-station 1
 
       <t>
         <ul spacing="compact">
-            <li>An individual peer, using a remote address. The model currently does not check if the remote address exists, that would be a responsability of the device.</li>
-            <li>A group of peers matching a BGP type. i.e. ebgp peers. </li>
+            <li>An individual peer, using a remote address. The model currently does not check if the remote address exists, that would be a responsibility of the device.</li>
+            <li>A group of peers matching a BGP type. i.e. eBGP peers. </li>
             <li>One or more peers defined by an `bmp-peer-types` identity. The BMP model currently provides the `bmp-peer-types-all-peers` identity which select all peers. For simple cases, this is the value that would normally be considered.</li>
         </ul>
       </t>
@@ -550,26 +550,26 @@ bmp monitoring-stations monitoring-station 1
             <li>If there is a peer address matching the peer, it should be configured using that instance.</li>
             <li>If the peer is of any BGP type listed in the peer list, it should be configured using this instance.</li>
             <li>If there is a peer instance identified with the `bmp-peer-types-all-peers`, it would be configured using this instance.</li>
-            <li>Finally, if no instance covers the peer, the data from this peer should not be transmited to the monitoring station.</li>
+            <li>Finally, if no instance covers the peer, the data from this peer should not be transmitted to the monitoring station.</li>
         </ul>
       </t>
 
       <t>An empty configuration of a peer type disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
 
-      <t>Any aditional bmp-peer-types identity created SHOULD describe how to unambiguoslly select a peer when there are conflicting options (multiple options covering the peer).</t>
+      <t>Any additional bmp-peer-types identity created SHOULD describe how to unambiguously select a peer when there are conflicting options (multiple options covering the peer).</t>
 
       <t>We'll provide examples of the peers configuration after describing the filter containers.</t>
 
     </section>
     <section title="Filtering route-monitoring messages">
 
-    <t>The local rib, and the peer containers within the rest of rib types, include a filter container. This container includes mechanims to filter route-monitoring messages for the specific RIB.</t>
+    <t>The local rib, and the peer containers within the rest of rib types, include a filter container. This container includes mechanisms to filter route-monitoring messages for the specific RIB.</t>
 
     <t>The policy-filter can include a routing policy that, if existing, should be applied to the outgoing updates to the monitoring station, and would serve as a granular way of filtering the messages that the monitoring station receives. </t>
 
     <t>Note that the policy-filter contains an `accept-route` default export policy. An operator can change it to a reject-route, if required.</t>
 
-    <t>The policies created with the routing-policy can perform a large variaty of actions routes, and can filter them based on multiple characteristics. For the consistency of the data in the monitoring station, The route policies actions SHOULD be restritcted to accepting or rejecting routes. Furthermore, the conditions SHOULD only match prefix sets.</t>
+    <t>The policies created with the routing-policy can perform a large variety of actions routes, and can filter them based on multiple characteristics. For the consistency of the data in the monitoring station, the route policies actions SHOULD be restricted to accepting or rejecting routes. Furthermore, the conditions SHOULD only match prefix sets.</t>
 
     <t>We present examples of full configurations next.</t>
     </section>
@@ -579,7 +579,7 @@ bmp monitoring-stations monitoring-station 1
 
     <section title="Example one">
 
-    <t>In this example, address families IPv6 and Iv4 are configured to send all peers. This is an example of a simple configuration</t>
+    <t>In this example, address families IPv6 and IPv4 are configured to send all peers. This is an example of a simple configuration</t>
         <t>
           <figure>
               <name>Enabling Route monitoring for all peers; all network instances; IPv4/IPv6 Address families,  in the adj-rib-in-pre RIB.</name>
@@ -630,11 +630,11 @@ bmp monitoring-stations monitoring-station 1
     </section>
     <section title="Example three">
 
-        <t>In this example, all network instances have adj-rib-in-pre with  IPv6  and IPv4  configured receiving all peers. network-instance-one is disabled, and network-instance-two is announing only the local-rib/ipv4 unicast routes.</t>
+        <t>In this example, all network instances have adj-rib-in-pre with  IPv6  and IPv4  configured receiving all peers. network-instance-one is disabled, and network-instance-two is announcing only the local-rib/IPv4 unicast routes.</t>
 
         <t>
           <figure>
-            <name>Applying a general configuration to all network instances, except of two, which are configured specifally.</name>
+            <name>Applying a general configuration to all network instances, except of two, which are configured specifically.</name>
             <sourcecode><![CDATA[
 !
  bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
@@ -672,7 +672,7 @@ bmp monitoring-stations monitoring-station 1
     </section> 
 
     <section title="Session reset action">
-        <t>The "session-reset" actio resets a session with a monitoring station.</t>
+        <t>The "session-reset" action resets a session with a monitoring station.</t>
     </section> 
 
     </section>  
