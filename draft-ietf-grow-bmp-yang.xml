@@ -63,7 +63,6 @@
     <abstract>
       <t> 
         This document proposes a YANG module for the configuration and monitoring of the BGP Monitoring Protocol (BMP).
-        A complementary RPC triggers a refresh of the session of a BMP monitoring station.
       </t>
     </abstract>
   </front>
@@ -86,17 +85,19 @@
        <t>
               This document specifies a YANG module for configuring and
            monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/>.  The model
-           provides parameters for defining the session to BMP monitoring stations; the
+           provides parameters for configuring the session to BMP monitoring stations; the
            selection of the BGP Routing Information Bases (RIBs) for Route Monitoring Messages; provides
            operational metrics and enables resetting of BMP monitoring sessions.
        </t> 
+
+       <t>The model is included in <xref target="model-content"/>. In this
+           section, we provide details and examples of each of its parts.</t>
 
        <t>The BMP yang model is placed at the root of the YANG tree.  At its
            upper level, the BMP model lists each monitoring station. Every
            monitoring station is identified by an ID, which is a string
            provided by the operator.</t>
 
-       <t>We describe the configuration of the monitoring station in the next sections.</t>
 
     <section title="IP Connectivity" anchor="ip_connectivitu">
         <t> BMP allows for active and passive
@@ -123,7 +124,7 @@
           <name>Active connection example</name>
           <sourcecode><![CDATA[
 !
-bmp monitoring-stations monitoring-station 1 session-stats discontinuity-time 2015-06-19T16:01:27.384-07:00
+bmp monitoring-stations monitoring-station monitor_station_one 
  connection active station-address 192.0.2.1
  connection active station-port 57992
  connection active local-address 192.0.2.2
@@ -152,7 +153,7 @@ bmp monitoring-stations monitoring-station 1 session-stats discontinuity-time 20
 !
 network-instances network-instance test
 !
-bmp monitoring-stations monitoring-station 2 session-stats discontinuity-time 2015-06-19T16:01:27.384-07:00
+bmp monitoring-stations monitoring-station monitoring_station_two 
  connection passive network-instance test
  connection passive station-address 192.0.2.1
  connection passive local-address 192.0.2.2
@@ -183,13 +184,13 @@ bmp monitoring-stations monitoring-station 2 session-stats discontinuity-time 20
           <name>Example of configuring basic TCP parameters</name>
             <sourcecode><![CDATA[
 !
-bmp monitoring-stations monitoring-station 1
+bmp monitoring-stations monitoring-station monitoring_station_one
  connection keepalives idle-time 15
  connection keepalives max-probes 3
  connection keepalives probe-interval 30
 !
 
-bmp monitoring-stations monitoring-station 1
+bmp monitoring-stations monitoring-station monitoring_station_one
  connection maximum-segment-size 1500
  connection mtu-discovery true
 !
@@ -228,7 +229,7 @@ key-chains key-chain bmp-key-chain
  !
 !
 
-bmp monitoring-stations monitoring-station 1
+bmp monitoring-stations monitoring-station monitoring_station_one
  connection tcp-options secure-session-enable true
  connection tcp-options secure-session ao-keychain bmp-key-chain
 !
@@ -257,7 +258,7 @@ key-chains key-chain bmp-key-chain
           <name>Example of the initial-delay and simple exponential backoff.</name>
             <sourcecode><![CDATA[
 !
-bmp monitoring-stations monitoring-station 1
+bmp monitoring-stations monitoring-station monitoring_station_one
  connection initial-delay 10
  connection backoff simple-exponential initial-backoff 50
  connection backoff simple-exponential maximum-backoff 600
@@ -286,7 +287,7 @@ bmp monitoring-stations monitoring-station 1
           <name>Example of configuration of initiation-message and statistics report interval.</name>
             <sourcecode><![CDATA[
 !
-bmp monitoring-stations monitoring-station 1
+bmp monitoring-stations monitoring-station monitoring_station_one
  bmp-data initiation-message "I am a BMP device supporting the BMP yang module"
  bmp-data bmp-statistics-report statistics-interval 600
 !
@@ -325,13 +326,13 @@ bmp monitoring-stations monitoring-station 1
 
       <t>We'll offer an introduction to these hierarchies before going over them with detail.</t>
 
-      <t>The RIB types (e.g. Adj-RIB-IN, etc/OUT and local RIB) and Address families the number of types is low, and their configuration should not change frequently. Therefore, they are configured explicitly in the model. That is, the model does not provide a way of providing a default configuration for these or configuring them in groups.</t>
+      <t>The number of RIB types (e.g. Adj-RIB-IN, etc/OUT and local RIB) and Address families is low, and their configuration should not change frequently. Therefore, they are configured explicitly in the model. That is, the model does not provide a way of providing a default configuration for these or configuring them in groups.</t>
 
       <t>On the other hand, Network instances and peers require greater flexibility.</t>
 
       <t>For network instances, the model should configure not only the "global" network instance (the main one configured under the /ietf-routing:routing), but also other network instances configured under the /ietf-network-instance:network-instances/. Also, network instances can change frequently in networks with customer connecting to Virtual Private Networks. To not force operators to change configuration at every change, the model provides methods for  defining a "default" configuration for network instances. However, to provide control over the configuration, each network instance can be configured independently, if needed.</t>
 
-      <t>A situation is similar with peers. The model includes a way of configuring a default for all peers for simple cases, but one can provide configuration for type of peers or each peer individually. </t>
+      <t>A situation is similar with peers for the Adj-RIB-IN and Adj-RIB-OUT RIBs. The model includes a way of configuring a default for all peers for simple cases, but one can provide configuration for type of peers or each peer individually. </t>
 
       <t>We summarize the requirements stated on the previous two paragraphs next:</t>
 
@@ -390,7 +391,7 @@ network-instances network-instance network-instance-one
 !
 network-instances network-instance network-instance-two
 !
-bmp monitoring-stations monitoring-station 1
+bmp monitoring-stations monitoring-station monitoring_station_one
  bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
   < Configuration A >
  !
@@ -424,7 +425,7 @@ bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-al
 
         <t>The example in <xref target="simple_ni_configuration"/> shows a "simple" configuration. In this case, all network instances would get "Configuration D". Note that `bmp-ni-types-all-ni` would also cover the global instance.</t>
 
-        <t>Another simple configuration in simple cases would just involve configuring the global network instance. In this case, information of non-global network instances would not be sent to the monitoring station. This is depicted in <xref target='simple_gni_configuration'/></t>
+        <t>Another simple configuration would just involve configuring the global network instance. In this case, information of non-global network instances would not be sent to the monitoring station. This is depicted in <xref target='simple_gni_configuration'/></t>
 
         <t>
           <figure  anchor='simple_gni_configuration'>
@@ -461,7 +462,7 @@ bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-al
           <name>Example of configuring RIBs and address families.</name>
             <sourcecode><![CDATA[
 !
-bmp monitoring-stations monitoring-station 1
+bmp monitoring-stations monitoring-station monitoring_station_one
  bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
   adj-rib-in-pre address-families address-family ipv6-unicast
    < Configuration F >
@@ -509,7 +510,7 @@ bmp monitoring-stations monitoring-station 1
       </t>
 
 
-      <t>If an operator only wants to configure the IPv4/IPv6 of adj-rib-pre-in for the global instance,  the configuration in <xref target='example_rib_af_one'/> will be enough.</t>
+      <t>If an operator only wants to configure the IPv4/IPv6 of adj-rib-pre-in for the global instance,  the configuration in <xref target='example_rib_af_two'/> will be enough. We note again that even if the configuration of both address families is the same, they must be explicitly configured for each of them.</t>
 
         <t>
         <figure anchor='example_rib_af_two'>
@@ -679,7 +680,7 @@ bmp monitoring-stations monitoring-station 1
     <!-- End of Model description -->
 
 
-    <section title="Base ietf-bmp YANG module">
+    <section title="Base ietf-bmp YANG module" anchor="model-content">
       <section title="Tree View" anchor="ietf-bmp-tree-view">
         <t>
         The following tree diagram provides an overview of the ietf-bmp.yang

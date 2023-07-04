@@ -5,11 +5,11 @@
 GROW                                                          C. Cardona
 Internet-Draft                                                P. Lucente
 Intended status: Standards Track                                     NTT
-Expires: 23 December 2023                                        T. Graf
+Expires: 5 January 2024                                          T. Graf
                                                                 Swisscom
                                                                B. Claise
                                                                   Huawei
-                                                            21 June 2023
+                                                             4 July 2023
 
 
                             BMP YANG Module
@@ -18,8 +18,7 @@ Expires: 23 December 2023                                        T. Graf
 Abstract
 
    This document proposes a YANG module for the configuration and
-   monitoring of the BGP Monitoring Protocol (BMP).  A complementary RPC
-   triggers a refresh of the session of a BMP monitoring station.
+   monitoring of the BGP Monitoring Protocol (BMP).
 
 Status of This Memo
 
@@ -36,27 +35,12 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 December 2023.
+   This Internet-Draft will expire on 5 January 2024.
 
 Copyright Notice
 
    Copyright (c) 2023 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
-
-
-
-
-
-
-
-
-
-
-
-Cardona, et al.         Expires 23 December 2023                [Page 1]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents (https://trustee.ietf.org/
@@ -67,9 +51,16 @@ Internet-Draft               BMP YANG Module                   June 2023
    described in Section 4.e of the Trust Legal Provisions and are
    provided without warranty as described in the Revised BSD License.
 
+
+
+Cardona, et al.          Expires 5 January 2024                 [Page 1]
+
+Internet-Draft               BMP YANG Module                   July 2023
+
+
 Table of Contents
 
-   1.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   1.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Model description . . . . . . . . . . . . . . . . . . . . . .   3
      2.1.  IP Connectivity . . . . . . . . . . . . . . . . . . . . .   3
        2.1.1.  Active connection . . . . . . . . . . . . . . . . . .   3
@@ -102,18 +93,6 @@ Table of Contents
    Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  22
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
-
-
-
-
-
-
-
-Cardona, et al.         Expires 23 December 2023                [Page 2]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
 1.  Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -125,22 +104,32 @@ Internet-Draft               BMP YANG Module                   June 2023
    Routing Information Bases, peers, monitoring stations, and initiation
    messages are defined in [RFC7854].
 
+
+
+
+
+
+Cardona, et al.          Expires 5 January 2024                 [Page 2]
+
+Internet-Draft               BMP YANG Module                   July 2023
+
+
 2.  Model description
 
    This document specifies a YANG module for configuring and monitoring
    the BGP Monitoring Protocol (BMP) [RFC7854].  The model provides
-   parameters for defining the session to BMP monitoring stations; the
-   selection of the BGP Routing Information Bases (RIBs) for Route
+   parameters for configuring the session to BMP monitoring stations;
+   the selection of the BGP Routing Information Bases (RIBs) for Route
    Monitoring Messages; provides operational metrics and enables
    resetting of BMP monitoring sessions.
+
+   The model is included in Section 3.  In this section, we provide
+   details and examples of each of its parts.
 
    The BMP yang model is placed at the root of the YANG tree.  At its
    upper level, the BMP model lists each monitoring station.  Every
    monitoring station is identified by an ID, which is a string provided
    by the operator.
-
-   We describe the configuration of the monitoring station in the next
-   sections.
 
 2.1.  IP Connectivity
 
@@ -163,21 +152,23 @@ Internet-Draft               BMP YANG Module                   June 2023
    instead of the global one, this one must also be specified.  An
    example of configuration is included in Figure 1.
 
-
-
-Cardona, et al.         Expires 23 December 2023                [Page 3]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
    !
-   bmp monitoring-stations monitoring-station 1 session-stats discontinuity-time 2015-06-19T16:01:27.384-07:00
+   bmp monitoring-stations monitoring-station monitor_station_one
     connection active station-address 192.0.2.1
     connection active station-port 57992
     connection active local-address 192.0.2.2
    !
 
                     Figure 1: Active connection example
+
+
+
+
+
+Cardona, et al.          Expires 5 January 2024                 [Page 3]
+
+Internet-Draft               BMP YANG Module                   July 2023
+
 
    Note in the example from Figure 1 that there is no network instance
    defined, so the connection is using the global network instance.
@@ -197,7 +188,7 @@ Internet-Draft               BMP YANG Module                   June 2023
    !
    network-instances network-instance test
    !
-   bmp monitoring-stations monitoring-station 2 session-stats discontinuity-time 2015-06-19T16:01:27.384-07:00
+   bmp monitoring-stations monitoring-station monitoring_station_two
     connection passive network-instance test
     connection passive station-address 192.0.2.1
     connection passive local-address 192.0.2.2
@@ -218,14 +209,6 @@ Internet-Draft               BMP YANG Module                   June 2023
       configuration of these parameters, the device must have the
       feature "tcp-client-keepalives" enabled.  See also Section 3.8.4
       of [RFC9293]
-
-
-
-Cardona, et al.         Expires 23 December 2023                [Page 4]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
    *  The maximum segment of the TCP connection.  See Section 3.7.1 of
       [RFC9293].
    *  Enabling MTU discovery for the path.  See Section 3.7.2 of
@@ -234,17 +217,26 @@ Internet-Draft               BMP YANG Module                   June 2023
       and MD5.  This part of the model was taken from the BGP yang model
       [I-D.ietf-idr-bgp-model].
 
+
+
+
+
+Cardona, et al.          Expires 5 January 2024                 [Page 4]
+
+Internet-Draft               BMP YANG Module                   July 2023
+
+
    Figures 3 and 4 include examples configuring the previous TCP
    parameters in the model.
 
    !
-   bmp monitoring-stations monitoring-station 1
+   bmp monitoring-stations monitoring-station monitoring_station_one
     connection keepalives idle-time 15
     connection keepalives max-probes 3
     connection keepalives probe-interval 30
    !
 
-   bmp monitoring-stations monitoring-station 1
+   bmp monitoring-stations monitoring-station monitoring_station_one
     connection maximum-segment-size 1500
     connection mtu-discovery true
    !
@@ -277,9 +269,17 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023                [Page 5]
+
+
+
+
+
+
+
+
+Cardona, et al.          Expires 5 January 2024                 [Page 5]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
    !
@@ -308,7 +308,7 @@ Internet-Draft               BMP YANG Module                   June 2023
     !
    !
 
-   bmp monitoring-stations monitoring-station 1
+   bmp monitoring-stations monitoring-station monitoring_station_one
     connection tcp-options secure-session-enable true
     connection tcp-options secure-session ao-keychain bmp-key-chain
    !
@@ -333,9 +333,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023                [Page 6]
+Cardona, et al.          Expires 5 January 2024                 [Page 6]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
    In the example in Figure 5, we configure an initial-delay of 10.
@@ -343,7 +343,7 @@ Internet-Draft               BMP YANG Module                   June 2023
    backoff.
 
    !
-   bmp monitoring-stations monitoring-station 1
+   bmp monitoring-stations monitoring-station monitoring_station_one
     connection initial-delay 10
     connection backoff simple-exponential initial-backoff 50
     connection backoff simple-exponential maximum-backoff 600
@@ -377,7 +377,7 @@ Internet-Draft               BMP YANG Module                   June 2023
    Figure 6
 
    !
-   bmp monitoring-stations monitoring-station 1
+   bmp monitoring-stations monitoring-station monitoring_station_one
     bmp-data initiation-message "I am a BMP device supporting the BMP yang module"
     bmp-data bmp-statistics-report statistics-interval 600
    !
@@ -389,9 +389,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023                [Page 7]
+Cardona, et al.          Expires 5 January 2024                 [Page 7]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
 2.4.1.  BMP route monitoring
@@ -445,16 +445,16 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023                [Page 8]
+Cardona, et al.          Expires 5 January 2024                 [Page 8]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
-   The RIB types (e.g.  Adj-RIB-IN, etc/OUT and local RIB) and Address
-   families the number of types is low, and their configuration should
-   not change frequently.  Therefore, they are configured explicitly in
-   the model.  That is, the model does not provide a way of providing a
-   default configuration for these or configuring them in groups.
+   The number of RIB types (e.g.  Adj-RIB-IN, etc/OUT and local RIB) and
+   Address families is low, and their configuration should not change
+   frequently.  Therefore, they are configured explicitly in the model.
+   That is, the model does not provide a way of providing a default
+   configuration for these or configuring them in groups.
 
    On the other hand, Network instances and peers require greater
    flexibility.
@@ -470,9 +470,10 @@ Internet-Draft               BMP YANG Module                   June 2023
    to provide control over the configuration, each network instance can
    be configured independently, if needed.
 
-   A situation is similar with peers.  The model includes a way of
-   configuring a default for all peers for simple cases, but one can
-   provide configuration for type of peers or each peer individually.
+   A situation is similar with peers for the Adj-RIB-IN and Adj-RIB-OUT
+   RIBs.  The model includes a way of configuring a default for all
+   peers for simple cases, but one can provide configuration for type of
+   peers or each peer individually.
 
    We summarize the requirements stated on the previous two paragraphs
    next:
@@ -500,10 +501,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-
-Cardona, et al.         Expires 23 December 2023                [Page 9]
+Cardona, et al.          Expires 5 January 2024                 [Page 9]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
    To further control the route monitoring data, the peer/peer-type
@@ -557,9 +557,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023               [Page 10]
+Cardona, et al.          Expires 5 January 2024                [Page 10]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
    !
@@ -567,7 +567,7 @@ Internet-Draft               BMP YANG Module                   June 2023
    !
    network-instances network-instance network-instance-two
    !
-   bmp monitoring-stations monitoring-station 1
+   bmp monitoring-stations monitoring-station monitoring_station_one
     bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
      < Configuration A >
     !
@@ -602,10 +602,10 @@ Internet-Draft               BMP YANG Module                   June 2023
    case, all network instances would get "Configuration D".  Note that
    `bmp-ni-types-all-ni` would also cover the global instance.
 
-   Another simple configuration in simple cases would just involve
-   configuring the global network instance.  In this case, information
-   of non-global network instances would not be sent to the monitoring
-   station.  This is depicted in Figure 9
+   Another simple configuration would just involve configuring the
+   global network instance.  In this case, information of non-global
+   network instances would not be sent to the monitoring station.  This
+   is depicted in Figure 9
 
 
 
@@ -613,9 +613,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023               [Page 11]
+Cardona, et al.          Expires 5 January 2024                [Page 11]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
    !
@@ -669,13 +669,13 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023               [Page 12]
+Cardona, et al.          Expires 5 January 2024                [Page 12]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
    !
-   bmp monitoring-stations monitoring-station 1
+   bmp monitoring-stations monitoring-station monitoring_station_one
     bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
      adj-rib-in-pre address-families address-family ipv6-unicast
       < Configuration F >
@@ -725,9 +725,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023               [Page 13]
+Cardona, et al.          Expires 5 January 2024                [Page 13]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
    *  Network instance "network-instance-two" has adj-rib-out-post
@@ -738,8 +738,10 @@ Internet-Draft               BMP YANG Module                   June 2023
       bmp-ni-types-all-ni
 
    If an operator only wants to configure the IPv4/IPv6 of adj-rib-pre-
-   in for the global instance, the configuration in Figure 10 will be
-   enough.
+   in for the global instance, the configuration in Figure 11 will be
+   enough.  We note again that even if the configuration of both address
+   families is the same, they must be explicitly configured for each of
+   them.
 
    !
     bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-global-ni
@@ -775,17 +777,17 @@ Internet-Draft               BMP YANG Module                   June 2023
    the peers list.  For the included keys in the BMP model, the process
    to select which instance to use is the next:
 
+
+
+
+
+Cardona, et al.          Expires 5 January 2024                [Page 14]
+
+Internet-Draft               BMP YANG Module                   July 2023
+
+
    *  If there is a peer address matching the peer, it should be
       configured using that instance.
-
-
-
-
-Cardona, et al.         Expires 23 December 2023               [Page 14]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
-
    *  If the peer is of any BGP type listed in the peer list, it should
       be configured using this instance.
    *  If there is a peer instance identified with the `bmp-peer-types-
@@ -829,18 +831,21 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 2.4.1.6.  Full examples of Route monitoring configurations
 
+
+
+
+
+
+
+Cardona, et al.          Expires 5 January 2024                [Page 15]
+
+Internet-Draft               BMP YANG Module                   July 2023
+
+
 2.4.1.6.1.  Example one
 
    In this example, address families IPv6 and IPv4 are configured to
    send all peers.  This is an example of a simple configuration
-
-
-
-
-Cardona, et al.         Expires 23 December 2023               [Page 15]
-
-Internet-Draft               BMP YANG Module                   June 2023
-
 
    !
     bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
@@ -888,14 +893,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-
-
-
-
-
-Cardona, et al.         Expires 23 December 2023               [Page 16]
+Cardona, et al.          Expires 5 January 2024                [Page 16]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
 2.4.1.6.3.  Example three
@@ -949,9 +949,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023               [Page 17]
+Cardona, et al.          Expires 5 January 2024                [Page 17]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
 3.2.  YANG Module
@@ -1005,9 +1005,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023               [Page 18]
+Cardona, et al.          Expires 5 January 2024                [Page 18]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
       Name: ietf-bmp
@@ -1061,9 +1061,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023               [Page 19]
+Cardona, et al.          Expires 5 January 2024                [Page 19]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
    [RFC6242]  Wasserman, M., "Using the NETCONF Protocol over Secure
@@ -1117,9 +1117,9 @@ Internet-Draft               BMP YANG Module                   June 2023
 
 
 
-Cardona, et al.         Expires 23 December 2023               [Page 20]
+Cardona, et al.          Expires 5 January 2024                [Page 20]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
    [RFC8671]  Evens, T., Bayraktar, S., Lucente, P., Mi, P., and S.
@@ -1173,9 +1173,9 @@ A.2.  Example two
 
 
 
-Cardona, et al.         Expires 23 December 2023               [Page 21]
+Cardona, et al.          Expires 5 January 2024                [Page 21]
 
-Internet-Draft               BMP YANG Module                   June 2023
+Internet-Draft               BMP YANG Module                   July 2023
 
 
    INSERT_TEXT_FROM_FILE(example_two.xml)
@@ -1229,4 +1229,4 @@ Authors' Addresses
 
 
 
-Cardona, et al.         Expires 23 December 2023               [Page 22]
+Cardona, et al.          Expires 5 January 2024                [Page 22]
