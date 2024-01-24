@@ -1,0 +1,18 @@
+!
+network-instances network-instance network-instance-one
+!
+network-instances network-instance network-instance-two
+!
+bmp monitoring-stations monitoring-station monitoring_station_one
+ bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
+  < Configuration A >
+ !
+ bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-global-ni
+  < Configuration B >
+ !
+ bmp-data bmp-route-monitoring network-instances network-instance network-instance-one
+  enabled false
+ !
+ bmp-data bmp-route-monitoring network-instances network-instance network-instance-two
+  < Configuration C >
+ !

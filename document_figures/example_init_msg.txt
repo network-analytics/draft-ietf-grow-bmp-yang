@@ -1,0 +1,5 @@
+!
+bmp monitoring-stations monitoring-station monitoring_station_one
+ bmp-data initiation-message "BMP device supporting the BMP yang module"
+ bmp-data bmp-statistics-report statistics-interval 600
+!
