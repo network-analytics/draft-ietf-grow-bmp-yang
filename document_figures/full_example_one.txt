@@ -1,0 +1,11 @@
+!
+ bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
+  adj-rib-in-pre address-families address-family ipv6-unicast
+   peers peer bmp-peer-types-all-peers
+   !
+  !
+  adj-rib-in-pre address-families address-family ipv4-unicast
+   peers peer bmp-peer-types-all-peers
+   !
+  !
+ !

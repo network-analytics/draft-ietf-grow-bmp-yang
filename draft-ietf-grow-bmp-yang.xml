@@ -286,11 +286,7 @@ bmp monitoring-stations monitoring-station monitoring_station_one
           <figure anchor='example_init_msg'>
           <name>Example of configuration of initiation-message and statistics report interval.</name>
             <sourcecode><![CDATA[
-!
-bmp monitoring-stations monitoring-station monitoring_station_one
- bmp-data initiation-message "I am a BMP device supporting the BMP yang module"
- bmp-data bmp-statistics-report statistics-interval 600
-!
+INSERT_TEXT_FROM_FILE(document_figures/example_init_msg.txt)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -386,24 +382,7 @@ bmp monitoring-stations monitoring-station monitoring_station_one
           <figure anchor='example_netins_one'>
           <name>Examples of configuring the network instance level for Route Monitoring.</name>
             <sourcecode><![CDATA[
-!
-network-instances network-instance network-instance-one
-!
-network-instances network-instance network-instance-two
-!
-bmp monitoring-stations monitoring-station monitoring_station_one
- bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
-  < Configuration A >
- !
- bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-global-ni
-  < Configuration B >
- !
- bmp-data bmp-route-monitoring network-instances network-instance network-instance-one
-  enabled false
- !
- bmp-data bmp-route-monitoring network-instances network-instance network-instance-two
-  < Configuration C >
- !
+INSERT_TEXT_FROM_FILE(document_figures/example_netins_one.txt)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -415,10 +394,7 @@ bmp monitoring-stations monitoring-station monitoring_station_one
           <figure anchor='simple_ni_configuration'>
           <name>Example of configuring all network instances.</name>
             <sourcecode><![CDATA[
-!
-bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
- < Configuration D >
-!
+INSERT_TEXT_FROM_FILE(document_figures/simple_ni_configuration.txt)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -431,10 +407,7 @@ bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-al
           <figure  anchor='simple_gni_configuration'>
           <name>Example of configuring only the global network instance.</name>
             <sourcecode><![CDATA[
-!
- bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-global-ni
- < Configuration E >
- !
+INSERT_TEXT_FROM_FILE(document_figures/simple_gni_configuration.txt)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -461,39 +434,7 @@ bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-al
           <figure anchor='example_rib_af_one'>
           <name>Example of configuring RIBs and address families.</name>
             <sourcecode><![CDATA[
-!
-bmp monitoring-stations monitoring-station monitoring_station_one
- bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
-  adj-rib-in-pre address-families address-family ipv6-unicast
-   < Configuration F >
-  !
-  adj-rib-in-pre address-families address-family ipv4-unicast
-   < Configuration G >
-  !
- !
- bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-global-ni
-  adj-rib-in-pre address-families address-family ipv6-unicast
-   < Configuration H >
-  !
-  adj-rib-in-pre address-families address-family ipv4-unicast
-   < Configuration I >
-  !
-  adj-rib-in-post address-families address-family ipv6-unicast
-   < Configuration J >
-  !
-  adj-rib-in-post address-families address-family ipv4-unicast
-   < Configuration K >
-  !
- !
- bmp-data bmp-route-monitoring network-instances network-instance network-instance-one
-  disabled
- !
- bmp-data bmp-route-monitoring network-instances network-instance network-instance-two
-  adj-rib-out-post address-families address-family ipv4-unicast
-   < Configuration L >
-  !
- !
-!
+INSERT_TEXT_FROM_FILE(document_figures/example_rib_af_one.txt)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -516,15 +457,7 @@ bmp monitoring-stations monitoring-station monitoring_station_one
         <figure anchor='example_rib_af_two'>
           <name>Example of configuring RIBs and address families.</name>
           <sourcecode><![CDATA[
-!
- bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-global-ni
-  adj-rib-in-pre address-families address-family ipv6-unicast
-   < config for ipv6-unicast >
-  !
-  adj-rib-in-pre address-families address-family ipv4-unicast
-   < config for ipv4-unicast >
-  !
- !
+INSERT_TEXT_FROM_FILE(document_figures/example_rib_af_two.txt)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -580,22 +513,12 @@ bmp monitoring-stations monitoring-station monitoring_station_one
 
     <section title="Example one">
 
-    <t>In this example, address families IPv6 and IPv4 are configured to send all peers. This is an example of a simple configuration</t>
+    <t>In the example configuration from  <xref target='full_example_one'/>, address families IPv6 and IPv4 are configured to send all peers. This is an example of a simple configuration</t>
         <t>
-          <figure>
+          <figure anchor="full_example_one">
               <name>Enabling Route monitoring for all peers; all network instances; IPv4/IPv6 Address families,  in the adj-rib-in-pre RIB.</name>
             <sourcecode><![CDATA[
-!
- bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
-  adj-rib-in-pre address-families address-family ipv6-unicast
-   peers peer bmp-peer-types-all-peers
-   !
-  !
-  adj-rib-in-pre address-families address-family ipv4-unicast
-   peers peer bmp-peer-types-all-peers
-   !
-  !
- !
+INSERT_TEXT_FROM_FILE(document_figures/full_example_one.txt)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -603,26 +526,13 @@ bmp monitoring-stations monitoring-station monitoring_station_one
     </section>
     <section title="Example two">
 
-        <t>In this example, the global network instance enables the adj-rib-in-pre. In this RIB, the IPv4 unicast address family is configured for all external peers. We assume peer 198.51.100.1 is external, but its BGP configuration is not shown in the snippet.  Peer 198.51.100.1, however, has a specific configuration: it announces everything but prefixes matching the test_policy list. Note that there is a default accept-route default policy in the model.</t>
+        <t>In the example in <xref target='full_example_two'/>, the global network instance enables the adj-rib-in-pre. In this RIB, the IPv4 unicast address family is configured for all external peers. We assume peer 198.51.100.1 is external, but its BGP configuration is not shown in the snippet.  Peer 198.51.100.1, however, has a specific configuration: it announces everything but prefixes matching the test_policy list. Note that there is a default accept-route default policy in the model.</t>
 
         <t>
-          <figure>
+          <figure anchor="full_example_two">
             <name>Configuring address families differently for the global network instance</name>
             <sourcecode><![CDATA[
-!
- bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-global-ni
-  adj-rib-in-pre 
-  adj-rib-in-pre address-families address-family ipv6-unicast
-   peers peer bmp-peer-types-all-peers
-   !
-  !
-  adj-rib-in-pre address-families address-family ipv4-unicast
-   peers peer 198.51.100.1
-    filters policy-filter export-policy [ test_policy ]
-   !
-   peers peer external
-   !
-  !
+INSERT_TEXT_FROM_FILE(document_figures/full_example_two.txt)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -631,31 +541,13 @@ bmp monitoring-stations monitoring-station monitoring_station_one
     </section>
     <section title="Example three">
 
-        <t>In this example, all network instances have adj-rib-in-pre with  IPv6  and IPv4  configured receiving all peers. network-instance-one is disabled, and network-instance-two is announcing only the local-rib/IPv4 unicast routes.</t>
+        <t>In the example from <xref target="full_example_three"/>, all network instances have adj-rib-in-pre with  IPv6  and IPv4  configured receiving all peers. network-instance-one is disabled, and network-instance-two is announcing only the local-rib/IPv4 unicast routes.</t>
 
         <t>
-          <figure>
+          <figure anchor="full_example_three">
             <name>Applying a general configuration to all network instances, except of two, which are configured specifically.</name>
             <sourcecode><![CDATA[
-!
- bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
-  adj-rib-in-pre address-families address-family ipv6-unicast
-   peers peer bmp-peer-types-all-peers
-   !
-  !
-  adj-rib-in-pre address-families address-family ipv4-unicast
-   peers peer bmp-peer-types-all-peers
-   !
-  !
- !
- bmp-data bmp-route-monitoring network-instances network-instance network-instance-one
-  disabled
- !
- bmp-data bmp-route-monitoring network-instances network-instance network-instance-two
-  local-rib address-families address-family ipv4-unicast
-  !
- !
-!
+INSERT_TEXT_FROM_FILE(document_figures/full_example_three.txt)
            ]]></sourcecode>
           </figure>
         </t> 

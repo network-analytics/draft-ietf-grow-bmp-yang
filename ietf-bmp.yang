@@ -4,53 +4,45 @@ module ietf-bmp {
   prefix bmp;
 
   import ietf-yang-types {
-     prefix yang;
-   }
-
+    prefix yang;
+  }
   import ietf-inet-types {
     prefix inet;
     reference
       "RFC 6991: Common YANG Data Types";
   }
-
   import ietf-bgp-types {
     prefix bt;
     reference
       "RFC AAAA: BGP YANG module for Service Provider Network.
-       RFC-EDITOR: please update XXX with the RFC ID assigned 
+       RFC-EDITOR: please update XXX with the RFC ID assigned
        to I-D.ietf-idr-bgp-model";
   }
-
   import ietf-netconf-acm {
     prefix nacm;
     reference
       "RFC 8341: Network Configuration Access Control Model";
   }
-
   import ietf-tcp-common {
-    prefix "tcpcmn";
+    prefix tcpcmn;
     reference
       "I-D.ietf-netconf-tcp-client-server: YANG Groupings for TCP
        Clients and TCP Servers.";
   }
-
   import ietf-network-instance {
-    prefix "ni";
+    prefix ni;
     reference
-    "RFC 8529: YANG Data Model for Network Instances";
+      "RFC 8529: YANG Data Model for Network Instances";
   }
-
   import ietf-routing-policy {
-    prefix "rt-pol";
+    prefix rt-pol;
     reference
-    "RFC 9067: A YANG Data Model for Routing Policy";
-
+      "RFC 9067: A YANG Data Model for Routing Policy";
   }
-
   import ietf-key-chain {
-       prefix key-chain;
-       reference
-         "RFC 8177: YANG Key Chain.";
+    prefix key-chain;
+    reference
+      "RFC 8177: YANG Key Chain.";
   }
 
   organization
@@ -100,114 +92,110 @@ module ietf-bmp {
       "initial version";
     reference
       "RFC YYYY: BMP YANG Module
-      RFC-EDITOR: please update YYYY with this RFC ID";
+       RFC-EDITOR: please update YYYY with this RFC ID";
   }
 
   identity bmp-peer-types {
-    description 
-    "Enum values for multiple selecting peer's 
-    Routing Information Bases (RIB) for configuration.";
+    description
+      "Enum values for multiple selecting peer's
+       Routing Information Bases (RIB) for configuration.";
   }
-  
+
   identity bmp-peer-types-all-peers {
     base bmp-peer-types;
-    description 
-    "This identity selects all peer's RIBs. 
-    When used, it act as a 'default' configuration."; 
+    description
+      "This identity selects all peer's RIBs.
+       When used, it act as a 'default' configuration.";
   }
 
   identity bmp-ni-types {
-    description "Enum values for selecting multiple Network instances
-    for configuration";
+    description
+      "Enum values for selecting multiple Network instances
+       for configuration";
   }
-  
+
   identity bmp-ni-types-all-ni {
     base bmp-ni-types;
-    description "The identify is an explicit way 
-      of selecting all network instances."; 
+    description
+      "The identify is an explicit way
+       of selecting all network instances.";
   }
 
   identity bmp-ni-types-global-ni {
     base bmp-ni-types;
-    description "Selects the global network instance"; 
+    description
+      "Selects the global network instance";
   }
 
   grouping bmp-tcp-options {
-    description 
+    description
       "TCP options for the connection to the station";
     leaf maximum-segment-size {
       type uint16;
       description
         "Maximum segment size for the TCP connections.";
     }
-
     // Taken from the bgp yang module
     leaf mtu-discovery {
-        type boolean;
-        description
-          "Turns path mtu discovery for the  TCP sessions 
-          on (true) or off (false).";
-        reference
-          "RFC 1191: Path MTU discovery.";
-      }
+      type boolean;
+      description
+        "Turns path mtu discovery for the  TCP sessions
+         on (true) or off (false).";
+      reference
+        "RFC 1191: Path MTU discovery.";
+    }
     uses tcpcmn:tcp-common-grouping;
-
     // taken from the bgp yang module
     leaf secure-session-enable {
-       type boolean;
-       default "false";
-       description
-         "Does this session need to be secured?";
+      type boolean;
+      default "false";
+      description
+        "Does this session need to be secured?";
     }
-
-   container secure-session {
-     when "../secure-session-enable = 'true'";
-     description
-       "Container for describing how a particular BMP session
-        is to be secured.";
-
+    container secure-session {
+      when "../secure-session-enable = 'true'";
+      description
+        "Container for describing how a particular BMP session
+         is to be secured.";
       choice authentication {
-       case ao {
-         leaf ao-keychain {
-           type key-chain:key-chain-ref;
-           description
-             "Reference to the key chain that will be used by
-              this model. Applicable for TCP-AO and TCP-MD5
-              only";
-           reference
-             "RFC 8177: YANG Key Chain.";
-         }
-         description
-           "Uses TCP-AO to secure the session. Parameters for
-            those are defined as a grouping in the TCP YANG
-            model.";
-         reference
-           "RFC 5925 - The TCP Authentication Option.";
+        case ao {
+          leaf ao-keychain {
+            type key-chain:key-chain-ref;
+            description
+              "Reference to the key chain that will be used by
+               this model. Applicable for TCP-AO and TCP-MD5
+               only";
+            reference
+              "RFC 8177: YANG Key Chain.";
+          }
+          description
+            "Uses TCP-AO to secure the session. Parameters for
+             those are defined as a grouping in the TCP YANG
+             model.";
+          reference
+            "RFC 5925 - The TCP Authentication Option.";
+        }
+        case md5 {
+          leaf md5-keychain {
+            type key-chain:key-chain-ref;
+            description
+              "Reference to the key chain that will be used by
+               this model. Applicable for TCP-AO and TCP-MD5
+               only";
+            reference
+              "RFC 8177: YANG Key Chain.";
+          }
+          description
+            "Uses TCP-MD5 to secure the session. Parameters for
+             those are defined as a grouping in the TCP YANG
+             model.";
+          reference
+            "RFC 5925: The TCP Authentication Option.";
+        }
+        description
+          "Choice of TCP authentication.";
       }
-
-       case md5 {
-         leaf md5-keychain {
-           type key-chain:key-chain-ref;
-           description
-             "Reference to the key chain that will be used by
-              this model. Applicable for TCP-AO and TCP-MD5
-              only";
-           reference
-             "RFC 8177: YANG Key Chain.";
-         }
-         description
-           "Uses TCP-MD5 to secure the session. Parameters for
-            those are defined as a grouping in the TCP YANG
-            model.";
-         reference
-           "RFC 5925: The TCP Authentication Option.";
-       }
-       description
-         "Choice of TCP authentication.";
-      }
-   }
-
-
+    }
   }
 
   grouping bmp-ip-connection {
@@ -217,24 +205,25 @@ module ietf-bmp {
     choice passive-or-active {
       description
         "Choice for active or passive connection as described
-        in section 3.2 of RFC 7854";
+         in section 3.2 of RFC 7854";
       case active {
         description
-          "The device starts the connection to the monitoring 
-          station";
+          "The device starts the connection to the monitoring
+           station";
         container active {
           description
-            "The device starts the connection to 
-            the monitoring station";
+            "The device starts the connection to
+             the monitoring station";
           leaf network-instance {
             type leafref {
               path "/ni:network-instances/ni:network-instance/"
                  + "ni:name";
             }
-            description 
-              "If present, specifies the network instance 
-              used to reach the monitoring station.
-              If not provided, the global network instance is used.";
+            description
+              "If present, specifies the network instance
+               used to reach the monitoring station.
+               If not provided, the global network
+               instance is used.";
           }
           leaf station-address {
             type inet:ip-address;
@@ -259,28 +248,26 @@ module ietf-bmp {
             description
               "Optional Local port for active connection";
           }
-
         }
-
       }
-
       case passive {
         description
-          "The device waits for the connection 
-          in a local endpoint";
+          "The device waits for the connection
+           in a local endpoint";
         container passive {
           description
-            "The device waits for the connection 
-            in a local endpoint";
+            "The device waits for the connection
+             in a local endpoint";
           leaf network-instance {
             type leafref {
               path "/ni:network-instances/ni:network-instance/"
                  + "ni:name";
             }
-            description 
-              "If present, specifies the network instance 
-              used to reach the monitoring station.
-              If not provided, the global network instance is used.";
+            description
+              "If present, specifies the network instance
+               used to reach the monitoring station.
+               If not provided, the global network
+               instance is used.";
           }
           leaf station-address {
             type inet:ip-address;
@@ -291,8 +278,8 @@ module ietf-bmp {
           leaf station-port {
             type inet:port-number;
             description
-              "Optional value identifying the origin port of 
-              the connection, if provided it MUST match";
+              "Optional value identifying the origin port of
+               the connection, if provided it MUST match";
           }
           leaf local-address {
             type inet:ip-address;
@@ -306,50 +293,47 @@ module ietf-bmp {
             description
               "Local port to wait for the connection";
           }
-
         }
-
       }
     }
   }
 
   grouping bmp-source-configuration {
     description
-    "Group containing some general characteristics for configuring
-    a BMP source";
-
+      "Group containing some general characteristics for configuring
+       a BMP source";
     container filters {
-      description 
-      "Includes containers specifying filters for deciding 
-      which routes to export to the station";
+      description
+        "Includes containers specifying filters for deciding
+         which routes to export to the station";
       container policy-filter {
-          description
+        description
           "Filter routes based on a policy.
-          The policy SHOULD not perform any action besides
-          filtering routes.
-          The policy SHOULD only contain accept and reject 
-          routes, and the matching conditions SHOULD only 
-          match prefix sets.";
-          leaf-list export-policy {
-           type leafref {
-             path "/rt-pol:routing-policy/"
-                + "rt-pol:policy-definitions/"
-                + "rt-pol:policy-definition/rt-pol:name";
-             require-instance true;
-           }
-           ordered-by user;
-           description
-              "List of policy names in sequence used to select
-              routes to be exported to station.";
-         }
-         leaf default-export-policy {
-           type rt-pol:default-policy-type;
-           default "accept-route";
-           description
-             "Explicitly set a default policy if no policy 
-             definition in the export policy chain 
+           The policy SHOULD NOT perform any action besides
+           filtering routes.
+           The policy SHOULD only contain accept and reject
+           routes, and the matching conditions SHOULD only
+           match prefix sets.";
+        leaf-list export-policy {
+          type leafref {
+            path "/rt-pol:routing-policy/"
+               + "rt-pol:policy-definitions/"
+               + "rt-pol:policy-definition/rt-pol:name";
+            require-instance true;
+          }
+          ordered-by user;
+          description
+            "List of policy names in sequence used to select
+             routes to be exported to station.";
+        }
+        leaf default-export-policy {
+          type rt-pol:default-policy-type;
+          default "accept-route";
+          description
+            "Explicitly set a default policy if no policy
+             definition in the export policy chain
              is satisfied.";
-         }
+        }
       }
     }
   }
@@ -358,7 +342,6 @@ module ietf-bmp {
     description
       "Leaves for configuring RIBs where
        origin/destination peers are defined.";
-
     container address-families {
       description
         "container for lists of address-families";
@@ -368,7 +351,6 @@ module ietf-bmp {
           "List of address families.
            The name of the address family, as defined
            in the BGP model is used for keying.";
-
         // If we knew the network instance,
         // we could list the AF directly from the configured
         // ones, as we for instance show next for the global one.
@@ -389,26 +371,24 @@ module ietf-bmp {
             base bt:afi-safi-type;
           }
           description
-          "Address family id to configure";
+            "Address family id to configure";
         }
-
         leaf enabled {
           type boolean;
-          default true;
+          default "true";
           description
-            "Enables route monitoring messages 
-            for the address family";
+            "Enables route monitoring messages
+             for the address family";
         }
-
         container peers {
           description
-          "Identification of peers 
-          for which we send BMP data to the collector";
+            "Identification of peers
+             for which we send BMP data to the collector";
           list peer {
             key "peer-id";
             description
-            "Identification of peers 
-            for which we send BMP data to the collector";
+              "Identification of peers
+               for which we send BMP data to the collector";
             leaf peer-id {
               type union {
                 // inet:ip-address reflects a neighbor
@@ -431,21 +411,19 @@ module ietf-bmp {
               description
                 "Peers can be identified by a remote-address,
                  by the bgp type of the peers,
-                 or by an enum value corresponding to groups 
-                 of peers.  This way an operator can 
-                 select, for example, all external peers, 
+                 or by an enum value corresponding to groups
+                 of peers.  This way an operator can
+                 select, for example, all external peers,
                  all internal peers, or all peers.";
             }
-
             leaf enabled {
               type boolean;
-              default true;
+              default "true";
               description
-                "Enables routing monitoring messages 
-                for the peer(s).";
+                "Enables routing monitoring messages
+                 for the peer(s).";
             }
             uses bmp-source-configuration;
-
           }
         }
       }
@@ -455,16 +433,15 @@ module ietf-bmp {
   grouping bmp-route-monitoring-sources {
     description
       "Route monitoring sources";
-    reference "RFC7854:  BGP Monitoring Protocol, Section 5.";
-
+    reference
+      "RFC7854:  BGP Monitoring Protocol, Section 5.";
     container network-instances {
       description
-      "container for lists of network-instances";
+        "container for lists of network-instances";
       list network-instance {
         key "network-instance-id";
         description
           "Network instance to monitory using BMP.";
-
         leaf network-instance-id {
           type union {
             type leafref {
@@ -475,45 +452,40 @@ module ietf-bmp {
               base bmp-ni-types;
             }
           }
-          description 
+          description
             "Identification of a network-instance.
-            Network instances can be identified
-            directly by their path or use an identity to 
-            identify one or a group of them 
-            (e.g. bmp-ni-types-all-ni for all of them)";
-            
+             Network instances can be identified
+             directly by their path or use an identity to
+             identify one or a group of them
+             (e.g. bmp-ni-types-all-ni for all of them)";
         }
-
-
         leaf enabled {
           type boolean;
-          default true;
+          default "true";
           description
-            "Enables routing monitoring 
-            messages for the network instance.";
+            "Enables routing monitoring
+             messages for the network instance.";
         }
-
         container adj-rib-in-pre {
           description
             "Configuration for the adj-rib-in pre-policy";
-          reference 
+          reference
             "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
           uses bmp-peer-ribs-filter;
         }
         container adj-rib-in-post {
           description
             "Configuration for the adj-rib-in post-policy";
-          reference 
+          reference
             "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
           uses bmp-peer-ribs-filter;
         }
         container local-rib {
           description
             "Configuration for the local-rib";
-          reference 
+          reference
             "RFC9069: Support for Local RIB in the BGP Monitoring
-            Protocol (BMP), Section 3.";
-
+             Protocol (BMP), Section 3.";
           container address-families {
             description
               "List of address families to enable for
@@ -521,13 +493,13 @@ module ietf-bmp {
             list address-family {
               key "address-family-id";
               description
-               "Address family to enable for local-rib";
+                "Address family to enable for local-rib";
               leaf address-family-id {
                 type identityref {
                   base bt:afi-safi-type;
                 }
                 description
-                "Address family id to enable for local-rib";
+                  "Address family id to enable for local-rib";
               }
               uses bmp-source-configuration;
             }
@@ -537,25 +509,21 @@ module ietf-bmp {
           description
             "Configuration for the adj-rib-out pre-policy";
           uses bmp-peer-ribs-filter;
-          reference 
+          reference
             "RFC8671: Support for Adj-RIB-Out in the BGP Monitoring
-            Protocol (BMP) , Section 3.";
+             Protocol (BMP) , Section 3.";
         }
         container adj-rib-out-post {
           description
             "Configuration for the adj-rib-out post-policy";
           uses bmp-peer-ribs-filter;
-          reference 
+          reference
             "RFC8671: Support for Adj-RIB-Out in the BGP Monitoring
-            Protocol (BMP) , Section 3.";
+             Protocol (BMP) , Section 3.";
         }
-
       }
-
     }
-
   }
-
 
   container bmp {
     description
@@ -578,52 +546,50 @@ module ietf-bmp {
           description
             "Connection details for the monitoring station";
           uses bmp-ip-connection;
-
           container tcp-options {
             description
-             "TCP options for the connection to the monitoring 
-             station";
+              "TCP options for the connection to the monitoring
+               station";
             uses bmp-tcp-options;
           }
-
           leaf initial-delay {
             type uint32;
             units "seconds";
-            default 0;
+            default "0";
             description
               "Initial delay of the connection to the station";
           }
-
-
           container backoff {
             description
-              "Configures the backoff strategy after a connection 
-              retry";
-            reference "RFC7854 Section 3.2";
+              "Configures the backoff strategy after a connection
+               retry";
+            reference
+              "RFC7854 Section 3.2";
             choice backoff-options {
               description
                 "Options for backoff strategies";
-              reference "RFC7854 Section 3.2";
+              reference
+                "RFC7854 Section 3.2";
               case simple-exponential {
-                description 
+                description
                   "Simple exponential backoff with limits.";
                 container simple-exponential {
-                  description 
-                    "Simple exponential backoff with limits. 
-                    Starts with the initial backoff and doubles
-                    the backoff of every retry until reaching the 
-                    maximum backoff";
+                  description
+                    "Simple exponential backoff with limits.
+                     Starts with the initial backoff and doubles
+                     the backoff of every retry until reaching the
+                     maximum backoff";
                   leaf initial-backoff {
                     type uint32;
                     units "seconds";
-                    default 30;
+                    default "30";
                     description
                       "Initial backoff time";
                   }
                   leaf maximum-backoff {
                     type uint32;
                     units "seconds";
-                    default 720;
+                    default "720";
                     description
                       "Maximum backoff time";
                   }
@@ -632,28 +598,25 @@ module ietf-bmp {
             }
           }
         }
-
         container bmp-data {
           description
             "Configuration of BMP data";
-
           leaf initiation-message {
             type string;
             description
               "User defined message to append to the
                initiation message";
-            reference "RFC7854:  BGP Monitoring Protocol, 
-              Section 4.3 and 4.4";
+            reference
+              "RFC7854:  BGP Monitoring Protocol,
+               Section 4.3 and 4.4";
           }
-
-          container bmp-statistics-report  {
+          container bmp-statistics-report {
             presence "Enables the BMP statistics report";
-
-            description "Configuration of the statistics report";
-            reference "RFC7854:  BGP Monitoring Protocol, 
-              Section 4.8";
-
-
+            description
+              "Configuration of the statistics report";
+            reference
+              "RFC7854:  BGP Monitoring Protocol,
+               Section 4.8";
             leaf statistics-interval {
               type uint32;
               units "seconds";
@@ -661,35 +624,30 @@ module ietf-bmp {
               description
                 "Interval for statistic report message.";
             }
-
           }
-
           container bmp-route-monitoring {
             description
-              "Configuration of the data sources for 
-              route-monitoring messages";
+              "Configuration of the data sources for
+               route-monitoring messages";
             uses bmp-route-monitoring-sources;
           }
         }
-
         container session-stats {
           config false;
           description
             "stats and operational values for the station";
-
           leaf discontinuity-time {
-             type yang:date-and-time;
-             mandatory true;
-             description
-               "The time on the most recent occasion at which any
+            type yang:date-and-time;
+            mandatory true;
+            description
+              "The time on the most recent occasion at which any
                one or more of this station's counters suffered a
                discontinuity.  If no such discontinuities have
                occurred since the last re-initialization of the
                local management subsystem, then this node contains
                the time the local management subsystem
                re-initialized itself.";
-           }
-
+          }
           leaf established-session {
             type boolean;
             description
@@ -733,8 +691,6 @@ module ietf-bmp {
                successful connection";
           }
         }
-
-
         container actions {
           nacm:default-deny-all;
           description
@@ -746,7 +702,7 @@ module ietf-bmp {
               choice outcome {
                 description
                   "Output of the reset operation. Either a success or
-                   failure. For the latter, the reason for the 
+                   failure. For the latter, the reason for the
                    error is provided.";
                 leaf success {
                   type empty;
@@ -756,20 +712,14 @@ module ietf-bmp {
                 leaf failure {
                   type string;
                   description
-                    "Reset could not be performed. 
-                    Reason is included in the field";
+                    "Reset could not be performed.
+                     Reason is included in the field";
                 }
               }
             }
           }
         }
-
       }
-
-
-
     }
-
-
   }
 }

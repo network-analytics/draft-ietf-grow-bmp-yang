@@ -1,0 +1,4 @@
+!
+bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-all-ni
+ < Configuration D >
+!
