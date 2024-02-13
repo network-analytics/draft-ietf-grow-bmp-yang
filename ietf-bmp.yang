@@ -87,7 +87,7 @@ module ietf-bmp {
      (https://www.rfc-editor.org/info/rfc9196); see the RFC itself
      for full legal notices.";
 
-  revision 2022-10-18 {
+  revision 2023-12-28 {
     description
       "initial version";
     reference
@@ -133,11 +133,15 @@ module ietf-bmp {
     leaf maximum-segment-size {
       type uint16;
       description
-        "Maximum segment size for the TCP connections.";
+        "Maximum segment size for the TCP connections.
+         In the absence of this container, the system
+         would select the maximum segment size for this
+         connection";
     }
     // Taken from the bgp yang module
     leaf mtu-discovery {
       type boolean;
+      default "true";
       description
         "Turns path mtu discovery for the  TCP sessions
          on (true) or off (false).";
@@ -154,6 +158,7 @@ module ietf-bmp {
     }
     container secure-session {
       when "../secure-session-enable = 'true'";
+      mandatory;
       description
         "Container for describing how a particular BMP session
          is to be secured.";
@@ -203,6 +208,7 @@ module ietf-bmp {
       "common elements for defining connectivity
        to a BMP monitoring station";
     choice passive-or-active {
+      mandatory;
       description
         "Choice for active or passive connection as described
          in section 3.2 of RFC 7854";
@@ -402,7 +408,18 @@ module ietf-bmp {
                 //   + "bgp:neighbors/bgp:neighbor/"
                 //   + "bgp:remote-address";
                 // }
+                // Problem here is that if we are configuring multiple vpns
+                // then this ip should not be valid.
+                // We could explain we just want this if the vpn is
+                // individually defined
                 type inet:ip-address;
+                // The second option is a peergroup. We dont have a way of
+                // controlling this (see above) so we make it general
+                // UNTIL we figure out a way of defining it.
+                // peergroup also depends on the vpn or global, so this only
+                // appears individaully
+                type string;
+                // Peer type and general descirptions can go in the general
                 type bt:peer-type;
                 type identityref {
                   base bmp-peer-types;
@@ -410,11 +427,22 @@ module ietf-bmp {
               }
               description
                 "Peers can be identified by a remote-address,
+                 by the peergroup,
                  by the bgp type of the peers,
-                 or by an enum value corresponding to groups
+                 or by identityref representing groups 
                  of peers.  This way an operator can
                  select, for example, all external peers,
-                 all internal peers, or all peers.";
+                 all internal peers, or all peers.
+                 A peer can only be configured using a single intance of 
+                 this list. 
+                 If its ipaddress exists, it must be configured using
+                 that one.  
+                 If not, then by its peergroup, if it appears.  
+                 If not, then by its peer-type, if it appears.  
+                 If not, then by its bmp-peer-types if any matches it.  
+                 If it is not configured, it is assumed 
+                 that no announcement for this peer should 
+                 be send to the station";
             }
             leaf enabled {
               type boolean;
