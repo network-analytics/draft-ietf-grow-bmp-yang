@@ -99,7 +99,7 @@ module ietf-bmp {
      (https://www.rfc-editor.org/info/rfc9196); see the RFC itself
      for full legal notices.";
 
-  revision 2023-12-28 {
+  revision 2024-04-03 {
     description
       "initial version";
     reference
@@ -749,10 +749,10 @@ module ietf-bmp {
   container bmp {
     description
       "Main level for BMP configuration ";
-    container monitoring-stations {
+    container bmp-monitoring-stations {
       description
         "Container for the list of BMP monitoring stations";
-      list monitoring-station {
+      list bmp-monitoring-station {
         key "id";
         description
           "Configuration for a BMP monitoring station.";
@@ -956,20 +956,24 @@ module ietf-bmp {
       description
         "Container for the configuration of BMP data
          related to this BGP instance";
-      container monitoring-stations {
+      container bmp-monitoring-stations {
         description
           "Container for the configuration of BMP data
            related to this BGP instance";
-        list monitoring-station {
+        list bmp-monitoring-station {
           key "id";
           description
             "Container for the configuration of BMP data for this
             monitoring-station related to this BGP instance";
           leaf id {
-            type leafref {
-              path "/bmp:bmp/bmp:monitoring-stations/"
-                    + "bmp:monitoring-station/bmp:id";
-            }
+            // TODO: We have not been able to configure
+            // the schema mount to recognize this yet. 
+            // Until we solve it, we will keep it as 
+            //type leafref {
+            //  path "/bmp:bmp/bmp:bmp-monitoring-stations/"
+            //        + "bmp:bmp-monitoring-station/bmp:id";
+            //}
+            type string;
             description
               "Identification string for the monitoring station";
           }
