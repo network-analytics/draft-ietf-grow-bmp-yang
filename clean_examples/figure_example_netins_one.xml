@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_one</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+      <bmp-data>
+        <bmp-route-monitoring>
+          <network-instance-configuration>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-all-ni</network-instance-id>
+              <!-- Configuration A -->
+            </network-instance>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-global-ni</network-instance-id>
+              <!-- Configuration B -->
+            </network-instance>
+            <network-instance>
+              <network-instance-id>network-instance-two</network-instance-id>
+              <!-- Configuration C -->
+            </network-instance>
+          </network-instance-configuration>
+        </bmp-route-monitoring>
+      </bmp-data>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>

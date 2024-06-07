@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_two</id>
+      <connection>
+        <passive>
+          <network-instance>test</network-instance>
+          <station-address>192.0.2.1</station-address>
+          <local-address>192.0.2.2</local-address>
+          <local-port>57993</local-port>
+        </passive>
+      </connection>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>

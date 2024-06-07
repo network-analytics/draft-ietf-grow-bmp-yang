@@ -41,11 +41,6 @@ module ietf-bmp {
       "I-D.ietf-netconf-tcp-client-server: YANG Groupings for TCP
        Clients and TCP Servers.";
   }
-  import ietf-network-instance {
-    prefix ni;
-    reference
-      "RFC 8529: YANG Data Model for Network Instances";
-  }
   import ietf-routing-policy {
     prefix rt-pol;
     reference
@@ -132,11 +127,17 @@ module ietf-bmp {
        of selecting all network instances.";
   }
 
+  identity bmp-ni-types-global-ni {
+    base bmp-ni-types;
+    description
+      "Configuring the global one";
+  }
+
   identity bmp-ni-types-non-global-ni {
     base bmp-ni-types;
     description
       "The identify is an explicit way
-       of selecting all network instances.";
+       of selecting all network instances, except th e global-one.";
   }
 
   grouping bmp-tcp-options {
@@ -233,10 +234,14 @@ module ietf-bmp {
             "The device starts the connection to
              the monitoring station";
           leaf network-instance {
-            type leafref {
-              path "/ni:network-instances/ni:network-instance/"
-                 + "ni:name";
-            }
+            // TODO:This will not be supported for 
+            // implementations not supporting schema-mount.
+            // Should just leave it as a string?
+            // type leafref {
+            //   path "/ni:network-instances/ni:network-instance/"
+            //      + "ni:name";
+            // }
+            type string;
             description
               "If present, specifies the network instance
                used to reach the monitoring station.
@@ -277,10 +282,14 @@ module ietf-bmp {
             "The device waits for the connection
              in a local endpoint";
           leaf network-instance {
-            type leafref {
-              path "/ni:network-instances/ni:network-instance/"
-                 + "ni:name";
-            }
+            // TODO:This will not be supported for 
+            // implementations not supporting schema-mount.
+            // Should just leave it as a string?
+            // type leafref {
+            //   path "/ni:network-instances/ni:network-instance/"
+            //      + "ni:name";
+            // }
+            type string;
             description
               "If present, specifies the network instance
                used to reach the monitoring station.
@@ -432,16 +441,16 @@ module ietf-bmp {
             description
               "Generic identification of peers to configure.";
             list peer-type {
-              key "peer-type";
+              key "peer-type-id";
               description
                 "Identification of peers
                  for which we send BMP data to the collector
                  using BGP peer-type (e.g. internal, external)
                 ";
-              leaf peer-type {
+              leaf peer-type-id {
                 type bt:peer-type;
                 description
-                 "BGP Peer type to configure";
+                  "BGP Peer type to configure";
               }
             }
             leaf enabled {
@@ -549,14 +558,64 @@ module ietf-bmp {
              message should include information from/to that peer.
              If the peer is covered by more than one, then the
              priority is:
-             1. peer-type
-             2. bmp-peer-types
+             1. peer
+             2. peer-groups
+             3. peer-type
+             4. bmp-peer-types
 
              New child containers or new bmp-peer-types instances
              SHOULD provide a way of unambiguislly selecting which
              configuration container should be selected for a peer in
              case mutiple matches.
             ";
+          container peers {
+            description
+              "Generic identification of peers to configure.";
+            list peer {
+              key "peer-id-str";
+              description
+                "Identification of the peer. It is up to the
+                implementation to define what to do if no peer
+                matches this key.";
+              leaf peer-id-str {
+                type string;
+                description
+                  "Peer to configure";
+              }
+              leaf enabled {
+                type boolean;
+                default "true";
+                description
+                  "Enables routing monitoring messages
+                   for the peer(s).";
+              }
+              uses bmp-source-configuration;
+            }
+          }
+          container peer-groups {
+            description
+              "Generic identification of peers to configure.";
+            list peer-group {
+              key "peer-group-id-str";
+              description
+                "Identification of the peer-group. It is up to the
+                implementation to define what to do if no peer-group
+                with this name exists.";
+              leaf peer-group-id-str {
+                type string;
+                description
+                  "Peer-group to configure";
+              }
+              leaf enabled {
+                type boolean;
+                default "true";
+                description
+                  "Enables routing monitoring messages
+                   for the peer(s).";
+              }
+              uses bmp-source-configuration;
+            }
+          }
           container bmp-peer-types {
             description
               "Generic identification of peers to configure.";
@@ -589,16 +648,16 @@ module ietf-bmp {
             description
               "Generic identification of peers to configure.";
             list peer-type {
-              key "peer-type";
+              key "peer-type-id";
               description
                 "Identification of peers
                  for which we send BMP data to the collector
                  using BGP peer-type (e.g. internal, external)
                 ";
-              leaf peer-type {
+              leaf peer-type-id {
                 type bt:peer-type;
-                description 
-                 "BGP peer-type to configure";
+                description
+                  "BGP peer-type to configure";
               }
             }
             leaf enabled {
@@ -623,11 +682,11 @@ module ietf-bmp {
     container network-instance-configuration {
       description
         "This container offers various options for configuring BMP
-        route-monitoring messages for each network instance.
-        Additionally, network instances can be configured under the
-        bmp-data container that this module includes under the
-        /rt:routing/rt:control-plane-protocols/
-        rt:control-plane-protocol/bgp:bgp container.
+         route-monitoring messages for each network instance.
+         Additionally, network instances can be configured under the
+         bmp-data container that this module includes under the
+         /rt:routing/rt:control-plane-protocols/
+         rt:control-plane-protocol/bgp:bgp container.
 
          This container also holds a way of configuring the network
          instance directly. This is redundant , and unfavoured to the
@@ -644,15 +703,15 @@ module ietf-bmp {
          network instances: i.e. providing a default for all  network
          instances under the ietf-network-instance module.
 
-         Only at most a single configuration container Network SHOULD
+         A single configuration container Network MUST
          be applied to a network instance.  If not containe matches a
-         network instance, the BMP route monitoring messages shoudl
+         network instance, the BMP route monitoring messages SHOULD
          be disabled for that network instance.  If more than one
          container matches a network-instance  the order of
          preference is:
          1. The configuration under the BGP container
          2. The Network-instance under this container
-         3. bmp-ni-types: bmp-ni-types-non-global-ni
+         3. bmp-ni-types: bmp-ni-types-non-global-ni (if it matches).
          4. bmp-ni-types: bmp-ni-types-all-ni
 
          New identities under bmp-ni-types or augmentations of this
@@ -665,13 +724,18 @@ module ietf-bmp {
           "Network instance to monitory using BMP.";
         leaf network-instance-id {
           type union {
-            type leafref {
-              path "/ni:network-instances/ni:network-instance/"
-                 + "ni:name";
-            }
             type identityref {
               base bmp-ni-types;
             }
+            // TODO:This will not be supported for 
+            // implementations not supporting schema-mount.
+            // Should just leave it as a string to be useful without
+            // schema-mount??
+            //type leafref {
+            //  path "/ni:network-instances/ni:network-instance/"
+            //     + "ni:name";
+            //}
+            type string;
           }
           description
             "Identification of a network-instance.
@@ -948,15 +1012,18 @@ module ietf-bmp {
 
   augment "/rt:routing/rt:control-plane-protocols/"
         + "rt:control-plane-protocol/bgp:bgp" {
-    description 
-     "Augments the BGP container under control-plane-protocol.  It
-     can be used to configure the global BGP instance, but also the
-     network-instances under the module ietf-network-instance";
+    description
+      "Augments the BGP container under control-plane-protocol.  It
+       can be used to configure the global BGP instance, but also the
+       network-instances under the module ietf-network-instance";
     container bmp-data {
       description
         "Container for the configuration of BMP data
          related to this BGP instance";
       container bmp-monitoring-stations {
+        presence 
+          "If this container exists, the network instance must be
+          configured using this";
         description
           "Container for the configuration of BMP data
            related to this BGP instance";
@@ -964,7 +1031,7 @@ module ietf-bmp {
           key "id";
           description
             "Container for the configuration of BMP data for this
-            monitoring-station related to this BGP instance";
+             monitoring-station related to this BGP instance";
           leaf id {
             // TODO: We have not been able to configure
             // the schema mount to recognize this yet. 
@@ -1036,7 +1103,7 @@ module ietf-bmp {
               uses bmp-ni-peer-ribs-filter;
               reference
                 "RFC8671: Support for Adj-RIB-Out in the BGP
-                Monitoring Protocol (BMP) , Section 3.";
+                 Monitoring Protocol (BMP) , Section 3.";
             }
             container adj-rib-out-post {
               description
@@ -1044,7 +1111,7 @@ module ietf-bmp {
               uses bmp-ni-peer-ribs-filter;
               reference
                 "RFC8671: Support for Adj-RIB-Out in the BGP
-                Monitoring Protocol (BMP) , Section 3.";
+                 Monitoring Protocol (BMP) , Section 3.";
             }
           }
         }

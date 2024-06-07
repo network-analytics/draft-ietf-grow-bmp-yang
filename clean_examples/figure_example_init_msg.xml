@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_one</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+      <bmp-data>
+        <initiation-message>BMP device supporting the BMP yang module</initiation-message>
+        <bmp-statistics-report>
+          <statistics-interval>600</statistics-interval>
+        </bmp-statistics-report>
+      </bmp-data>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>

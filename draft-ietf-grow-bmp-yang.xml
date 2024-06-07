@@ -123,12 +123,7 @@
         <figure  anchor="active_connection_option">
           <name>Active connection example</name>
           <sourcecode><![CDATA[
-!
-bmp monitoring-stations monitoring-station monitor_station_one 
- connection active station-address 192.0.2.1
- connection active station-port 57992
- connection active local-address 192.0.2.2
-!
+INSERT_TEXT_FROM_FILE(clean_examples/figure_active_connection_option.xml)
            ]]></sourcecode>
         </figure>
 
@@ -150,15 +145,7 @@ bmp monitoring-stations monitoring-station monitor_station_one
         <figure anchor="passive_connection_option">
           <name>Passive connection example</name>
           <sourcecode><![CDATA[
-!
-network-instances network-instance test
-!
-bmp monitoring-stations monitoring-station monitoring_station_two 
- connection passive network-instance test
- connection passive station-address 192.0.2.1
- connection passive local-address 192.0.2.2
- connection passive local-port 57993
-!
+INSERT_TEXT_FROM_FILE(clean_examples/figure_passive_connection_option.xml)
            ]]></sourcecode>
           </figure>
       </section>
@@ -183,17 +170,7 @@ bmp monitoring-stations monitoring-station monitoring_station_two
           <figure anchor="tcp_example1">
           <name>Example of configuring basic TCP parameters</name>
             <sourcecode><![CDATA[
-!
-bmp monitoring-stations monitoring-station monitoring_station_one
- connection keepalives idle-time 15
- connection keepalives max-probes 3
- connection keepalives probe-interval 30
-!
-
-bmp monitoring-stations monitoring-station monitoring_station_one
- connection maximum-segment-size 1500
- connection mtu-discovery true
-!
+INSERT_TEXT_FROM_FILE(clean_examples/figure_tcp_example1.xml)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -203,38 +180,7 @@ bmp monitoring-stations monitoring-station monitoring_station_one
           <figure anchor="tcp_example2">
           <name>Example of the Configuration of TCP session security.</name>
             <sourcecode><![CDATA[
-!
-key-chains key-chain bmp-key-chain
- description "An example of TCP-AO configuration for BMP"
- key 55 crypto-algorithm aes-128
-  lifetime send-lifetime start-date-time 2023-01-01T00:00:00+00:00
-  lifetime send-lifetime end-date-time 2023-02-01T00:00:00+00:00
-  lifetime accept-lifetime start-date-time 2023-01-01T00:00:00+00:00
-  lifetime accept-lifetime end-date-time 2023-02-01T00:00:00+00:00
-  key-string keystring teststring
-  authentication keychain bmp-key-chain
-  authentication ao send-id 65
-  authentication ao recv-id 87
- !
- !
- key 56 crypto-algorithm aes-128
-  lifetime send-lifetime start-date-time 2023-01-01T00:00:00+00:00
-  lifetime send-lifetime end-date-time 2023-02-01T00:00:00+00:00
-  lifetime accept-lifetime start-date-time 2023-01-01T00:00:00+00:00
-  lifetime accept-lifetime end-date-time 2023-02-01T00:00:00+00:00
-  authentication keychain bmp-key-chain
-  authentication ao send-id 65
-  authentication ao recv-id 87
- !
- !
-!
-
-bmp monitoring-stations monitoring-station monitoring_station_one
- connection tcp-options secure-session-enable true
- connection tcp-options secure-session ao-keychain bmp-key-chain
-!
-key-chains key-chain bmp-key-chain
-!
+INSERT_TEXT_FROM_FILE(clean_examples/figure_tcp_example2.xml)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -257,12 +203,7 @@ key-chains key-chain bmp-key-chain
           <figure anchor="example_indelay">
           <name>Example of the initial-delay and simple exponential backoff.</name>
             <sourcecode><![CDATA[
-!
-bmp monitoring-stations monitoring-station monitoring_station_one
- connection initial-delay 10
- connection backoff simple-exponential initial-backoff 50
- connection backoff simple-exponential maximum-backoff 600
-!
+INSERT_TEXT_FROM_FILE(clean_examples/figure_example_indelay.xml)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -286,7 +227,7 @@ bmp monitoring-stations monitoring-station monitoring_station_one
           <figure anchor='example_init_msg'>
           <name>Example of configuration of initiation-message and statistics report interval.</name>
             <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(document_figures/example_init_msg.txt)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -328,7 +269,7 @@ INSERT_TEXT_FROM_FILE(document_figures/example_init_msg.txt)
 
       <t>For network instances, the model should configure not only the "global" network instance (the main one configured under the /ietf-routing:routing), but also other network instances configured under the /ietf-network-instance:network-instances/. Also, network instances can change frequently in networks with customer connecting to Virtual Private Networks. To not force operators to change configuration at every change, the model provides methods for  defining a "default" configuration for network instances. However, to provide control over the configuration, each network instance can be configured independently, if needed.</t>
 
-      <t>A situation is similar with peers for the Adj-RIB-IN and Adj-RIB-OUT RIBs. The model includes a way of configuring a default for all peers for simple cases, but one can provide configuration for type of peers or each peer individually. </t>
+      <t>A situation is similar with peers for the Adj-RIB-IN and Adj-RIB-OUT RIBs. The model includes a way of configuring a default for all peers for simple cases, but one can provide configuration for type of peers, peergroups,  or each peer individually. </t>
 
       <t>We summarize the requirements stated on the previous two paragraphs next:</t>
 
@@ -346,6 +287,7 @@ INSERT_TEXT_FROM_FILE(document_figures/example_init_msg.txt)
       <t>
        <ul spacing="compact">
             <li>The model should provide ways of configuring all peers, kind of a default. This would be the most common case.</li>
+            <li>The model should provide ways of configuring peergroups.</li>
             <li>The model should provide ways of configuring type of peers. For instance, only send routes from eBGP peers.</li>
             <li>The model should provide ways of configuring individual peers. For instance, turn a route-policy filtering prefix for a specific peer, or turning off a peer that is noisy yet not important.</li>
         </ul>
@@ -357,9 +299,11 @@ INSERT_TEXT_FROM_FILE(document_figures/example_init_msg.txt)
 
       <section title="Network instances">
 
-          <t>The routing monitoring configuration starts with the selection of network instance. One or more Network instances can be selected using a "bmp-ni-types" identity, or they can be selected individually, referencing the /network-instance/ list.</t>
+          <t>The routing monitoring configuration starts with the configuration of network instances. A network instance can be configured individual or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. We explain each next</t>
 
-          <t>The model currently defines two bmp-ni-types identities: "bmp-ni-types-all-ni" which selects all network instances, and "bmp-ni-types-global-ni" which selects the global network instance (the one configured in `/ietf-routing:routing/`). The former can be used as a "default" configuration for simple cases.</t>
+          <t>The model currently defines two bmp-ni-types identities: "bmp-ni-types-all-ni" which selects all network instances, and "bmp-ni-types-non-global-ni" which selects all network instances, expcet the global one. The former can be used as a "default" configuration for simple cases.</t>
+
+          <t>The model offers two ways of configuring a network-instance individually. The main one is under container "bmp-data/bmp-monitoring-stations/" under the "routing/control-plane-protocols/control-plane-protocol/bgp". The second one is specifying the name under the "bmp/bmp-route-monitoring/network-instance". The former one is the prefered method, since it allows for better validation of the data. This method requires the support of schema-mount. The latter method does not validate some leafs, but it requires less support by the device.</t>
 
           <t>An empty configuration disables routing monitoring messages for the selected network-instances. Operators can also use the enable leaf to disable explicitly the routing messages for the network instance. </t>
 
@@ -367,22 +311,23 @@ INSERT_TEXT_FROM_FILE(document_figures/example_init_msg.txt)
 
       <t>
         <ul spacing="compact">
+            <li>If the BGP container under the network-instance includes a BMP/Route monitoring container. Note that ff the monitoring-station is not present in the container, the route monitoring will be disabled for this network instance..</li>
             <li>If the bmp-ni-types-global-ni exist, the global network instance / network instance SHOULD be configured using this element.</li>
             <li>If any /ni:network-instances/ni:network-instance/ is referenced, the network instance SHOULD be configured using this element.</li>
-            <li>Any Network instance not referenced by any rule above should be configured using the bmp-ni-types-all-ni if one exists. If it does not exist, then the network instance is not configured (and therefore no route monitoring messages from the network instance are sent to the monitoring station).</li>
+            <li>Any Network instance not referenced by any rule above SHOULD be configured using the bmp-ni-types-all-ni if one exists. If it does not exist, then the network instance is not configured (and therefore no route monitoring messages from the network instance are sent to the monitoring station).</li>
         </ul>
       </t>
 
       <t>Any extension of the bmp-ni-types SHOULD provide explanations of how to deal with case in which multiple elements select the same network instance. </t>
 
-      <t>We provide examples of configuring the network instance level next. To focus on the network instance configuration, we mask the configuration under each instance using "Configuration X". </t>
+      <t>We provide examples of configuring the network instance level next. For now, we will focus on the configuration using the BMP container (not the configuration under the BGP container).  To focus on the network instance configuration, we mask the configuration under each instance using "Configuration X". </t>
 
 
         <t>
           <figure anchor='example_netins_one'>
           <name>Examples of configuring the network instance level for Route Monitoring.</name>
             <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(document_figures/example_netins_one.txt)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_example_netins_one.xml)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -394,7 +339,7 @@ INSERT_TEXT_FROM_FILE(document_figures/example_netins_one.txt)
           <figure anchor='simple_ni_configuration'>
           <name>Example of configuring all network instances.</name>
             <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(document_figures/simple_ni_configuration.txt)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_simple_ni_configuration.xml)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -407,13 +352,15 @@ INSERT_TEXT_FROM_FILE(document_figures/simple_ni_configuration.txt)
           <figure  anchor='simple_gni_configuration'>
           <name>Example of configuring only the global network instance.</name>
             <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(document_figures/simple_gni_configuration.txt)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_simple_ni_configuration.xml)
            ]]></sourcecode>
           </figure>
         </t> 
 
     </section>
     <section title="RIB Type">
+
+        <t>Alternatively to the configuration of <xref target='simple_gni_configuration'/>, one can configure directly the global instance, but using the BMP configuration under the BGP container</t>
 
     <t>Each RIB type is configured explicitly in the model through a container. The model currently provides containers for adj-rib-out-pre, adj-rib-out-post, adj-rib-in-post, adj-rib-in-pre and local-rib. </t>
 
@@ -434,7 +381,7 @@ INSERT_TEXT_FROM_FILE(document_figures/simple_gni_configuration.txt)
           <figure anchor='example_rib_af_one'>
           <name>Example of configuring RIBs and address families.</name>
             <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(document_figures/example_rib_af_one.txt)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_one.xml)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -457,7 +404,7 @@ INSERT_TEXT_FROM_FILE(document_figures/example_rib_af_one.txt)
         <figure anchor='example_rib_af_two'>
           <name>Example of configuring RIBs and address families.</name>
           <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(document_figures/example_rib_af_two.txt)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -518,7 +465,7 @@ INSERT_TEXT_FROM_FILE(document_figures/example_rib_af_two.txt)
           <figure anchor="full_example_one">
               <name>Enabling Route monitoring for all peers; all network instances; IPv4/IPv6 Address families,  in the adj-rib-in-pre RIB.</name>
             <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(document_figures/full_example_one.txt)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_one.xml)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -532,7 +479,7 @@ INSERT_TEXT_FROM_FILE(document_figures/full_example_one.txt)
           <figure anchor="full_example_two">
             <name>Configuring address families differently for the global network instance</name>
             <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(document_figures/full_example_two.txt)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_two.xml)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -547,7 +494,7 @@ INSERT_TEXT_FROM_FILE(document_figures/full_example_two.txt)
           <figure anchor="full_example_three">
             <name>Applying a general configuration to all network instances, except of two, which are configured specifically.</name>
             <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(document_figures/full_example_three.txt)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_three.xml)
            ]]></sourcecode>
           </figure>
         </t> 
@@ -720,9 +667,9 @@ INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
             instance, the adj-rib-out-pre RIB, the IPv4/IPv6 address family,
             and external peers.
             </t>
-        <t><figure>
+        <t><figure anchor="example_one">
             <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(example_one.xml)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_example_one.xml)
 ]]></sourcecode>         
     </figure></t>
     </section>
@@ -747,9 +694,9 @@ INSERT_TEXT_FROM_FILE(example_one.xml)
                 families IPv4/IPv6, and for all peers.</t>
         </list>
         </t>
-        <t><figure>
+        <t><figure anchor="example_two">
             <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(example_two.xml)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_example_two.xml)
 ]]></sourcecode>         
     </figure></t>
     </section>

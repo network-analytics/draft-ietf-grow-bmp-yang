@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>1</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+        <tcp-options>
+          <keepalives>
+            <idle-time>15</idle-time>
+            <max-probes>3</max-probes>
+            <probe-interval>30</probe-interval>
+          </keepalives>
+          <maximum-segment-size>1500</maximum-segment-size>
+          <mtu-discovery>true</mtu-discovery>
+        </tcp-options>
+      </connection>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
