@@ -1,0 +1,3202 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc category="std" ipr="trust200902" docName="draft-ietf-grow-bmp-yang-04" submissionType='IETF'>
+  <front>
+    <title abbrev="BMP YANG Module">BMP YANG Module</title>
+    <author fullname="Camilo Cardona" initials="C" surname="Cardona ">
+      <organization>NTT</organization>
+      <address>
+        <postal>
+          <street>164-168, Carrer de Numancia</street>
+
+          <city>Barcelona</city>
+
+          <code>08029</code>
+
+          <country>Spain</country>
+        </postal>
+
+        <email>camilo@ntt.net</email>
+      </address>
+    </author>
+    <author fullname="Paolo Lucente" initials="P." surname="Lucente">
+      <organization>NTT</organization>
+      <address>
+        <postal>
+          <street>Siriusdreef 70-72</street>
+          <city>Hoofddorp</city>
+          <code>2132</code>
+          <country>Netherlands</country>
+        </postal>
+        <email>paolo@ntt.net</email>
+      </address>
+    </author>
+    <author fullname="Thomas Graf" initials="T." surname="Graf">
+      <organization>Swisscom</organization>
+      <address>
+        <postal>
+          <street>Binzring 17</street>
+          <city>Zurich 8045</city>
+          <country>Switzerland</country>
+        </postal>
+        <email>thomas.graf@swisscom.com</email>
+      </address>
+    </author>     
+    <author fullname="Benoit Claise" initials="B" surname="Claise">
+      <organization>Huawei</organization>
+      <address>
+        <email>benoit.claise@huawei.com</email>
+      </address>
+    </author> 
+    <date/>
+    <area>OPS</area>
+    <workgroup>GROW</workgroup>
+    <abstract>
+      <t> 
+        This document proposes a YANG module for the configuration and monitoring of the BGP Monitoring Protocol (BMP).
+      </t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Terminology" anchor="terminology">
+       <t>
+         The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+         NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+         "MAY", and "OPTIONAL" in this document are to be interpreted as
+         described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/>
+         when, and only when, they appear in all capitals, as shown here.
+      </t>    
+       <t>
+           Routing Information Bases, peers, monitoring stations, and
+           initiation messages are defined in <xref target="RFC7854"/>.
+      </t>    
+    </section>   
+    <section title="Model description" anchor="model_description">
+       <t>
+              This document specifies a YANG module for configuring and
+           monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/>.  The model
+           provides parameters for configuring the session to BMP monitoring stations; the
+           selection of the BGP Routing Information Bases (RIBs) for Route Monitoring Messages; provides
+           operational metrics and enables resetting of BMP monitoring sessions.
+       </t> 
+
+       <t>The model is included in <xref target="model-content"/>. In this
+           section, we provide details and examples of each of its parts.</t>
+
+       <t>The BMP yang model is placed at the root of the YANG tree.  At its
+           upper level, the BMP model lists each monitoring station. Every
+           monitoring station is identified by an ID, which is a string
+           provided by the operator.</t>
+
+
+    <section title="IP Connectivity" anchor="ip_connectivitu">
+        <t> BMP allows for active and passive
+            connections between the router and the BMP monitoring station as described in  <xref
+                target="RFC7854" section="3.2" sectionFormat="of"/>. In
+            an active connection, the router establishes the TCP connection to
+            the monitoring station, while in a passive one, it is the monitoring
+            station which initiates the connection. The BMP yang module
+            provides options for both types of connection using a choice.</t>
+
+        <t>We describe each type of connection option next, and provide
+            examples of their configuration.</t>
+
+    <section title="Active connection">
+
+        <t>For an active connection, the IP address and port of the monitoring
+            station, together with the local address MUST be provided. One can
+            optionally provide the local port for establishing the connection.
+            If the monitoring station is connected over a network-instance
+            instead of the global one, this one must also be specified. An
+            example of configuration is included in <xref target="active_connection_option"/>.</t>
+
+        <figure  anchor="active_connection_option">
+          <name>Active connection example</name>
+          <sourcecode><![CDATA[
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>1</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+        </figure>
+
+        <t>Note in the example from  <xref target="active_connection_option"/>
+                that there is no network instance defined, so the connection is
+                using the global network instance.</t>
+    </section>
+      <section title="Passive connection">
+        <t>In a passive connection, the IP of the monitoring station, the local address and local port
+            for the incoming connection must be specified. If the port of the
+            monitoring station is provided, it MUST match the incoming
+            connection. If the monitoring station is connected through a
+            network-instance instead of the global one, this one MUST also be
+            specified.</t>
+
+        <t>An incoming connection not matching a valid entry MUST be ignored by
+            the router.</t>
+
+        <figure anchor="passive_connection_option">
+          <name>Passive connection example</name>
+          <sourcecode><![CDATA[
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_two</id>
+      <connection>
+        <passive>
+          <network-instance>test</network-instance>
+          <station-address>192.0.2.1</station-address>
+          <local-address>192.0.2.2</local-address>
+          <local-port>57993</local-port>
+        </passive>
+      </connection>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+      </section>
+    </section>
+    <section title="TCP Options" anchor="tcp_options">
+        
+        <t>The BMP module allows tuning various parameters of the TCP
+            connection supporting the BMP session:</t>
+
+      <t>
+          <ul spacing="compact">
+            <li>For configuring TCP keepalives, the connection container uses the tcp-common-grouping from <xref target="I-D.ietf-netconf-tcp-client-server"/>. Please see <xref target="I-D.ietf-netconf-tcp-client-server" section="2.1.3.1" sectionFormat="of"/> for the explanation of each of its parameters. Note that for the configuration of these parameters, the device must have the feature "tcp-client-keepalives" enabled. See also <xref target="RFC9293" section="3.8.4" sectionFormat="of"/></li>
+            <li>The maximum segment of the TCP connection. See  <xref target="RFC9293" section="3.7.1" sectionFormat="of"/>.</li>
+            <li>Enabling MTU discovery for the path. See <xref target="RFC9293" section="3.7.2" sectionFormat="of"/>.</li>
+            <li>Session security. Provides options for authentication using AO and MD5. This part of the model was taken from the BGP yang model <xref target="I-D.ietf-idr-bgp-model"/>.</li>
+        </ul>
+      </t>
+
+      <t>Figures <xref target="tcp_example1" format="counter"/> and <xref target="tcp_example2" format="counter"/> include examples configuring the previous TCP parameters in the model.</t>
+
+        <t>
+          <figure anchor="tcp_example1">
+          <name>Example of configuring basic TCP parameters</name>
+            <sourcecode><![CDATA[
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>1</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+        <tcp-options>
+          <keepalives>
+            <idle-time>15</idle-time>
+            <max-probes>3</max-probes>
+            <probe-interval>30</probe-interval>
+          </keepalives>
+          <maximum-segment-size>1500</maximum-segment-size>
+          <mtu-discovery>true</mtu-discovery>
+        </tcp-options>
+      </connection>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+
+
+        <t>
+          <figure anchor="tcp_example2">
+          <name>Example of the Configuration of TCP session security.</name>
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+  <key-chains xmlns="urn:ietf:params:xml:ns:yang:ietf-key-chain">
+    <key-chain>
+      <name>bmp-key-chain</name>
+      <description>An example of TCP-AO configuration for BMP</descr\
+iption>
+      <key>
+        <key-id>55</key-id>
+        <crypto-algorithm>aes-cmac-prf-128</crypto-algorithm>
+        <lifetime>
+          <send-lifetime>
+            <start-date-time>2023-01-01T00:00:00+00:00</start-date-t\
+ime>
+            <end-date-time>2023-02-01T00:00:00+00:00</end-date-time>
+          </send-lifetime>
+          <accept-lifetime>
+            <start-date-time>2023-01-01T00:00:00+00:00</start-date-t\
+ime>
+            <end-date-time>2023-02-01T00:00:00+00:00</end-date-time>
+          </accept-lifetime>
+        </lifetime>
+        <key-string>
+          <keystring>teststring</keystring>
+        </key-string>
+        <authentication xmlns="urn:ietf:params:xml:ns:yang:ietf-tcp">
+          <keychain>bmp-key-chain</keychain>
+          <ao>
+            <send-id>65</send-id>
+            <recv-id>87</recv-id>
+          </ao>
+        </authentication>
+      </key>
+      <key>
+        <key-id>56</key-id>
+        <crypto-algorithm>aes-cmac-prf-128</crypto-algorithm>
+        <lifetime>
+          <send-lifetime>
+            <start-date-time>2023-01-01T00:00:00+00:00</start-date-t\
+ime>
+            <end-date-time>2023-02-01T00:00:00+00:00</end-date-time>
+          </send-lifetime>
+          <accept-lifetime>
+            <start-date-time>2023-01-01T00:00:00+00:00</start-date-t\
+ime>
+            <end-date-time>2023-02-01T00:00:00+00:00</end-date-time>
+          </accept-lifetime>
+        </lifetime>
+        <authentication xmlns="urn:ietf:params:xml:ns:yang:ietf-tcp">
+          <keychain>bmp-key-chain</keychain>
+          <ao>
+            <send-id>65</send-id>
+            <recv-id>87</recv-id>
+          </ao>
+        </authentication>
+      </key>
+    </key-chain>
+  </key-chains>
+  <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+    <bmp-monitoring-stations>
+      <bmp-monitoring-station>
+        <id>monitoring_station_one</id>
+        <connection>
+          <active>
+            <station-address>192.0.2.1</station-address>
+            <station-port>57992</station-port>
+            <local-address>192.0.2.2</local-address>
+          </active>
+          <tcp-options>
+            <secure-session-enable>true</secure-session-enable>
+            <secure-session>
+              <ao-keychain>bmp-key-chain</ao-keychain>
+            </secure-session>
+          </tcp-options>
+        </connection>
+      </bmp-monitoring-station>
+    </bmp-monitoring-stations>
+  </bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+
+    </section>
+    <section title="Other BMP connectivity options">
+
+    <t>The model also includes  the next options to configure the connection to the BMP monitoring station:</t>
+
+      <t>
+        <ul spacing="compact">
+            <li>Initial-delay: a value in seconds that the device must hold back before starting the connection to the station. </li>
+            <li>Backoff time. Configuration of the backoff time strategy after failing to connect to the monitoring station. The model includes a basic exponential backoff with a default initial backoff of 30 seconds and a maximum of 720 seconds, as suggested in <xref target="RFC7854" section="3.2" sectionFormat="of"/>.</li>
+        </ul>
+      </t>
+
+      <t>In the example in <xref target="example_indelay"/>, we configure an initial-delay of 10. Configuring an initial-backoff of 50 seconds and 600 of maximum-backoff.</t>
+
+        <t>
+          <figure anchor="example_indelay">
+          <name>Example of the initial-delay and simple exponential backoff.</name>
+            <sourcecode><![CDATA[
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>1</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+        <initial-delay>10</initial-delay>
+        <backoff>
+            <simple-exponential>
+                <initial-backoff>50</initial-backoff>
+                <maximum-backoff>600</maximum-backoff>
+            </simple-exponential>
+        </backoff>
+      </connection>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+    </section>
+    <section title="BMP data">
+
+        <t>The bmp-data container defines the configuration parameters for the data that the device sends to the monitoring station using the various BMP messages. See <xref target="RFC7854" section="4" sectionFormat="of"/>.</t>
+
+        <t>The BMP model defines options for the initiation message, the statistics report, and the routing monitoring. The first two have simple configurations options and are shortly described next. The Routing monitoring is the most complex of all and it is detailed in <xref target='route_monitoring'/>.</t>
+
+      <t>
+        <ul spacing="compact">
+            <li>Initiation-message: Content for an information TLV type-0 for identification of the device. See <xref target="RFC7854" section="4.3" sectionFormat="bare"/> and <xref target="RFC7854" section="4.4" sectionFormat="of"/></li> 
+            <li>Statistics-interval: The statistics report is enabled by the presence of the bmp-statistics-report container. The statistics-interval is mandatory if the bmp-statistics-report container exists and defines the interval of the statistics report. See <xref target="RFC7854" section="4.8" sectionFormat="of"/>.</li>
+        </ul>
+      </t>
+
+      <t>An example of configuring the previous options is included in <xref target="example_init_msg"/></t>
+
+        <t>
+          <figure anchor='example_init_msg'>
+          <name>Example of configuration of initiation-message and statistics report interval.</name>
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_one</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+      <bmp-data>
+        <initiation-message>BMP device supporting the BMP yang modul\
+e</initiation-message>
+        <bmp-statistics-report>
+          <statistics-interval>600</statistics-interval>
+        </bmp-statistics-report>
+      </bmp-data>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+
+        <section title="BMP route monitoring" anchor="route_monitoring">
+
+        <t>Route monitoring messages are used for synchronization of RIBs to the monitoring station. See <xref target="RFC7854" section="5" sectionFormat="of"/>.</t>
+
+        <t>The next 3 requirements were defined before designing this part of the model.</t>
+
+      <t>
+        <ul spacing="compact">
+            <li>Operators might not want to receive all routes from all RIBs in a network device. For instance, some devices contain a considerable amount of data that might overwhelm the monitoring station. In this cases, operators might want to only collect information from an arbitrary subset of RIBs, address families, peers.</li>
+            <li>Operators might want to configure the route monitoring messages for different network instances differently. For example, they might want to receive different address families from the global network instance than in L3 VPN network instances. </li>
+            <li>In contrast to the previous points. some operators might want a simple configuration that covers multiple cases (e.g. same config for all peers, or same config for all network instances).  This would not only make configurations look smaller and concise, but will reduce the need for reconfiguring devices when you add a new peer or add a new network instance (which happens frequently on some type of networks). </li>
+        </ul>
+      </t>
+
+      <t>Based on the previous points, the BMP yang model is designed to flexibly control the data sent through the BMP route monitoring packets, yet it provides options to facilitate configurations for simple cases, such as when the operator wants to receive all routes from a RIB.</t>
+
+      <t>The Routing monitoring configuration is divided in a 4 part hierarchy:</t>
+
+      <t>
+        <ul spacing="compact">
+            <li>Network Instance </li>
+            <li>RIB Type (e.g. Adj-RIB-IN pre/post, local RIB)</li>
+            <li>Address Family </li>
+            <li>Peers</li>
+        </ul>
+      </t>
+
+      <t>Absence of the routing monitoring container will disable the routing monitoring messages to the monitoring station.</t>
+
+      <t>We'll offer an introduction to these hierarchies before going over them with detail.</t>
+
+      <t>The number of RIB types (e.g. Adj-RIB-IN, etc/OUT and local RIB) and Address families is low, and their configuration should not change frequently. Therefore, they are configured explicitly in the model. That is, the model does not provide a way of providing a default configuration for these or configuring them in groups.</t>
+
+      <t>On the other hand, Network instances and peers require greater flexibility.</t>
+
+      <t>For network instances, the model should configure not only the "global" network instance (the main one configured under the /ietf-routing:routing), but also other network instances configured under the /ietf-network-instance:network-instances/. Also, network instances can change frequently in networks with customer connecting to Virtual Private Networks. To not force operators to change configuration at every change, the model provides methods for  defining a "default" configuration for network instances. However, to provide control over the configuration, each network instance can be configured independently, if needed.</t>
+
+      <t>A situation is similar with peers for the Adj-RIB-IN and Adj-RIB-OUT RIBs. The model includes a way of configuring a default for all peers for simple cases, but one can provide configuration for type of peers, peergroups,  or each peer individually. </t>
+
+      <t>We summarize the requirements stated on the previous two paragraphs next:</t>
+
+      <t>For network instances:</t>
+
+      <t>
+        <ul spacing="compact">
+          <li>The configuration should be simple for cases where only the "global" routing instance is enabled.</li>
+          <li>The model should  provide ways of configuring all Network instances (kind of a default config for any Network instance that is configured in the device).</li>
+          <li>The model should provide a way of configuring network instances individually.</li>
+        </ul>
+      </t>
+
+      <t>For peers:</t>
+      <t>
+       <ul spacing="compact">
+            <li>The model should provide ways of configuring all peers, kind of a default. This would be the most common case.</li>
+            <li>The model should provide ways of configuring peergroups.</li>
+            <li>The model should provide ways of configuring type of peers. For instance, only send routes from eBGP peers.</li>
+            <li>The model should provide ways of configuring individual peers. For instance, turn a route-policy filtering prefix for a specific peer, or turning off a peer that is noisy yet not important.</li>
+        </ul>
+      </t>
+
+      <t>To further control the route monitoring data, the peer/peer-type container includes a route-policy option in which the operator can further filter the data send to the BMP monitoring station.</t>
+
+      <t>We'll describe each of the 4 hierarchies, and provide examples for each, in the next sections.</t>
+
+      <section title="Network instances">
+
+          <t>The routing monitoring configuration starts with the configuration of network instances. A network instance can be configured individual or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. We explain each next</t>
+
+          <t>The model currently defines two bmp-ni-types identities: "bmp-ni-types-all-ni" which selects all network instances, and "bmp-ni-types-non-global-ni" which selects all network instances, except the global one. The former can be used as a "default" configuration for simple cases.</t>
+
+          <t>The model offers two ways of configuring a network-instance individually. The main one is under container "bmp-data/bmp-monitoring-stations/" under the "routing/control-plane-protocols/control-plane-protocol/bgp". The second one is specifying the name under the "bmp/bmp-route-monitoring/network-instance". The former one is the prefered method, since it allows for better validation of the data. This method requires the support of schema-mount. The latter method does not validate some leafs, but it does not requires support for schema-mount by the device.</t>
+
+          <t>An empty configuration disables routing monitoring messages for the selected network-instances. Operators can also use the "enable" leaf to disable explicitly the routing messages for the network instance. </t>
+
+          <t>The route-monitoring data for a network instance can be configured by maximum one element of the network-instances list.  There SHOULD  be clear rules to which element to apply to a network instance in case multiple elements can select it. We provide rules and examples in the next part of the section.</t>
+
+      <t>
+        <ul spacing="compact">
+            <li>If the BGP container under the network-instance includes a BMP/Route monitoring container, it SHOULD be configured by it. Note that if the monitoring-station is not present in the container, the route monitoring will be disabled for this network instance.</li>
+            <li>If the bmp-ni-types-global-ni exist, the global network instance / network instance SHOULD be configured using this element.</li>
+            <li>If any /ni:network-instances/ni:network-instance/ is referenced, the network instance SHOULD be configured using this element.</li>
+            <li>Any Network instance not referenced by any rule above SHOULD be configured using the bmp-ni-types-all-ni if one exists. If it does not exist, then the network instance is not configured (and therefore no route monitoring messages from the network instance are sent to the monitoring station).</li>
+        </ul>
+      </t>
+
+      <t>Any extension of the bmp-ni-types SHOULD provide explanations of how to deal with case in which multiple elements select the same network instance. </t>
+
+      <t>We provide examples of configuring the network instance level next. For now, we will focus on the configuration using the BMP container (not the configuration under the BGP container).  To focus on the network instance configuration, we mask the configuration under each instance using "Configuration X". </t>
+
+
+        <t>
+          <figure anchor='example_netins_one'>
+          <name>Examples of configuring the network instance level for Route Monitoring.</name>
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_one</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+      <bmp-data>
+        <bmp-route-monitoring>
+          <network-instance-configuration>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-all-ni</network-inst\
+ance-id>
+              <!-- Configuration A -->
+            </network-instance>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-global-ni</network-i\
+nstance-id>
+              <!-- Configuration B -->
+            </network-instance>
+            <network-instance>
+              <network-instance-id>network-instance-two</network-ins\
+tance-id>
+              <!-- Configuration C -->
+            </network-instance>
+            <network-instance>
+              <network-instance-id>network-instance-one</network-ins\
+tance-id>
+              <enabled>false</enabled>
+            </network-instance>
+          </network-instance-configuration>
+        </bmp-route-monitoring>
+      </bmp-data>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+
+        <t>In example from <xref target="example_netins_one"/>, we have a "default" configuration (Configuration A) applied to any network instance without any explicit configuration. The global network instance and network-instance-two get Configuration B and Configuration C, respectively. The network-instance-one instance container disables the routing monitoring messages for that network instance.</t>
+
+
+        <t>
+          <figure anchor='simple_ni_configuration'>
+          <name>Example of configuring all network instances.</name>
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_one</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+      <bmp-data>
+        <bmp-route-monitoring>
+          <network-instance-configuration>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-all-ni</network-inst\
+ance-id>
+              <!-- Configuration D -->
+            </network-instance>
+        </network-instance-configuration>
+        </bmp-route-monitoring>
+      </bmp-data>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+
+        <t>The example in <xref target="simple_ni_configuration"/> shows a "simple" configuration. In this case, all network instances would get "Configuration D". Note that `bmp-ni-types-all-ni` would also cover the global instance.</t>
+
+        <t>Another simple configuration would just involve configuring the global network instance. In this case, information of non-global network instances would not be sent to the monitoring station. This is depicted in <xref target='simple_gni_configuration'/></t>
+
+        <t>
+          <figure  anchor='simple_gni_configuration'>
+          <name>Example of configuring only the global network instance.</name>
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_one</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+      <bmp-data>
+        <bmp-route-monitoring>
+          <network-instance-configuration>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-all-ni</network-inst\
+ance-id>
+              <!-- Configuration D -->
+            </network-instance>
+        </network-instance-configuration>
+        </bmp-route-monitoring>
+      </bmp-data>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+     
+        <t>Alternatively to the configuration of <xref target='simple_gni_configuration'/>, one can configure directly the global instance, but using the BMP configuration under the BGP container</t>
+
+    </section>
+    <section title="RIB Type">
+
+    <t>Each RIB type is configured explicitly in the model through a container. The model currently provides containers for adj-rib-out-pre, adj-rib-out-post, adj-rib-in-post, adj-rib-in-pre and local-rib. </t>
+
+    <t>An empty configuration or absence of a RIB-type container disables route-messages for it. Operators can also disable the RIB-type route monitoring messages by marking the "enabled" leaf as False.</t>
+
+    <t>We provide an example of this together with address families in the next section</t>
+
+    </section>
+    <section title="Address families">
+
+    <t>Address families are configured explicitly within each RIB-TYPE using a list. The key is of type `ietf-bgp-types:afi-safi-type` without any further constraint.</t>
+
+    <t>An empty configuration or absence of an address family disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
+
+    <t>We show a few examples of configuring RIB-Types and Address families next. We will mask further configurations of address families with "Configuration X" to focus on the covered parts.</t>
+
+        <t>
+          <figure anchor='example_rib_af_one'>
+          <name>Example of configuring RIBs and address families.</name>
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_one</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+      <bmp-data>
+        <bmp-route-monitoring>
+          <network-instance-configuration>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-all-ni</network-inst\
+ance-id>
+              <adj-rib-in-pre>
+                <address-families>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                    <!-- Configuration F -->
+                  </address-family>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                    <!-- Configuration G -->
+                  </address-family>
+                </address-families>
+              </adj-rib-in-pre>
+            </network-instance>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-global-ni</network-i\
+nstance-id>
+              <adj-rib-in-pre>
+                <address-families>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                    <!-- Configuration H -->
+                  </address-family>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                    <!-- Configuration I -->
+                  </address-family>
+                </address-families>
+              </adj-rib-in-pre>
+              <adj-rib-in-post>
+                <address-families>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                    <!-- Configuration H -->
+                  </address-family>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                    <!-- Configuration I -->
+                  </address-family>
+                </address-families>
+              </adj-rib-in-post>
+            </network-instance>
+            <network-instance>
+              <network-instance-id>network-instance-one</network-ins\
+tance-id>
+              <enabled>false</enabled>
+            </network-instance>
+            <network-instance>
+              <network-instance-id>network-instance-two</network-ins\
+tance-id>
+              <adj-rib-in-post>
+                <address-families>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                    <!-- Configuration L -->
+                  </address-family>
+                </address-families>
+              </adj-rib-in-post>
+            </network-instance>
+          </network-instance-configuration>
+        </bmp-route-monitoring>
+      </bmp-data>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+
+        <t>In <xref target='example_rib_af_one'/>,  we expand previous sections examples with RIB-Type and address families configurations. The expected result of the previous configuration would be:</t>
+
+      <t>
+        <ul spacing="compact">
+            <li>For the global network instance, adj-rib-in-pre and adj-rib-in-post RIBs are enabled. In each of them IPv4 and IPv6 address families are configured. The configuration can be the same or not, depending on the requirements of the operators. Any other RIB and address families are disabled.</li>
+            <li>Network instance one is disabled, meaning that routing monitoring messages are disabled for that network instance.</li>
+            <li>Network instance "network-instance-two" has adj-rib-out-post enabled, but only address family ipv4-unicast is configured. The ipv6-unicast will not be configured for this instance.</li>
+            <li>For all other network instances, adj-rib-in-pre with IPv4 and IPv6 address families are configured, thanks to the configuration of bmp-ni-types-all-ni</li>
+        </ul>
+      </t>
+
+
+      <t>If an operator only wants to configure the IPv4/IPv6 of adj-rib-pre-in for the global instance,  the configuration in <xref target='example_rib_af_two'/> will be enough. We note again that even if the configuration of both address families is the same, they must be explicitly configured for each of them.</t>
+
+        <t>
+        <figure anchor='example_rib_af_two'>
+          <name>Example of configuring RIBs and address families.</name>
+          <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_one</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+      <bmp-data>
+        <bmp-route-monitoring>
+          <network-instance-configuration>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-global-ni</network-i\
+nstance-id>
+              <adj-rib-in-pre>
+                <address-families>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                    <!-- Configuration for ipv6-uniceast -->
+                  </address-family>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                    <!-- Configuration for ipv4-unicast -->
+                  </address-family>
+                </address-families>
+              </adj-rib-in-pre>
+            </network-instance>
+          </network-instance-configuration>
+        </bmp-route-monitoring>
+      </bmp-data>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+
+    </section>
+    <section title="Peers">
+
+    <t>For adj-RIB-in and adj-RIB-out, both pre and post, the model requires the selection of peer's RIBs that will be transmitted to the monitoring station. The local-rib does not include this container.</t>
+
+    <t>Peers are a list indexed by a peer id, which can be one of the following: </t>
+
+      <t>
+        <ul spacing="compact">
+            <li>An individual peer, using a remote address. The model currently does not check if the remote address exists, that would be a responsibility of the device.</li>
+            <li>A group of peers matching a BGP type. i.e. eBGP peers. </li>
+            <li>One or more peers defined by an `bmp-peer-types` identity. The BMP model currently provides the `bmp-peer-types-all-peers` identity which select all peers. For simple cases, this is the value that would normally be considered.</li>
+        </ul>
+      </t>
+
+    <t>Peers MUST be selected (configured) by maximum a single instance of the peers list. For the included keys in the BMP model, the process to select which instance to use is the next:</t>
+
+      <t>
+        <ul spacing="compact">
+            <li>If there is a peer address matching the peer, it should be configured using that instance.</li>
+            <li>If the peer is of any BGP type listed in the peer list, it should be configured using this instance.</li>
+            <li>If there is a peer instance identified with the `bmp-peer-types-all-peers`, it would be configured using this instance.</li>
+            <li>Finally, if no instance covers the peer, the data from this peer should not be transmitted to the monitoring station.</li>
+        </ul>
+      </t>
+
+      <t>An empty configuration of a peer type disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
+
+      <t>Any additional bmp-peer-types identity created SHOULD describe how to unambiguously select a peer when there are conflicting options (multiple options covering the peer).</t>
+
+      <t>We'll provide examples of the peers configuration after describing the filter containers.</t>
+
+    </section>
+    <section title="Filtering route-monitoring messages">
+
+    <t>The local rib, and the peer containers within the rest of rib types, include a filter container. This container includes mechanisms to filter route-monitoring messages for the specific RIB.</t>
+
+    <t>The policy-filter can include a routing policy that, if existing, should be applied to the outgoing updates to the monitoring station, and would serve as a granular way of filtering the messages that the monitoring station receives. </t>
+
+    <t>Note that the policy-filter contains an `accept-route` default export policy. An operator can change it to a reject-route, if required.</t>
+
+    <t>The policies created with the routing-policy can perform a large variety of actions routes, and can filter them based on multiple characteristics. For the consistency of the data in the monitoring station, the route policies actions SHOULD be restricted to accepting or rejecting routes. Furthermore, the conditions SHOULD only match prefix sets.</t>
+
+    <t>We present examples of full configurations next.</t>
+    </section>
+
+    <section title="Full examples of Route monitoring configurations">
+
+
+    <section title="Example one">
+
+    <t>In the example configuration from  <xref target='full_example_one'/>, address families IPv6 and IPv4 are configured to send all peers. This is an example of a simple configuration</t>
+        <t>
+          <figure anchor="full_example_one">
+              <name>Enabling Route monitoring for all peers; all network instances; IPv4/IPv6 Address families,  in the adj-rib-in-pre RIB.</name>
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_one</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+      <bmp-data>
+        <bmp-route-monitoring>
+          <network-instance-configuration>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-global-ni</network-i\
+nstance-id>
+              <adj-rib-in-pre>
+                <address-families>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                  <peers-configurations>
+                      <bmp-peer-types>
+                        <bmp-peer-type>
+                            <peer-types-bmp>bmp-peer-types-all-peers\
+</peer-types-bmp>
+                        </bmp-peer-type>
+                      </bmp-peer-types>
+                  </peers-configurations>
+                  </address-family>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                  <peers-configurations>
+                      <bmp-peer-types>
+                        <bmp-peer-type>
+                            <peer-types-bmp>bmp-peer-types-all-peers\
+</peer-types-bmp>
+                        </bmp-peer-type>
+                      </bmp-peer-types>
+                  </peers-configurations>
+                  </address-family>
+                </address-families>
+              </adj-rib-in-pre>
+            </network-instance>
+          </network-instance-configuration>
+        </bmp-route-monitoring>
+      </bmp-data>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+
+    </section>
+    <section title="Example two">
+
+        <t>In the example in <xref target='full_example_two'/>, the global network instance enables the adj-rib-in-pre. In this RIB, the IPv4 unicast address family is configured for all external peers. We assume peer 198.51.100.1 is external, but its BGP configuration is not shown in the snippet.  Peer 198.51.100.1, however, has a specific configuration: it announces everything but prefixes matching the test_policy list. Note that there is a default accept-route default policy in the model.</t>
+
+        <t>
+          <figure anchor="full_example_two">
+            <name>Configuring address families differently for the global network instance</name>
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+<?xml version="1.0"?>
+<routing-policy xmlns="urn:ietf:params:xml:ns:yang:ietf-routing-poli\
+cy">
+<policy-definitions>
+  <policy-definition>
+    <name>test_policy</name>
+    <!-- Policy definition -->
+  </policy-definition>
+</policy-definitions>
+</routing-policy>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+<bmp-monitoring-stations>
+  <bmp-monitoring-station>
+    <id>monitoring_station_one</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+    <bmp-data>
+      <bmp-route-monitoring>
+        <network-instance-configuration>
+          <network-instance>
+            <network-instance-id>bmp-ni-types-global-ni</network-ins\
+tance-id>
+            <adj-rib-in-pre>
+              <address-families>
+                <address-family>
+                  <address-family-id xmlns:bt="urn:ietf:params:xml:n\
+s:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                  <peers-configurations>
+                    <bmp-peer-types>
+                      <bmp-peer-type>
+                        <peer-types-bmp>bmp-peer-types-all-peers</pe\
+er-types-bmp>
+                      </bmp-peer-type>
+                    </bmp-peer-types>
+                  </peers-configurations>
+                </address-family>
+                <address-family>
+                  <address-family-id xmlns:bt="urn:ietf:params:xml:n\
+s:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                  <peers-configurations>
+                    <peer-types>
+                        <peer-type>
+                            <peer-type-id>external</peer-type-id>
+                        </peer-type>
+                    </peer-types>
+                    <peers>
+                      <peer>
+                        <peer-id-str>198.51.100.1</peer-id-str>
+                        <filters>
+                          <policy-filter>
+                            <export-policy>test_policy</export-polic\
+y>
+                          </policy-filter>
+                        </filters>
+                      </peer>
+                    </peers>
+                  </peers-configurations>
+                </address-family>
+              </address-families>
+            </adj-rib-in-pre>
+          </network-instance>
+        </network-instance-configuration>
+      </bmp-route-monitoring>
+    </bmp-data>
+  </bmp-monitoring-station>
+</bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+
+
+    </section>
+    <section title="Example three">
+
+        <t>In the example from <xref target="full_example_three"/>, all network instances have adj-rib-in-pre with  IPv6  and IPv4  configured receiving all peers. network-instance-one is disabled, and network-instance-two is announcing only the local-rib/IPv4 unicast routes.</t>
+
+        <t>
+          <figure anchor="full_example_three">
+            <name>Applying a general configuration to all network instances, except of two, which are configured specifically.</name>
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>monitoring_station_one</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+      <bmp-data>
+        <bmp-route-monitoring>
+          <network-instance-configuration>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-all-ni</network-inst\
+ance-id>
+              <adj-rib-in-pre>
+                <address-families>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                    <peers-configurations>
+                      <bmp-peer-types>
+                        <bmp-peer-type>
+                        <peer-types-bmp>bmp-peer-types-all-peers</pe\
+er-types-bmp>
+                        </bmp-peer-type>
+                      </bmp-peer-types>
+                    </peers-configurations>
+                  </address-family>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                    <peers-configurations>
+                      <bmp-peer-types>
+                        <bmp-peer-type>
+                        <peer-types-bmp>bmp-peer-types-all-peers</pe\
+er-types-bmp>
+                    </bmp-peer-type>
+                      </bmp-peer-types>
+                    </peers-configurations>
+                  </address-family>
+                </address-families>
+              </adj-rib-in-pre>
+            </network-instance>
+            <network-instance>
+              <network-instance-id>network-instance-one</network-ins\
+tance-id>
+              <enabled>false</enabled>
+            </network-instance>
+            <network-instance>
+              <network-instance-id>network-instance-two</network-ins\
+tance-id>
+              <local-rib>
+                <address-families>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                  </address-family>
+                </address-families>
+              </local-rib>
+            </network-instance>
+          </network-instance-configuration>
+        </bmp-route-monitoring>
+      </bmp-data>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+           ]]></sourcecode>
+          </figure>
+        </t> 
+
+    </section>
+
+
+    </section> 
+    </section> 
+    </section> 
+    <!-- End of BMP data-->
+
+    <section title="Session stats">
+        <t>The non-configurable container "session-stats" includes various metrics for the session with the monitoring station.</t>
+    </section> 
+
+    <section title="Session reset action">
+        <t>The "session-reset" action resets a session with a monitoring station.</t>
+    </section> 
+
+    </section>  
+    <!-- End of Model description -->
+
+
+    <section title="Base ietf-bmp YANG module" anchor="model-content">
+      <section title="Tree View" anchor="ietf-bmp-tree-view">
+        <t>
+        The following tree diagram provides an overview of the ietf-bmp.yang
+            data model.
+        </t>
+        <t>
+          <figure>
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+module: ietf-bmp
+  +--rw bmp
+     +--rw bmp-monitoring-stations
+        +--rw bmp-monitoring-station* [id]
+           +--rw id               string
+           +--rw connection
+           |  +--rw (passive-or-active)
+           |  |  +--:(active)
+           |  |  |  +--rw active
+           |  |  |     +--rw network-instance?   string
+           |  |  |     +--rw station-address     inet:ip-address
+           |  |  |     +--rw station-port        inet:port-number
+           |  |  |     +--rw local-address       inet:ip-address
+           |  |  |     +--rw local-port?         inet:port-number
+           |  |  +--:(passive)
+           |  |     +--rw passive
+           |  |        +--rw network-instance?   string
+           |  |        +--rw station-address     inet:ip-address
+           |  |        +--rw station-port?       inet:port-number
+           |  |        +--rw local-address       inet:ip-address
+           |  |        +--rw local-port          inet:port-number
+           |  +--rw tcp-options
+           |  |  +--rw maximum-segment-size?    uint16
+           |  |  +--rw mtu-discovery?           boolean
+           |  |  +--rw keepalives! {keepalives-supported}?
+           |  |  |  +--rw idle-time         uint16
+           |  |  |  +--rw max-probes        uint16
+           |  |  |  +--rw probe-interval    uint16
+           |  |  +--rw secure-session-enable?   boolean
+           |  |  +--rw secure-session
+           |  |     +--rw (authentication)
+           |  |        +--:(ao)
+           |  |        |  +--rw ao-keychain?
+           |  |        |          key-chain:key-chain-ref
+           |  |        +--:(md5)
+           |  |           +--rw md5-keychain?
+           |  |                   key-chain:key-chain-ref
+           |  +--rw initial-delay?   uint32
+           |  +--rw backoff
+           |     +--rw (backoff-options)?
+           |        +--:(simple-exponential)
+           |           +--rw simple-exponential
+           |              +--rw initial-backoff?   uint32
+           |              +--rw maximum-backoff?   uint32
+           +--rw bmp-data
+           |  +--rw initiation-message?      string
+           |  +--rw bmp-statistics-report!
+           |  |  +--rw statistics-interval    uint32
+           |  +--rw bmp-route-monitoring
+           |     +--rw network-instance-configuration
+           |        +--rw network-instance* [network-instance-id]
+           |           +--rw network-instance-id    union
+           |           +--rw enabled?               boolean
+           |           +--rw adj-rib-in-pre
+           |           |  +--rw address-families
+           |           |     +--rw address-family*
+           |           |             [address-family-id]
+           |           |        +--rw address-family-id
+           |           |        |       identityref
+           |           |        +--rw enabled?
+           |           |        |       boolean
+           |           |        +--rw peers-configurations
+           |           |           +--rw peers
+           |           |           |  +--rw peer* [peer-id-str]
+           |           |           |     +--rw peer-id-str
+           |           |           |     |       string
+           |           |           |     +--rw enabled?
+           |           |           |     |       boolean
+           |           |           |     +--rw filters
+           |           |           |        +--rw policy-filter
+           |           |           |           +--rw export-policy*
+           |           |           |           |       leafref
+           |           |           |           +--rw default-export-\
+policy?
+           |           |           |                   rt-pol:defaul\
+t-policy-type
+           |           |           +--rw peer-groups
+           |           |           |  +--rw peer-group*
+           |           |           |          [peer-group-id-str]
+           |           |           |     +--rw peer-group-id-str
+           |           |           |     |       string
+           |           |           |     +--rw enabled?
+           |           |           |     |       boolean
+           |           |           |     +--rw filters
+           |           |           |        +--rw policy-filter
+           |           |           |           +--rw export-policy*
+           |           |           |           |       leafref
+           |           |           |           +--rw default-export-\
+policy?
+           |           |           |                   rt-pol:defaul\
+t-policy-type
+           |           |           +--rw bmp-peer-types
+           |           |           |  +--rw bmp-peer-type*
+           |           |           |          [peer-types-bmp]
+           |           |           |     +--rw peer-types-bmp
+           |           |           |     |       identityref
+           |           |           |     +--rw enabled?
+           |           |           |     |       boolean
+           |           |           |     +--rw filters
+           |           |           |        +--rw policy-filter
+           |           |           |           +--rw export-policy*
+           |           |           |           |       leafref
+           |           |           |           +--rw default-export-\
+policy?
+           |           |           |                   rt-pol:defaul\
+t-policy-type
+           |           |           +--rw peer-types
+           |           |              +--rw peer-type*
+           |           |              |       [peer-type-id]
+           |           |              |  +--rw peer-type-id
+           |           |              |          bt:peer-type
+           |           |              +--rw enabled?     boolean
+           |           |              +--rw filters
+           |           |                 +--rw policy-filter
+           |           |                    +--rw export-policy*
+           |           |                    |       leafref
+           |           |                    +--rw default-export-pol\
+icy?
+           |           |                            rt-pol:default-p\
+olicy-type
+           |           +--rw adj-rib-in-post
+           |           |  +--rw address-families
+           |           |     +--rw address-family*
+           |           |             [address-family-id]
+           |           |        +--rw address-family-id
+           |           |        |       identityref
+           |           |        +--rw enabled?
+           |           |        |       boolean
+           |           |        +--rw peers-configurations
+           |           |           +--rw peers
+           |           |           |  +--rw peer* [peer-id-str]
+           |           |           |     +--rw peer-id-str
+           |           |           |     |       string
+           |           |           |     +--rw enabled?
+           |           |           |     |       boolean
+           |           |           |     +--rw filters
+           |           |           |        +--rw policy-filter
+           |           |           |           +--rw export-policy*
+           |           |           |           |       leafref
+           |           |           |           +--rw default-export-\
+policy?
+           |           |           |                   rt-pol:defaul\
+t-policy-type
+           |           |           +--rw peer-groups
+           |           |           |  +--rw peer-group*
+           |           |           |          [peer-group-id-str]
+           |           |           |     +--rw peer-group-id-str
+           |           |           |     |       string
+           |           |           |     +--rw enabled?
+           |           |           |     |       boolean
+           |           |           |     +--rw filters
+           |           |           |        +--rw policy-filter
+           |           |           |           +--rw export-policy*
+           |           |           |           |       leafref
+           |           |           |           +--rw default-export-\
+policy?
+           |           |           |                   rt-pol:defaul\
+t-policy-type
+           |           |           +--rw bmp-peer-types
+           |           |           |  +--rw bmp-peer-type*
+           |           |           |          [peer-types-bmp]
+           |           |           |     +--rw peer-types-bmp
+           |           |           |     |       identityref
+           |           |           |     +--rw enabled?
+           |           |           |     |       boolean
+           |           |           |     +--rw filters
+           |           |           |        +--rw policy-filter
+           |           |           |           +--rw export-policy*
+           |           |           |           |       leafref
+           |           |           |           +--rw default-export-\
+policy?
+           |           |           |                   rt-pol:defaul\
+t-policy-type
+           |           |           +--rw peer-types
+           |           |              +--rw peer-type*
+           |           |              |       [peer-type-id]
+           |           |              |  +--rw peer-type-id
+           |           |              |          bt:peer-type
+           |           |              +--rw enabled?     boolean
+           |           |              +--rw filters
+           |           |                 +--rw policy-filter
+           |           |                    +--rw export-policy*
+           |           |                    |       leafref
+           |           |                    +--rw default-export-pol\
+icy?
+           |           |                            rt-pol:default-p\
+olicy-type
+           |           +--rw local-rib
+           |           |  +--rw address-families
+           |           |     +--rw address-family*
+           |           |             [address-family-id]
+           |           |        +--rw address-family-id
+           |           |        |       identityref
+           |           |        +--rw filters
+           |           |           +--rw policy-filter
+           |           |              +--rw export-policy*
+           |           |              |       leafref
+           |           |              +--rw default-export-policy?
+           |           |                      rt-pol:default-policy-\
+type
+           |           +--rw adj-rib-out-pre
+           |           |  +--rw address-families
+           |           |     +--rw address-family*
+           |           |             [address-family-id]
+           |           |        +--rw address-family-id
+           |           |        |       identityref
+           |           |        +--rw enabled?
+           |           |        |       boolean
+           |           |        +--rw peers-configurations
+           |           |           +--rw peers
+           |           |           |  +--rw peer* [peer-id-str]
+           |           |           |     +--rw peer-id-str
+           |           |           |     |       string
+           |           |           |     +--rw enabled?
+           |           |           |     |       boolean
+           |           |           |     +--rw filters
+           |           |           |        +--rw policy-filter
+           |           |           |           +--rw export-policy*
+           |           |           |           |       leafref
+           |           |           |           +--rw default-export-\
+policy?
+           |           |           |                   rt-pol:defaul\
+t-policy-type
+           |           |           +--rw peer-groups
+           |           |           |  +--rw peer-group*
+           |           |           |          [peer-group-id-str]
+           |           |           |     +--rw peer-group-id-str
+           |           |           |     |       string
+           |           |           |     +--rw enabled?
+           |           |           |     |       boolean
+           |           |           |     +--rw filters
+           |           |           |        +--rw policy-filter
+           |           |           |           +--rw export-policy*
+           |           |           |           |       leafref
+           |           |           |           +--rw default-export-\
+policy?
+           |           |           |                   rt-pol:defaul\
+t-policy-type
+           |           |           +--rw bmp-peer-types
+           |           |           |  +--rw bmp-peer-type*
+           |           |           |          [peer-types-bmp]
+           |           |           |     +--rw peer-types-bmp
+           |           |           |     |       identityref
+           |           |           |     +--rw enabled?
+           |           |           |     |       boolean
+           |           |           |     +--rw filters
+           |           |           |        +--rw policy-filter
+           |           |           |           +--rw export-policy*
+           |           |           |           |       leafref
+           |           |           |           +--rw default-export-\
+policy?
+           |           |           |                   rt-pol:defaul\
+t-policy-type
+           |           |           +--rw peer-types
+           |           |              +--rw peer-type*
+           |           |              |       [peer-type-id]
+           |           |              |  +--rw peer-type-id
+           |           |              |          bt:peer-type
+           |           |              +--rw enabled?     boolean
+           |           |              +--rw filters
+           |           |                 +--rw policy-filter
+           |           |                    +--rw export-policy*
+           |           |                    |       leafref
+           |           |                    +--rw default-export-pol\
+icy?
+           |           |                            rt-pol:default-p\
+olicy-type
+           |           +--rw adj-rib-out-post
+           |              +--rw address-families
+           |                 +--rw address-family*
+           |                         [address-family-id]
+           |                    +--rw address-family-id
+           |                    |       identityref
+           |                    +--rw enabled?
+           |                    |       boolean
+           |                    +--rw peers-configurations
+           |                       +--rw peers
+           |                       |  +--rw peer* [peer-id-str]
+           |                       |     +--rw peer-id-str
+           |                       |     |       string
+           |                       |     +--rw enabled?
+           |                       |     |       boolean
+           |                       |     +--rw filters
+           |                       |        +--rw policy-filter
+           |                       |           +--rw export-policy*
+           |                       |           |       leafref
+           |                       |           +--rw default-export-\
+policy?
+           |                       |                   rt-pol:defaul\
+t-policy-type
+           |                       +--rw peer-groups
+           |                       |  +--rw peer-group*
+           |                       |          [peer-group-id-str]
+           |                       |     +--rw peer-group-id-str
+           |                       |     |       string
+           |                       |     +--rw enabled?
+           |                       |     |       boolean
+           |                       |     +--rw filters
+           |                       |        +--rw policy-filter
+           |                       |           +--rw export-policy*
+           |                       |           |       leafref
+           |                       |           +--rw default-export-\
+policy?
+           |                       |                   rt-pol:defaul\
+t-policy-type
+           |                       +--rw bmp-peer-types
+           |                       |  +--rw bmp-peer-type*
+           |                       |          [peer-types-bmp]
+           |                       |     +--rw peer-types-bmp
+           |                       |     |       identityref
+           |                       |     +--rw enabled?
+           |                       |     |       boolean
+           |                       |     +--rw filters
+           |                       |        +--rw policy-filter
+           |                       |           +--rw export-policy*
+           |                       |           |       leafref
+           |                       |           +--rw default-export-\
+policy?
+           |                       |                   rt-pol:defaul\
+t-policy-type
+           |                       +--rw peer-types
+           |                          +--rw peer-type*
+           |                          |       [peer-type-id]
+           |                          |  +--rw peer-type-id
+           |                          |          bt:peer-type
+           |                          +--rw enabled?     boolean
+           |                          +--rw filters
+           |                             +--rw policy-filter
+           |                                +--rw export-policy*
+           |                                |       leafref
+           |                                +--rw default-export-pol\
+icy?
+           |                                        rt-pol:default-p\
+olicy-type
+           +--ro session-stats
+           |  +--ro discontinuity-time
+           |  |       yang:date-and-time
+           |  +--ro established-session?               boolean
+           |  +--ro total-route-monitoring-messages?   uint64
+           |  +--ro total-statistics-messages?         uint64
+           |  +--ro total-peer-down-messages?          uint64
+           |  +--ro total-peer-up-messages?            uint64
+           |  +--ro total-initiation-messages?         uint64
+           |  +--ro total-route-mirroring-messages?    uint64
+           +--rw actions
+              +---x session-reset
+                 +--ro output
+                    +--ro (outcome)?
+                       +--:(success)
+                       |  +--ro success?   empty
+                       +--:(failure)
+                          +--ro failure?   string
+
+  augment /rt:routing/rt:control-plane-protocols
+            /rt:control-plane-protocol/bgp:bgp:
+    +--rw bmp-data
+       +--rw bmp-monitoring-stations!
+          +--rw bmp-monitoring-station* [id]
+             +--rw id                      string
+             +--rw bmp-route-monitoring!
+                +--rw enabled?            boolean
+                +--rw adj-rib-in-pre
+                |  +--rw address-families
+                |     +--rw address-family* [address-family-id]
+                |        +--rw address-family-id
+                |        |       identityref
+                |        +--rw enabled?                boolean
+                |        +--rw peers-configurations
+                |           +--rw bmp-peer-types
+                |           |  +--rw bmp-peer-type*
+                |           |          [peer-types-bmp]
+                |           |     +--rw peer-types-bmp
+                |           |     |       identityref
+                |           |     +--rw enabled?          boolean
+                |           |     +--rw filters
+                |           |        +--rw policy-filter
+                |           |           +--rw export-policy*
+                |           |           |       leafref
+                |           |           +--rw default-export-policy?
+                |           |                   rt-pol:default-polic\
+y-type
+                |           +--rw peer-types
+                |           |  +--rw peer-type* [peer-type-id]
+                |           |  |  +--rw peer-type-id
+                |           |  |          bt:peer-type
+                |           |  +--rw enabled?     boolean
+                |           |  +--rw filters
+                |           |     +--rw policy-filter
+                |           |        +--rw export-policy*
+                |           |        |       leafref
+                |           |        +--rw default-export-policy?
+                |           |                rt-pol:default-policy-t\
+ype
+                |           +--rw peer-groups
+                |           |  +--rw peer-group* [peer-id]
+                |           |     +--rw peer-id    leafref
+                |           |     +--rw enabled?   boolean
+                |           |     +--rw filters
+                |           |        +--rw policy-filter
+                |           |           +--rw export-policy*
+                |           |           |       leafref
+                |           |           +--rw default-export-policy?
+                |           |                   rt-pol:default-polic\
+y-type
+                |           +--rw peers
+                |              +--rw peer* [peer-id]
+                |                 +--rw peer-id    leafref
+                |                 +--rw enabled?   boolean
+                |                 +--rw filters
+                |                    +--rw policy-filter
+                |                       +--rw export-policy*
+                |                       |       leafref
+                |                       +--rw default-export-policy?
+                |                               rt-pol:default-polic\
+y-type
+                +--rw adj-rib-in-post
+                |  +--rw address-families
+                |     +--rw address-family* [address-family-id]
+                |        +--rw address-family-id
+                |        |       identityref
+                |        +--rw enabled?                boolean
+                |        +--rw peers-configurations
+                |           +--rw bmp-peer-types
+                |           |  +--rw bmp-peer-type*
+                |           |          [peer-types-bmp]
+                |           |     +--rw peer-types-bmp
+                |           |     |       identityref
+                |           |     +--rw enabled?          boolean
+                |           |     +--rw filters
+                |           |        +--rw policy-filter
+                |           |           +--rw export-policy*
+                |           |           |       leafref
+                |           |           +--rw default-export-policy?
+                |           |                   rt-pol:default-polic\
+y-type
+                |           +--rw peer-types
+                |           |  +--rw peer-type* [peer-type-id]
+                |           |  |  +--rw peer-type-id
+                |           |  |          bt:peer-type
+                |           |  +--rw enabled?     boolean
+                |           |  +--rw filters
+                |           |     +--rw policy-filter
+                |           |        +--rw export-policy*
+                |           |        |       leafref
+                |           |        +--rw default-export-policy?
+                |           |                rt-pol:default-policy-t\
+ype
+                |           +--rw peer-groups
+                |           |  +--rw peer-group* [peer-id]
+                |           |     +--rw peer-id    leafref
+                |           |     +--rw enabled?   boolean
+                |           |     +--rw filters
+                |           |        +--rw policy-filter
+                |           |           +--rw export-policy*
+                |           |           |       leafref
+                |           |           +--rw default-export-policy?
+                |           |                   rt-pol:default-polic\
+y-type
+                |           +--rw peers
+                |              +--rw peer* [peer-id]
+                |                 +--rw peer-id    leafref
+                |                 +--rw enabled?   boolean
+                |                 +--rw filters
+                |                    +--rw policy-filter
+                |                       +--rw export-policy*
+                |                       |       leafref
+                |                       +--rw default-export-policy?
+                |                               rt-pol:default-polic\
+y-type
+                +--rw local-rib
+                |  +--rw address-families
+                |     +--rw address-family* [address-family-id]
+                |        +--rw address-family-id    identityref
+                |        +--rw filters
+                |           +--rw policy-filter
+                |              +--rw export-policy*
+                |              |       leafref
+                |              +--rw default-export-policy?
+                |                      rt-pol:default-policy-type
+                +--rw adj-rib-out-pre
+                |  +--rw address-families
+                |     +--rw address-family* [address-family-id]
+                |        +--rw address-family-id
+                |        |       identityref
+                |        +--rw enabled?                boolean
+                |        +--rw peers-configurations
+                |           +--rw bmp-peer-types
+                |           |  +--rw bmp-peer-type*
+                |           |          [peer-types-bmp]
+                |           |     +--rw peer-types-bmp
+                |           |     |       identityref
+                |           |     +--rw enabled?          boolean
+                |           |     +--rw filters
+                |           |        +--rw policy-filter
+                |           |           +--rw export-policy*
+                |           |           |       leafref
+                |           |           +--rw default-export-policy?
+                |           |                   rt-pol:default-polic\
+y-type
+                |           +--rw peer-types
+                |           |  +--rw peer-type* [peer-type-id]
+                |           |  |  +--rw peer-type-id
+                |           |  |          bt:peer-type
+                |           |  +--rw enabled?     boolean
+                |           |  +--rw filters
+                |           |     +--rw policy-filter
+                |           |        +--rw export-policy*
+                |           |        |       leafref
+                |           |        +--rw default-export-policy?
+                |           |                rt-pol:default-policy-t\
+ype
+                |           +--rw peer-groups
+                |           |  +--rw peer-group* [peer-id]
+                |           |     +--rw peer-id    leafref
+                |           |     +--rw enabled?   boolean
+                |           |     +--rw filters
+                |           |        +--rw policy-filter
+                |           |           +--rw export-policy*
+                |           |           |       leafref
+                |           |           +--rw default-export-policy?
+                |           |                   rt-pol:default-polic\
+y-type
+                |           +--rw peers
+                |              +--rw peer* [peer-id]
+                |                 +--rw peer-id    leafref
+                |                 +--rw enabled?   boolean
+                |                 +--rw filters
+                |                    +--rw policy-filter
+                |                       +--rw export-policy*
+                |                       |       leafref
+                |                       +--rw default-export-policy?
+                |                               rt-pol:default-polic\
+y-type
+                +--rw adj-rib-out-post
+                   +--rw address-families
+                      +--rw address-family* [address-family-id]
+                         +--rw address-family-id
+                         |       identityref
+                         +--rw enabled?                boolean
+                         +--rw peers-configurations
+                            +--rw bmp-peer-types
+                            |  +--rw bmp-peer-type*
+                            |          [peer-types-bmp]
+                            |     +--rw peer-types-bmp
+                            |     |       identityref
+                            |     +--rw enabled?          boolean
+                            |     +--rw filters
+                            |        +--rw policy-filter
+                            |           +--rw export-policy*
+                            |           |       leafref
+                            |           +--rw default-export-policy?
+                            |                   rt-pol:default-polic\
+y-type
+                            +--rw peer-types
+                            |  +--rw peer-type* [peer-type-id]
+                            |  |  +--rw peer-type-id
+                            |  |          bt:peer-type
+                            |  +--rw enabled?     boolean
+                            |  +--rw filters
+                            |     +--rw policy-filter
+                            |        +--rw export-policy*
+                            |        |       leafref
+                            |        +--rw default-export-policy?
+                            |                rt-pol:default-policy-t\
+ype
+                            +--rw peer-groups
+                            |  +--rw peer-group* [peer-id]
+                            |     +--rw peer-id    leafref
+                            |     +--rw enabled?   boolean
+                            |     +--rw filters
+                            |        +--rw policy-filter
+                            |           +--rw export-policy*
+                            |           |       leafref
+                            |           +--rw default-export-policy?
+                            |                   rt-pol:default-polic\
+y-type
+                            +--rw peers
+                               +--rw peer* [peer-id]
+                                  +--rw peer-id    leafref
+                                  +--rw enabled?   boolean
+                                  +--rw filters
+                                     +--rw policy-filter
+                                        +--rw export-policy*
+                                        |       leafref
+                                        +--rw default-export-policy?
+                                                rt-pol:default-polic\
+y-type
+           ]]></sourcecode>
+          </figure>
+        </t> 
+      </section>    
+
+      <section title="YANG Module" anchor="ietf-bmp">
+        <t>&lt;CODE BEGINS> file "ietf-bmp@2022-01-27.yang"</t>
+          <figure>
+            <sourcecode><![CDATA[
+module ietf-bmp {
+  yang-version 1.1;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-bmp";
+  prefix bmp;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import ietf-routing {
+    prefix rt;
+    reference
+      "RFC 8349: A YANG Data Model for Routing Management
+       (NMDA Version).";
+  }
+  import ietf-bgp {
+    prefix bgp;
+    reference
+      "I-D.draft-ietf-idr-bgp-model-17:
+       BGP YANG module for Service Provider Network.";
+  }
+  import ietf-inet-types {
+    prefix inet;
+    reference
+      "RFC 6991: Common YANG Data Types";
+  }
+  import ietf-bgp-types {
+    prefix bt;
+    reference
+      "RFC AAAA: BGP YANG module for Service Provider Network.
+       RFC-EDITOR: please update XXX with the RFC ID assigned
+       to I-D.ietf-idr-bgp-model";
+  }
+  import ietf-netconf-acm {
+    prefix nacm;
+    reference
+      "RFC 8341: Network Configuration Access Control Model";
+  }
+  import ietf-tcp-common {
+    prefix tcpcmn;
+    reference
+      "I-D.ietf-netconf-tcp-client-server: YANG Groupings for TCP
+       Clients and TCP Servers.";
+  }
+  import ietf-routing-policy {
+    prefix rt-pol;
+    reference
+      "RFC 9067: A YANG Data Model for Routing Policy";
+  }
+  import ietf-key-chain {
+    prefix key-chain;
+    reference
+      "RFC 8177: YANG Key Chain.";
+  }
+
+  organization
+    "IETF GROW Working Group";
+  contact
+    "WG Web:   <https://datatracker.ietf.org/wg/grow/>
+     WG List:  <mailto:grow@ietf.org>
+
+     Author:  Camilo Cardona
+        <mailto:camilo@ntt.net>
+
+     Author:  Paolo Lucente
+        <mailto:cpaolo@ntt.net>
+
+     Author:  Thomas Graf
+        <mailto:thomas.graf@swisscom.com>
+
+     Author:  Benoit Claise
+        <mailto:benoit.claise@huawei.com>";
+  description
+    "This module specifies a structure for BMP
+     (BGP Monitoring Protocol) configuration and monitoring.
+
+     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
+     'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED',
+     'NOT RECOMMENDED', 'MAY', and 'OPTIONAL' in this document
+     are to be interpreted as described in BCP 14 (RFC 2119)
+     (RFC 8174) when, and only when, they appear in all
+     capitals, as shown here.
+
+     Copyright (c) 2022 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject to
+     the license terms contained in, the Revised BSD License set
+     forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (https://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC 9196
+     (https://www.rfc-editor.org/info/rfc9196); see the RFC itself
+     for full legal notices.";
+
+  revision 2024-04-03 {
+    description
+      "initial version";
+    reference
+      "RFC YYYY: BMP YANG Module
+       RFC-EDITOR: please update YYYY with this RFC ID";
+  }
+
+  identity bmp-peer-types {
+    description
+      "Enum values for selecting peers";
+  }
+
+  identity bmp-peer-types-all-peers {
+    base bmp-peer-types;
+    description
+      "This identity selects all peer's RIBs.
+       When used, it act as a 'default' configuration.";
+  }
+
+  identity bmp-ni-types {
+    description
+      "Enum values for selecting multiple Network instances
+       for configuration";
+  }
+
+  identity bmp-ni-types-all-ni {
+    base bmp-ni-types;
+    description
+      "The identify is an explicit way
+       of selecting all network instances.";
+  }
+
+  identity bmp-ni-types-global-ni {
+    base bmp-ni-types;
+    description
+      "Configuring the global one";
+  }
+
+  identity bmp-ni-types-non-global-ni {
+    base bmp-ni-types;
+    description
+      "The identify is an explicit way
+       of selecting all network instances, except th e global-one.";
+  }
+
+  grouping bmp-tcp-options {
+    description
+      "TCP options for the connection to the station";
+    leaf maximum-segment-size {
+      type uint16;
+      description
+        "Maximum segment size for the TCP connections.
+         In the absence of this container, the system
+         would select the maximum segment size for this
+         connection";
+    }
+    // Taken from the bgp yang module
+    leaf mtu-discovery {
+      type boolean;
+      default "true";
+      description
+        "Turns path mtu discovery for the  TCP sessions
+         on (true) or off (false).";
+      reference
+        "RFC 1191: Path MTU discovery.";
+    }
+    uses tcpcmn:tcp-common-grouping;
+    // taken from the bgp yang module
+    leaf secure-session-enable {
+      type boolean;
+      default "false";
+      description
+        "Does this session need to be secured?";
+    }
+    container secure-session {
+      when "../secure-session-enable = 'true'";
+      description
+        "Container for describing how a particular BMP session
+         is to be secured.";
+      choice authentication {
+        mandatory true;
+        case ao {
+          leaf ao-keychain {
+            type key-chain:key-chain-ref;
+            description
+              "Reference to the key chain that will be used by
+               this model. Applicable for TCP-AO and TCP-MD5
+               only";
+            reference
+              "RFC 8177: YANG Key Chain.";
+          }
+          description
+            "Uses TCP-AO to secure the session. Parameters for
+             those are defined as a grouping in the TCP YANG
+             model.";
+          reference
+            "RFC 5925 - The TCP Authentication Option.";
+        }
+        case md5 {
+          leaf md5-keychain {
+            type key-chain:key-chain-ref;
+            description
+              "Reference to the key chain that will be used by
+               this model. Applicable for TCP-AO and TCP-MD5
+               only";
+            reference
+              "RFC 8177: YANG Key Chain.";
+          }
+          description
+            "Uses TCP-MD5 to secure the session. Parameters for
+             those are defined as a grouping in the TCP YANG
+             model.";
+          reference
+            "RFC 5925: The TCP Authentication Option.";
+        }
+        description
+          "Choice of TCP authentication.";
+      }
+    }
+  }
+
+  grouping bmp-ip-connection {
+    description
+      "common elements for defining connectivity
+       to a BMP monitoring station";
+    choice passive-or-active {
+      mandatory true;
+      description
+        "Choice for active or passive connection as described
+         in section 3.2 of RFC 7854";
+      case active {
+        description
+          "The device starts the connection to the monitoring
+           station";
+        container active {
+          description
+            "The device starts the connection to
+             the monitoring station";
+          leaf network-instance {
+            // TODO:This will not be supported for 
+            // implementations not supporting schema-mount.
+            // Should just leave it as a string?
+            // type leafref {
+            //   path "/ni:network-instances/ni:network-instance/"
+            //      + "ni:name";
+            // }
+            type string;
+            description
+              "If present, specifies the network instance
+               used to reach the monitoring station.
+               If not provided, the global network
+               instance is used.";
+          }
+          leaf station-address {
+            type inet:ip-address;
+            mandatory true;
+            description
+              "Destination IP address of monitoring station";
+          }
+          leaf station-port {
+            type inet:port-number;
+            mandatory true;
+            description
+              "Destination port of the station";
+          }
+          leaf local-address {
+            type inet:ip-address;
+            mandatory true;
+            description
+              "Local IP address to source active connection";
+          }
+          leaf local-port {
+            type inet:port-number;
+            description
+              "Optional Local port for active connection";
+          }
+        }
+      }
+      case passive {
+        description
+          "The device waits for the connection
+           in a local endpoint";
+        container passive {
+          description
+            "The device waits for the connection
+             in a local endpoint";
+          leaf network-instance {
+            // TODO:This will not be supported for 
+            // implementations not supporting schema-mount.
+            // Should just leave it as a string?
+            // type leafref {
+            //   path "/ni:network-instances/ni:network-instance/"
+            //      + "ni:name";
+            // }
+            type string;
+            description
+              "If present, specifies the network instance
+               used to reach the monitoring station.
+               If not provided, the global network
+               instance is used.";
+          }
+          leaf station-address {
+            type inet:ip-address;
+            mandatory true;
+            description
+              "address of the station";
+          }
+          leaf station-port {
+            type inet:port-number;
+            description
+              "Optional value identifying the origin port of
+               the connection, if provided it MUST match";
+          }
+          leaf local-address {
+            type inet:ip-address;
+            mandatory true;
+            description
+              "Local IP address to wait for the connection";
+          }
+          leaf local-port {
+            type inet:port-number;
+            mandatory true;
+            description
+              "Local port to wait for the connection";
+          }
+        }
+      }
+    }
+  }
+
+  grouping bmp-source-configuration {
+    description
+      "Group containing some general characteristics for configuring
+       a BMP source";
+    container filters {
+      description
+        "Includes containers specifying filters for deciding
+         which routes to export to the station";
+      container policy-filter {
+        description
+          "Filter routes based on a policy.
+           The policy SHOULD NOT perform any action besides
+           filtering routes.
+           The policy SHOULD only contain accept and reject
+           routes, and the matching conditions SHOULD only
+           match prefix sets.";
+        leaf-list export-policy {
+          type leafref {
+            path "/rt-pol:routing-policy/"
+               + "rt-pol:policy-definitions/"
+               + "rt-pol:policy-definition/rt-pol:name";
+            require-instance true;
+          }
+          ordered-by user;
+          description
+            "List of policy names in sequence used to select
+             routes to be exported to station.";
+        }
+        leaf default-export-policy {
+          type rt-pol:default-policy-type;
+          default "accept-route";
+          description
+            "Explicitly set a default policy if no policy
+             definition in the export policy chain
+             is satisfied.";
+        }
+      }
+    }
+  }
+
+  grouping bmp-ni-peer-ribs-filter {
+    description
+      "Leaves for configuring RIBs where under the BGP
+       container.";
+    container address-families {
+      description
+        "container for lists of address-families";
+      list address-family {
+        key "address-family-id";
+        description
+          "List of address families.
+           The name of the address family, as defined
+           in the BGP model is used for keying.";
+        leaf address-family-id {
+          type identityref {
+            base bt:afi-safi-type;
+          }
+          description
+            "Address family id to configure";
+        }
+        leaf enabled {
+          type boolean;
+          default "true";
+          description
+            "Enables route monitoring messages
+             for the address family";
+        }
+        container peers-configurations {
+          description
+            "Every peer under the configured network instance can be
+            at most configured by one of the next containers.  If the
+            peer is not covered by any, then no BMP message should
+            include information from/to that peer.  If the peer is
+            covered by more than one, then the priority is:
+             1. peers
+             2. peer-groups
+             3. peer-type
+             4. bmp-peer-types
+
+             New child containers or new bmp-peer-types instances
+             SHOULD provide a way of unambiguislly selecting which
+             configuration container should be selected for a peer in
+             case mutiple matches.
+            ";
+          container bmp-peer-types {
+            description
+              "Generic identification of peers to configure.";
+            list bmp-peer-type {
+              key "peer-types-bmp";
+              description
+                "Identification of peers
+                 for which we send BMP data to the collector
+                 using a peer type defined using a peer-types-bmp.
+                 For instance, to create a default for all
+                 peers use bmp-peer-types-all-peers";
+              leaf peer-types-bmp {
+                type identityref {
+                  base bmp-peer-types;
+                }
+                description
+                  "Peer type to configure";
+              }
+              leaf enabled {
+                type boolean;
+                default "true";
+                description
+                  "Enables routing monitoring messages
+                   for the peer(s).";
+              }
+              uses bmp-source-configuration;
+            }
+          }
+          container peer-types {
+            description
+              "Generic identification of peers to configure.";
+            list peer-type {
+              key "peer-type-id";
+              description
+                "Identification of peers
+                 for which we send BMP data to the collector
+                 using BGP peer-type (e.g. internal, external)
+                ";
+              leaf peer-type-id {
+                type bt:peer-type;
+                description
+                  "BGP Peer type to configure";
+              }
+            }
+            leaf enabled {
+              type boolean;
+              default "true";
+              description
+                "Enables routing monitoring messages
+                 for the peer(s).";
+            }
+            uses bmp-source-configuration;
+          }
+          container peer-groups {
+            description
+              "Identification of peer-groups
+               to configure";
+            list peer-group {
+              key "peer-id";
+              description
+                "Identification of peer-groups
+                 for which we send BMP data to the collector";
+              leaf peer-id {
+                type leafref {
+                  path "../../../../../../../../../../../"
+                     + "bgp:peer-groups/bgp:peer-group/"
+                     + "bgp:name";
+                }
+                description
+                  "Peergroup to configure";
+              }
+              leaf enabled {
+                type boolean;
+                default "true";
+                description
+                  "Enables routing monitoring messages
+                   for the peer-group(s).";
+              }
+              uses bmp-source-configuration;
+            }
+          }
+          container peers {
+            description
+              "Identification of peers
+               for which we send BMP data to the collector";
+            list peer {
+              key "peer-id";
+              description
+                "Identification of peers
+                 for which we send BMP data to the collector";
+              leaf peer-id {
+                type leafref {
+                  path "../../../../../../../../../../../"
+                     + "bgp:neighbors/bgp:neighbor/"
+                     + "bgp:remote-address";
+                }
+                description
+                  "Peer to configure";
+              }
+              leaf enabled {
+                type boolean;
+                default "true";
+                description
+                  "Enables routing monitoring messages
+                   for the peer(s).";
+              }
+              uses bmp-source-configuration;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  grouping bmp-peer-ribs-filter {
+    description
+      "Leaves for configuring RIBs
+       under the main BMP container";
+    container address-families {
+      description
+        "container for lists of address-families";
+      list address-family {
+        key "address-family-id";
+        description
+          "List of address families.
+           The name of the address family, as defined
+           in the BGP model is used for keying.";
+        leaf address-family-id {
+          type identityref {
+            base bt:afi-safi-type;
+          }
+          description
+            "Address family id to configure";
+        }
+        leaf enabled {
+          type boolean;
+          default "true";
+          description
+            "Enables route monitoring messages
+             for the address family";
+        }
+        container peers-configurations {
+          description
+            "Every peer under this BGP instance
+             can be at most configured by one of the next containers.
+             If the peer is not covered by any, then no BMP
+             message should include information from/to that peer.
+             If the peer is covered by more than one, then the
+             priority is:
+             1. peer
+             2. peer-groups
+             3. peer-type
+             4. bmp-peer-types
+
+             New child containers or new bmp-peer-types instances
+             SHOULD provide a way of unambiguislly selecting which
+             configuration container should be selected for a peer in
+             case mutiple matches.
+            ";
+          container peers {
+            description
+              "Generic identification of peers to configure.";
+            list peer {
+              key "peer-id-str";
+              description
+                "Identification of the peer. It is up to the
+                implementation to define what to do if no peer
+                matches this key.";
+              leaf peer-id-str {
+                type string;
+                description
+                  "Peer to configure";
+              }
+              leaf enabled {
+                type boolean;
+                default "true";
+                description
+                  "Enables routing monitoring messages
+                   for the peer(s).";
+              }
+              uses bmp-source-configuration;
+            }
+          }
+          container peer-groups {
+            description
+              "Generic identification of peers to configure.";
+            list peer-group {
+              key "peer-group-id-str";
+              description
+                "Identification of the peer-group. It is up to the
+                implementation to define what to do if no peer-group
+                with this name exists.";
+              leaf peer-group-id-str {
+                type string;
+                description
+                  "Peer-group to configure";
+              }
+              leaf enabled {
+                type boolean;
+                default "true";
+                description
+                  "Enables routing monitoring messages
+                   for the peer(s).";
+              }
+              uses bmp-source-configuration;
+            }
+          }
+          container bmp-peer-types {
+            description
+              "Generic identification of peers to configure.";
+            list bmp-peer-type {
+              key "peer-types-bmp";
+              description
+                "Identification of peers
+                 for which we send BMP data to the collector
+                 using a peer type defined using a peer-types-bmp.
+                 For instance, to create a default for all
+                 peers use bmp-peer-types-all-peers";
+              leaf peer-types-bmp {
+                type identityref {
+                  base bmp-peer-types;
+                }
+                description
+                  "Peer type to configure";
+              }
+              leaf enabled {
+                type boolean;
+                default "true";
+                description
+                  "Enables routing monitoring messages
+                   for the peer(s).";
+              }
+              uses bmp-source-configuration;
+            }
+          }
+          container peer-types {
+            description
+              "Generic identification of peers to configure.";
+            list peer-type {
+              key "peer-type-id";
+              description
+                "Identification of peers
+                 for which we send BMP data to the collector
+                 using BGP peer-type (e.g. internal, external)
+                ";
+              leaf peer-type-id {
+                type bt:peer-type;
+                description
+                  "BGP peer-type to configure";
+              }
+            }
+            leaf enabled {
+              type boolean;
+              default "true";
+              description
+                "Enables routing monitoring messages
+                 for the peer(s).";
+            }
+            uses bmp-source-configuration;
+          }
+        }
+      }
+    }
+  }
+
+  grouping bmp-route-monitoring-sources {
+    description
+      "Route monitoring sources";
+    reference
+      "RFC7854:  BGP Monitoring Protocol, Section 5.";
+    container network-instance-configuration {
+      description
+        "This container offers various options for configuring BMP
+         route-monitoring messages for each network instance.
+         Additionally, network instances can be configured under the
+         bmp-data container that this module includes under the
+         /rt:routing/rt:control-plane-protocols/
+         rt:control-plane-protocol/bgp:bgp container.
+
+         This container also holds a way of configuring the network
+         instance directly. This is redundant , and unfavoured to the
+         configuration under the bgp container, but it might be used
+         for implementation not yet supporting schema-mount since
+         that is required for adding control-plane infromation using
+         the ietf-network-instance module.
+
+         This container also provides a way of configuring
+         network-instances by 'bmp-ni-types'. It currently holds two
+         instances:  bmp-ni-types-all-ni to configure all network
+         instances (serving as a default), and
+         bmp-ni-types-non-global-ni that configures all non-global
+         network instances: i.e. providing a default for all  network
+         instances under the ietf-network-instance module.
+
+         A single configuration container Network MUST
+         be applied to a network instance.  If not containe matches a
+         network instance, the BMP route monitoring messages SHOULD
+         be disabled for that network instance.  If more than one
+         container matches a network-instance  the order of
+         preference is:
+         1. The configuration under the BGP container
+         2. The Network-instance under this container
+         3. bmp-ni-types: bmp-ni-types-non-global-ni (if it matches).
+         4. bmp-ni-types: bmp-ni-types-all-ni
+
+         New identities under bmp-ni-types or augmentations of this
+         container in the future SHOULD provide a clear way of
+         selecting the configuration container for a network-instance
+         without ambiguity.";
+      list network-instance {
+        key "network-instance-id";
+        description
+          "Network instance to monitory using BMP.";
+        leaf network-instance-id {
+          type union {
+            type identityref {
+              base bmp-ni-types;
+            }
+            // TODO:This will not be supported for 
+            // implementations not supporting schema-mount.
+            // Should just leave it as a string to be useful without
+            // schema-mount??
+            //type leafref {
+            //  path "/ni:network-instances/ni:network-instance/"
+            //     + "ni:name";
+            //}
+            type string;
+          }
+          description
+            "Identification of a network-instance.
+             Network instances can be identified
+             directly by their path or use an identity to
+             identify one or a group of them
+             (e.g. bmp-ni-types-all-ni for all of them)";
+        }
+        leaf enabled {
+          type boolean;
+          default "true";
+          description
+            "Enables routing monitoring
+             messages for the network instance.";
+        }
+        container adj-rib-in-pre {
+          description
+            "Configuration for the adj-rib-in pre-policy";
+          reference
+            "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
+          uses bmp-peer-ribs-filter;
+        }
+        container adj-rib-in-post {
+          description
+            "Configuration for the adj-rib-in post-policy";
+          reference
+            "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
+          uses bmp-peer-ribs-filter;
+        }
+        container local-rib {
+          description
+            "Configuration for the local-rib";
+          reference
+            "RFC9069: Support for Local RIB in the BGP Monitoring
+             Protocol (BMP), Section 3.";
+          container address-families {
+            description
+              "List of address families to enable for
+               local-rib.";
+            list address-family {
+              key "address-family-id";
+              description
+                "Address family to enable for local-rib";
+              leaf address-family-id {
+                type identityref {
+                  base bt:afi-safi-type;
+                }
+                description
+                  "Address family id to enable for local-rib";
+              }
+              uses bmp-source-configuration;
+            }
+          }
+        }
+        container adj-rib-out-pre {
+          description
+            "Configuration for the adj-rib-out pre-policy";
+          uses bmp-peer-ribs-filter;
+          reference
+            "RFC8671: Support for Adj-RIB-Out in the BGP Monitoring
+             Protocol (BMP) , Section 3.";
+        }
+        container adj-rib-out-post {
+          description
+            "Configuration for the adj-rib-out post-policy";
+          uses bmp-peer-ribs-filter;
+          reference
+            "RFC8671: Support for Adj-RIB-Out in the BGP Monitoring
+             Protocol (BMP) , Section 3.";
+        }
+      }
+    }
+  }
+
+  container bmp {
+    description
+      "Main level for BMP configuration ";
+    container bmp-monitoring-stations {
+      description
+        "Container for the list of BMP monitoring stations";
+      list bmp-monitoring-station {
+        key "id";
+        description
+          "Configuration for a BMP monitoring station.";
+        leaf id {
+          type string;
+          description
+            "Identification string for the monitoring station";
+        }
+        // Connection, missing tcp tuning params 
+        // like keep-alives, segment sizes, etc.
+        container connection {
+          description
+            "Connection details for the monitoring station";
+          uses bmp-ip-connection;
+          container tcp-options {
+            description
+              "TCP options for the connection to the monitoring
+               station";
+            uses bmp-tcp-options;
+          }
+          leaf initial-delay {
+            type uint32;
+            units "seconds";
+            default "0";
+            description
+              "Initial delay of the connection to the station";
+          }
+          container backoff {
+            description
+              "Configures the backoff strategy after a connection
+               retry";
+            reference
+              "RFC7854 Section 3.2";
+            choice backoff-options {
+              description
+                "Options for backoff strategies";
+              reference
+                "RFC7854 Section 3.2";
+              case simple-exponential {
+                description
+                  "Simple exponential backoff with limits.";
+                container simple-exponential {
+                  description
+                    "Simple exponential backoff with limits.
+                     Starts with the initial backoff and doubles
+                     the backoff of every retry until reaching the
+                     maximum backoff";
+                  leaf initial-backoff {
+                    type uint32;
+                    units "seconds";
+                    default "30";
+                    description
+                      "Initial backoff time";
+                  }
+                  leaf maximum-backoff {
+                    type uint32;
+                    units "seconds";
+                    default "720";
+                    description
+                      "Maximum backoff time";
+                  }
+                }
+              }
+            }
+          }
+        }
+        container bmp-data {
+          description
+            "Configuration of BMP data";
+          leaf initiation-message {
+            type string;
+            description
+              "User defined message to append to the
+               initiation message";
+            reference
+              "RFC7854:  BGP Monitoring Protocol,
+               Section 4.3 and 4.4";
+          }
+          container bmp-statistics-report {
+            presence "Enables the BMP statistics report";
+            description
+              "Configuration of the statistics report";
+            reference
+              "RFC7854:  BGP Monitoring Protocol,
+               Section 4.8";
+            leaf statistics-interval {
+              type uint32;
+              units "seconds";
+              mandatory true;
+              description
+                "Interval for statistic report message.";
+            }
+          }
+          container bmp-route-monitoring {
+            description
+              "Configuration of the data sources for
+               route-monitoring messages";
+            uses bmp-route-monitoring-sources;
+          }
+        }
+        container session-stats {
+          config false;
+          description
+            "stats and operational values for the station";
+          leaf discontinuity-time {
+            type yang:date-and-time;
+            mandatory true;
+            description
+              "The time on the most recent occasion at which any
+               one or more of this station's counters suffered a
+               discontinuity.  If no such discontinuities have
+               occurred since the last re-initialization of the
+               local management subsystem, then this node contains
+               the time the local management subsystem
+               re-initialized itself.";
+          }
+          leaf established-session {
+            type boolean;
+            description
+              "Value indicating if the session is currently
+               established";
+          }
+          leaf total-route-monitoring-messages {
+            type uint64;
+            description
+              "Number of route-monitoring messages sent since last
+               successful connection";
+          }
+          leaf total-statistics-messages {
+            type uint64;
+            description
+              "Number of statistics messages sent since last
+               successful connection";
+          }
+          leaf total-peer-down-messages {
+            type uint64;
+            description
+              "Number of peer-down messages sent since last
+               successful connection";
+          }
+          leaf total-peer-up-messages {
+            type uint64;
+            description
+              "Number of peer-up messages sent since last successful
+               connection";
+          }
+          leaf total-initiation-messages {
+            type uint64;
+            description
+              "Number of initiation messages sent since last
+               successful connection";
+          }
+          leaf total-route-mirroring-messages {
+            type uint64;
+            description
+              "Number of route-mirroring messages sent since last
+               successful connection";
+          }
+        }
+        container actions {
+          nacm:default-deny-all;
+          description
+            "Container with the actions for the BMP operation";
+          action session-reset {
+            description
+              "Resets the session for a station.";
+            output {
+              choice outcome {
+                description
+                  "Output of the reset operation. Either a success or
+                   failure. For the latter, the reason for the
+                   error is provided.";
+                leaf success {
+                  type empty;
+                  description
+                    "Reset successful";
+                }
+                leaf failure {
+                  type string;
+                  description
+                    "Reset could not be performed.
+                     Reason is included in the field";
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Augment the BGP module to include data for network instances
+
+  augment "/rt:routing/rt:control-plane-protocols/"
+        + "rt:control-plane-protocol/bgp:bgp" {
+    description
+      "Augments the BGP container under control-plane-protocol.  It
+       can be used to configure the global BGP instance, but also the
+       network-instances under the module ietf-network-instance";
+    container bmp-data {
+      description
+        "Container for the configuration of BMP data
+         related to this BGP instance";
+      container bmp-monitoring-stations {
+        presence 
+          "If this container exists, the network instance must be
+          configured using this";
+        description
+          "Container for the configuration of BMP data
+           related to this BGP instance";
+        list bmp-monitoring-station {
+          key "id";
+          description
+            "Container for the configuration of BMP data for this
+             monitoring-station related to this BGP instance";
+          leaf id {
+            // TODO: We have not been able to configure
+            // the schema mount to recognize this yet. 
+            // Until we solve it, we will keep it as 
+            //type leafref {
+            //  path "/bmp:bmp/bmp:bmp-monitoring-stations/"
+            //        + "bmp:bmp-monitoring-station/bmp:id";
+            //}
+            type string;
+            description
+              "Identification string for the monitoring station";
+          }
+          container bmp-route-monitoring {
+            presence "The presence of this container means the
+                      Network instance it contains MUST
+                      be configured using it";
+            description
+              "Configuration of the data sources for
+               route-monitoring messages for this network-instance";
+            leaf enabled {
+              type boolean;
+              default "true";
+              description
+                "Enables routing monitoring
+                 messages for the network instance.";
+            }
+            container adj-rib-in-pre {
+              description
+                "Configuration for the adj-rib-in pre-policy";
+              reference
+                "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
+              uses bmp-ni-peer-ribs-filter;
+            }
+            container adj-rib-in-post {
+              description
+                "Configuration for the adj-rib-in post-policy";
+              reference
+                "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
+              uses bmp-ni-peer-ribs-filter;
+            }
+            container local-rib {
+              description
+                "Configuration for the local-rib";
+              reference
+                "RFC9069: Support for Local RIB in the BGP Monitoring
+                 Protocol (BMP), Section 3.";
+              container address-families {
+                description
+                  "List of address families to enable for
+                   local-rib.";
+                list address-family {
+                  key "address-family-id";
+                  description
+                    "Address family to enable for local-rib";
+                  leaf address-family-id {
+                    type identityref {
+                      base bt:afi-safi-type;
+                    }
+                    description
+                      "Address family id to enable for local-rib";
+                  }
+                  uses bmp-source-configuration;
+                }
+              }
+            }
+            container adj-rib-out-pre {
+              description
+                "Configuration for the adj-rib-out pre-policy";
+              uses bmp-ni-peer-ribs-filter;
+              reference
+                "RFC8671: Support for Adj-RIB-Out in the BGP
+                 Monitoring Protocol (BMP) , Section 3.";
+            }
+            container adj-rib-out-post {
+              description
+                "Configuration for the adj-rib-out post-policy";
+              uses bmp-ni-peer-ribs-filter;
+              reference
+                "RFC8671: Support for Adj-RIB-Out in the BGP
+                 Monitoring Protocol (BMP) , Section 3.";
+            }
+          }
+        }
+      }
+    }
+  }
+}
+            ]]></sourcecode>
+          </figure>
+        <t>&lt;CODE ENDS></t>
+      </section> 
+    </section>  
+                    
+    <section title="Security Considerations" anchor="security-considerations">
+      <t> 
+         The YANG module specified in this document defines a schema for data
+          that is designed to be accessed via network management protocols such
+          as NETCONF <xref target="RFC6241"/> or RESTCONF <xref
+          target="RFC8040"/>. The lowest NETCONF layer is the secure transport
+          layer, and the mandatory-to-implement secure transport is Secure
+          Shell (SSH) <xref target="RFC6242"/>. The lowest RESTCONF layer is
+          HTTPS, and the mandatory-to-implement secure transport is TLS <xref
+          target="RFC8446"/>. The NETCONF Access Control Model (NACM) <xref
+              target="RFC8341"/> provides the means to restrict access for
+          NETCONF or RESTCONF users to a preconfigured subset of all
+          available NETCONF or RESTCONF protocol operations and content. 
+      </t>
+      <t>
+         BGP data is sensible for security considerations. The model described
+          in this document could be used to send BGP information to malicious
+          BMP stations. Write access to this model SHOULD therefore be
+          properly protected. 
+      </t>
+      <t>
+          The session-reset action can demand considerable amount of resources
+          from network elements. It SHOULD thus be protected from illegal access.
+      </t>
+    </section>
+
+    <section title="IANA Considerations" anchor="iana-considerations">
+      <section title="The IETF XML Registry">
+      	<t>
+      	   This document registers a URIs in the IETF XML 
+      	   registry <xref target="RFC3688"/>.  Following the format in 
+           <xref target="RFC3688"/>, the following registrations are
+           requested:</t>
+        <t>
+          <figure>
+          	<sourcecode>
+   URI: urn:ietf:params:xml:ns:yang:ietf-bmp
+   Registrant Contact: The IESG.
+   XML: N/A, the requested URI is an XML namespace.
+             </sourcecode>
+           </figure>
+         </t>
+      </section>
+      <section title="The YANG Module Name Registration">
+        <t>
+           This document registers the following YANG module in the "
+           YANG Module Names" registry  
+           registry <xref target="RFC6020"/>:</t>
+        <t>
+          <figure>
+            <sourcecode>
+   Name: ietf-bmp
+   Namespace: urn:ietf:params:xml:ns:yang:ietf-bmp
+   Prefix: bmp
+   Reference: [This RFC-to-be]
+             </sourcecode>
+           </figure>
+         </t>
+      </section>
+    </section>
+
+    <section title="Open Issues">
+      <t>
+        <list counter="a">
+          <t>The security considerations section will have to be aligned with 
+              https://trac.ietf.org/trac/ops/wiki/yang-security-guidelines</t>
+        </list>
+      </t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References"> 
+      <?rfc include="reference.RFC.2119.xml"?>
+      <?rfc include="reference.RFC.3688.xml"?>
+      <?rfc include="reference.RFC.6241.xml"?>
+      <?rfc include="reference.RFC.6242.xml"?>
+      <?rfc include="reference.RFC.6991.xml"?>
+      <?rfc include="reference.RFC.7854.xml"?>
+      <?rfc include="reference.RFC.8671.xml"?>
+      <?rfc include="reference.RFC.9069.xml"?>
+      <?rfc include="reference.RFC.8040.xml"?>
+      <?rfc include="reference.RFC.8174.xml"?>
+      <?rfc include="reference.RFC.8349.xml"?>
+      <?rfc include="reference.RFC.8446.xml"?>
+      <?rfc include="reference.RFC.8341.xml"?>
+      <?rfc include="reference.RFC.6020.xml"?>
+      <?rfc include="reference.RFC.8529.xml"?>
+      <?rfc include="reference.RFC.1191.xml"?>
+      <?rfc include="reference.RFC.8177.xml"?>
+      <?rfc include="reference.RFC.9293.xml"?>
+      <?rfc include='reference.I-D.ietf-idr-bgp-model.xml'?>
+      <?rfc include='reference.I-D.ietf-netconf-tcp-client-server.xml'?>
+    </references>
+<!--
+    <references title="Informative References">
+    </references>
+        -->
+    <?rfc needLines="100"?>
+
+<!--   
+    <section title="Changes between revisions">
+      </t>   
+      <t>v00 - v01
+        <list style="symbols">
+          <t>Placeholder: xxx</t>
+          <t>Placeholder: yyy</t>
+        </list>
+      </t>
+    </section>    
+  -->
+
+    <section title="Examples">
+        <t>This sections shows some examples of BMP configuration using the
+            model.</t>
+        <section title="Example one">
+            <t>In this example, the device connects to a monitoring station
+            using an active connection. 
+            The devices sends route monitoring messages for the global
+            instance, the adj-rib-out-pre RIB, the IPv4/IPv6 address family,
+            and external peers.
+            </t>
+        <t><figure anchor="example_one">
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>1</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+      </connection>
+      <bmp-data>
+        <bmp-route-monitoring>
+          <network-instance-configuration>
+            <network-instance>
+              <network-instance-id>bmp-ni-types-all-ni</network-inst\
+ance-id>
+              <adj-rib-in-pre>
+                <address-families>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                    <peers-configurations>
+                      <peer-types>
+                        <peer-type>
+                          <peer-type-id>external</peer-type-id>
+                        </peer-type>
+                      </peer-types>
+                    </peers-configurations>
+                  </address-family>
+                  <address-family>
+                    <address-family-id xmlns:bt="urn:ietf:params:xml\
+:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                    <peers-configurations>
+                      <peer-types>
+                        <peer-type>
+                          <peer-type-id>external</peer-type-id>
+                        </peer-type>
+                      </peer-types>
+                    </peers-configurations>
+                  </address-family>
+                </address-families>
+              </adj-rib-in-pre>
+            </network-instance>
+          </network-instance-configuration>
+        </bmp-route-monitoring>
+      </bmp-data>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>
+]]></sourcecode>         
+    </figure></t>
+    </section>
+        <section title="Example two">
+            <t>In the next example, the device connects to a monitoring station
+            using a passive connection, over the network-instance monitoring.
+            The configuration of route monitoring messages is more complex than
+            in the previous example.  It shows how to combine the configuration
+            of general identities of network instances and peers (e.g.
+            bmp-ni-types-all-ni for NI, external for peers), and individual
+            configurations to support a more complex requirement. This is what
+                the example expects to configure:</t>
+        <t>
+        <list style="symbols">
+            <t> For the global network instance,
+            the device sends updates for adj-rib-in-pre, address families IPv4
+            and IPv6. It sends updates for all external peers except peer
+            128.66.1.1, which is disabled.</t>
+        <t>Network instance monitoring is disabled for route monitoring messages. </t>
+        <t>For the rest of network
+            instances, we are enabling messages from adj-rib-in-pre, address
+                families IPv4/IPv6, and for all peers.</t>
+        </list>
+        </t>
+        <t><figure anchor="example_two">
+            <sourcecode><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+<routing xmlns="urn:ietf:params:xml:ns:yang:ietf-routing">
+  <control-plane-protocols>
+    <control-plane-protocol>
+      <type xmlns:bgp="urn:ietf:params:xml:ns:yang:ietf-bgp">bgp:bgp\
+</type>
+      <name>BGP</name>
+      <bgp xmlns="urn:ietf:params:xml:ns:yang:ietf-bgp">
+        <global>
+          <as>64496</as>
+          <identifier>192.0.2.1</identifier>
+        </global>
+        <neighbors>
+          <neighbor>
+            <!-- Neighbor-specific configuration parameters -->
+            <remote-address>128.66.1.1</remote-address>
+            <peer-as>64497</peer-as>
+          </neighbor>
+          <!-- Additional neighbors if needed -->
+        </neighbors>
+        <!-- Additional BGP configuration elements -->
+        <bmp-data xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+            <bmp-monitoring-stations>
+            <bmp-monitoring-station>
+                <id>2</id>
+                <bmp-route-monitoring>
+                <adj-rib-in-pre>
+                  <address-families>
+                    <address-family>
+                        <address-family-id xmlns:bt="urn:ietf:params\
+:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                  <peers-configurations>
+                      <peers>
+                        <peer>
+                          <peer-id>128.66.1.1</peer-id>
+                          <enabled>false</enabled>
+                        </peer>
+                      </peers>
+                        <peer-types>
+                        <peer-type>
+                          <peer-type-id>external</peer-type-id>
+                        </peer-type>
+                        </peer-types>
+                  </peers-configurations>
+                    </address-family>
+                    <address-family>
+                        <address-family-id xmlns:bt="urn:ietf:params\
+:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                  <peers-configurations>
+                      <peers>
+                        <peer>
+                          <peer-id>128.66.1.1</peer-id>
+                          <enabled>false</enabled>
+                        </peer>
+                      </peers>
+                        <peer-types>
+                        <peer-type>
+                          <peer-type-id>external</peer-type-id>
+                        </peer-type>
+                        </peer-types>
+                  </peers-configurations>
+                    </address-family>
+                  </address-families>
+                </adj-rib-in-pre>
+                </bmp-route-monitoring>
+            </bmp-monitoring-station>
+            </bmp-monitoring-stations>
+        </bmp-data>
+      </bgp>
+    </control-plane-protocol>
+  </control-plane-protocols>
+</routing>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+    <bmp-monitoring-stations>
+      <bmp-monitoring-station>
+        <id>2</id>
+        <connection>
+          <passive>
+            <network-instance>monitoring</network-instance>
+            <station-address>192.0.2.1</station-address>
+            <local-address>192.0.2.2</local-address>
+            <local-port>57993</local-port>
+          </passive>
+        </connection>
+        <bmp-data>
+          <bmp-route-monitoring>
+          <network-instance-configuration>
+              <network-instance>
+                  <network-instance-id>bmp-ni-types-all-ni</network-\
+instance-id>
+                <adj-rib-in-pre>
+                  <address-families>
+                    <address-family>
+                        <address-family-id xmlns:bt="urn:ietf:params\
+:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                      <peers-configurations>
+                          <bmp-peer-types>
+                        <bmp-peer-type>
+                          <peer-types-bmp>bmp-peer-types-all-peers</\
+peer-types-bmp>
+                        </bmp-peer-type>
+                      </bmp-peer-types>
+                  </peers-configurations>
+                    </address-family>
+                    <address-family>
+                        <address-family-id xmlns:bt="urn:ietf:params\
+:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                      <peers-configurations>
+                    <bmp-peer-types>
+                        <bmp-peer-type>
+                          <peer-types-bmp>bmp-peer-types-all-peers</\
+peer-types-bmp>
+                        </bmp-peer-type>
+                    </bmp-peer-types>
+                      </peers-configurations>
+                    </address-family>
+                  </address-families>
+                </adj-rib-in-pre>
+              </network-instance>
+              <network-instance>
+                <network-instance-id>monitoring</network-instance-id>
+                <enabled>false</enabled>
+              </network-instance>
+          </network-instance-configuration>
+          </bmp-route-monitoring>
+        </bmp-data>
+      </bmp-monitoring-station>
+    </bmp-monitoring-stations>
+  </bmp>
+]]></sourcecode>         
+    </figure></t>
+    </section>
+    </section>
+
+    <section title="Acknowledgements" numbered="no">
+        <t>
+          The authors would like to thank Yimin Shen, Jeff Haas, Pierre Vander
+            Vorst, and Tom Petch for their review and feedback.
+        </t>
+    </section>
+
+  </back>
+</rfc>
+<!-- Local Variables: -->
+<!-- fill-column:72 -->
+<!-- End: -->
+
