@@ -15,17 +15,9 @@
           <network-instance-configuration>
             <network-instance>
               <network-instance-id>bmp-ni-types-all-ni</network-instance-id>
-              <!-- Configuration A -->
+              <!-- Configuration D -->
             </network-instance>
-            <network-instance>
-              <network-instance-id>bmp-ni-types-global-ni</network-instance-id>
-              <!-- Configuration B -->
-            </network-instance>
-            <network-instance>
-              <network-instance-id>network-instance-two</network-instance-id>
-              <!-- Configuration C -->
-            </network-instance>
-          </network-instance-configuration>
+        </network-instance-configuration>
         </bmp-route-monitoring>
       </bmp-data>
     </bmp-monitoring-station>

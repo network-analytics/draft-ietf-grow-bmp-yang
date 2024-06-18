@@ -210,7 +210,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_indelay.xml)
     </section>
     <section title="BMP data">
 
-        <t>The bmp-data container defines the configuration parameters for the data that the devices sends to the monitoring station using the various BMP messages. See <xref target="RFC7854" section="4" sectionFormat="of"/>.</t>
+        <t>The bmp-data container defines the configuration parameters for the data that the device sends to the monitoring station using the various BMP messages. See <xref target="RFC7854" section="4" sectionFormat="of"/>.</t>
 
         <t>The BMP model defines options for the initiation message, the statistics report, and the routing monitoring. The first two have simple configurations options and are shortly described next. The Routing monitoring is the most complex of all and it is detailed in <xref target='route_monitoring'/>.</t>
 
@@ -301,17 +301,17 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
 
           <t>The routing monitoring configuration starts with the configuration of network instances. A network instance can be configured individual or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. We explain each next</t>
 
-          <t>The model currently defines two bmp-ni-types identities: "bmp-ni-types-all-ni" which selects all network instances, and "bmp-ni-types-non-global-ni" which selects all network instances, expcet the global one. The former can be used as a "default" configuration for simple cases.</t>
+          <t>The model currently defines two bmp-ni-types identities: "bmp-ni-types-all-ni" which selects all network instances, and "bmp-ni-types-non-global-ni" which selects all network instances, except the global one. The former can be used as a "default" configuration for simple cases.</t>
 
-          <t>The model offers two ways of configuring a network-instance individually. The main one is under container "bmp-data/bmp-monitoring-stations/" under the "routing/control-plane-protocols/control-plane-protocol/bgp". The second one is specifying the name under the "bmp/bmp-route-monitoring/network-instance". The former one is the prefered method, since it allows for better validation of the data. This method requires the support of schema-mount. The latter method does not validate some leafs, but it requires less support by the device.</t>
+          <t>The model offers two ways of configuring a network-instance individually. The main one is under container "bmp-data/bmp-monitoring-stations/" under the "routing/control-plane-protocols/control-plane-protocol/bgp". The second one is specifying the name under the "bmp/bmp-route-monitoring/network-instance". The former one is the prefered method, since it allows for better validation of the data. This method requires the support of schema-mount. The latter method does not validate some leafs, but it does not requires support for schema-mount by the device.</t>
 
-          <t>An empty configuration disables routing monitoring messages for the selected network-instances. Operators can also use the enable leaf to disable explicitly the routing messages for the network instance. </t>
+          <t>An empty configuration disables routing monitoring messages for the selected network-instances. Operators can also use the "enable" leaf to disable explicitly the routing messages for the network instance. </t>
 
           <t>The route-monitoring data for a network instance can be configured by maximum one element of the network-instances list.  There SHOULD  be clear rules to which element to apply to a network instance in case multiple elements can select it. We provide rules and examples in the next part of the section.</t>
 
       <t>
         <ul spacing="compact">
-            <li>If the BGP container under the network-instance includes a BMP/Route monitoring container. Note that ff the monitoring-station is not present in the container, the route monitoring will be disabled for this network instance..</li>
+            <li>If the BGP container under the network-instance includes a BMP/Route monitoring container, it SHOULD be configured by it. Note that if the monitoring-station is not present in the container, the route monitoring will be disabled for this network instance.</li>
             <li>If the bmp-ni-types-global-ni exist, the global network instance / network instance SHOULD be configured using this element.</li>
             <li>If any /ni:network-instances/ni:network-instance/ is referenced, the network instance SHOULD be configured using this element.</li>
             <li>Any Network instance not referenced by any rule above SHOULD be configured using the bmp-ni-types-all-ni if one exists. If it does not exist, then the network instance is not configured (and therefore no route monitoring messages from the network instance are sent to the monitoring station).</li>
@@ -332,7 +332,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_netins_one.xml)
           </figure>
         </t> 
 
-        <t>In example from <xref target="example_netins_one"/>, we have a "default" configuration (Configuration A) applied to any network instance without any explicit configuration. The global network instance and network-instance-two get Configuration B and Configuration C, respectively. The network-instance-one instance disables the routing monitoring messages for that network instance.</t>
+        <t>In example from <xref target="example_netins_one"/>, we have a "default" configuration (Configuration A) applied to any network instance without any explicit configuration. The global network instance and network-instance-two get Configuration B and Configuration C, respectively. The network-instance-one instance container disables the routing monitoring messages for that network instance.</t>
 
 
         <t>
@@ -366,7 +366,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_simple_ni_configuration.xml)
 
     <t>An empty configuration or absence of a RIB-type container disables route-messages for it. Operators can also disable the RIB-type route monitoring messages by marking the "enabled" leaf as False.</t>
 
-    <t>We provide an example of this together with address families in the next section</t>
+    <t>We provide an example of this, together with address families, in the next section</t>
 
     </section>
     <section title="Address families">
@@ -398,7 +398,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_one.xml)
       </t>
 
 
-      <t>If an operator only wants to configure the IPv4/IPv6 of adj-rib-pre-in for the global instance,  the configuration in <xref target='example_rib_af_two'/> will be enough. We note again that even if the configuration of both address families is the same, they must be explicitly configured for each of them.</t>
+      <t>If an operator only wants to configure the IPv4/IPv6 of adj-rib-pre-in for the global instance,  the configuration in <xref target='example_rib_af_two'/> plus the peer configuration (coming in next section) will be enough. We note again that even if the configuration of both address families is the same, they must be explicitly configured for each of them.</t>
 
         <t>
         <figure anchor='example_rib_af_two'>
@@ -418,7 +418,8 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
 
       <t>
         <ul spacing="compact">
-            <li>An individual peer, using a remote address. The model currently does not check if the remote address exists, that would be a responsibility of the device.</li>
+            <li>An individual peer, using a remote address. For the configuration under the "/bmp" tree, The model currently does not check if the remote address exists, that would be a responsibility of the device.</li>
+            <li>Peergroups.</li>
             <li>A group of peers matching a BGP type. i.e. eBGP peers. </li>
             <li>One or more peers defined by an `bmp-peer-types` identity. The BMP model currently provides the `bmp-peer-types-all-peers` identity which select all peers. For simple cases, this is the value that would normally be considered.</li>
         </ul>

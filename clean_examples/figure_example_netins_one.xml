@@ -25,6 +25,10 @@
               <network-instance-id>network-instance-two</network-instance-id>
               <!-- Configuration C -->
             </network-instance>
+            <network-instance>
+              <network-instance-id>network-instance-one</network-instance-id>
+              <enabled>false</enabled>
+            </network-instance>
           </network-instance-configuration>
         </bmp-route-monitoring>
       </bmp-data>
