@@ -1,11 +1,3 @@
-<routing-state xmlns="urn:ietf:params:xml:ns:yang:ietf-routing">
-<ribs>
-  <rib>
-    <name>ipv4-master</name>
-    <address-family>ipv4</address-family>
-  </rib>
-</ribs>
-</routing-state>
 <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
   <bmp-monitoring-stations>
     <bmp-monitoring-station>
@@ -29,7 +21,7 @@
                     <peers-configurations>
                       <peer-types>
                         <peer-type>
-                          <peer-type>external</peer-type>
+                          <peer-type-id>external</peer-type-id>
                         </peer-type>
                       </peer-types>
                     </peers-configurations>
@@ -39,7 +31,7 @@
                     <peers-configurations>
                       <peer-types>
                         <peer-type>
-                          <peer-type>external</peer-type>
+                          <peer-type-id>external</peer-type-id>
                         </peer-type>
                       </peer-types>
                     </peers-configurations>
@@ -50,9 +42,6 @@
           </network-instance-configuration>
         </bmp-route-monitoring>
       </bmp-data>
-      <session-stats>
-        <discontinuity-time>2015-06-19T16:01:27.384-07:00</discontinuity-time>
-      </session-stats>
     </bmp-monitoring-station>
   </bmp-monitoring-stations>
 </bmp>

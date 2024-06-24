@@ -56,7 +56,7 @@ endif
 $(next).xml: $(draft).xml ietf-bmp.yang
 	sed -e"s/$(basename $<)-latest/$(basename $@)/" -e"s/YYYY-MM-DD/$(shell date +%Y-%m-%d)/" $< > $@
 	sed -e"s/YYYY-MM-DD/$(shell date +%Y-%m-%d)/" ietf-bmp.yang > ietf-bmp.yang\@$(shell date +%Y-%m-%d).yang
-	./validate-all.sh && ./gen-trees.sh 
+	./validate-examples.sh && ./validate-all.sh && ./gen-trees.sh 
 	./insert-figures.sh $@ > tmp && mv tmp $@
 	rm *-tree*.txt 
 	xml2rfc --v2v3 $@

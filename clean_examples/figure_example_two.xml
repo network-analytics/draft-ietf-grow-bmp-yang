@@ -1,34 +1,3 @@
-<network-instances xmlns="urn:ietf:params:xml:ns:yang:ietf-network-instance">
-    <network-instance>
-        <name>monitoring</name>
-        <vrf-root>
-<routing xmlns="urn:ietf:params:xml:ns:yang:ietf-routing">
-    <control-plane-protocols>
-        <control-plane-protocol>
-      <type xmlns:bgp="urn:ietf:params:xml:ns:yang:ietf-bgp">bgp:bgp</type>
-      <name>BGP</name>
-      <bgp xmlns="urn:ietf:params:xml:ns:yang:ietf-bgp">
-                <global>
-                    <as>64496</as>
-                </global>
-
-        <bmp-data xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-            <bmp-monitoring-stations>
-            <bmp-monitoring-station>
-                <id>2</id>
-                <bmp-route-monitoring>
-                    <enabled>false</enabled>
-                </bmp-route-monitoring>
-            </bmp-monitoring-station>
-            </bmp-monitoring-stations>
-            </bmp-data>
-            </bgp>
-    </control-plane-protocol>
-</control-plane-protocols>
-</routing>
-        </vrf-root>
-    </network-instance>
-</network-instances>
 <routing xmlns="urn:ietf:params:xml:ns:yang:ietf-routing">
   <control-plane-protocols>
     <control-plane-protocol>
@@ -66,7 +35,7 @@
                       </peers>
                         <peer-types>
                         <peer-type>
-                          <peer-type>external</peer-type>
+                          <peer-type-id>external</peer-type-id>
                         </peer-type>
                         </peer-types>
                   </peers-configurations>
@@ -82,7 +51,7 @@
                       </peers>
                         <peer-types>
                         <peer-type>
-                          <peer-type>external</peer-type>
+                          <peer-type-id>external</peer-type-id>
                         </peer-type>
                         </peer-types>
                   </peers-configurations>

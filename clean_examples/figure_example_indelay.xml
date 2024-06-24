@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
+  <bmp-monitoring-stations>
+    <bmp-monitoring-station>
+      <id>1</id>
+      <connection>
+        <active>
+          <station-address>192.0.2.1</station-address>
+          <station-port>57992</station-port>
+          <local-address>192.0.2.2</local-address>
+        </active>
+        <initial-delay>10</initial-delay>
+        <backoff>
+            <simple-exponential>
+                <initial-backoff>50</initial-backoff>
+                <maximum-backoff>600</maximum-backoff>
+            </simple-exponential>
+        </backoff>
+      </connection>
+    </bmp-monitoring-station>
+  </bmp-monitoring-stations>
+</bmp>

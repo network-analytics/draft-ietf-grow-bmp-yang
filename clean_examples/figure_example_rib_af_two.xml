@@ -1,15 +1,8 @@
-<routing-state xmlns="urn:ietf:params:xml:ns:yang:ietf-routing">
-<ribs>
-  <rib>
-    <name>ipv4-master</name>
-    <address-family>ipv4</address-family>
-  </rib>
-</ribs>
-</routing-state>
+<?xml version="1.0"?>
 <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
   <bmp-monitoring-stations>
     <bmp-monitoring-station>
-      <id>1</id>
+      <id>monitoring_station_one</id>
       <connection>
         <active>
           <station-address>192.0.2.1</station-address>
@@ -21,28 +14,16 @@
         <bmp-route-monitoring>
           <network-instance-configuration>
             <network-instance>
-              <network-instance-id>bmp-ni-types-all-ni</network-instance-id>
+              <network-instance-id>bmp-ni-types-global-ni</network-instance-id>
               <adj-rib-in-pre>
                 <address-families>
                   <address-family>
                     <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
-                    <peers-configurations>
-                      <peer-types>
-                        <peer-type>
-                          <peer-type>external</peer-type>
-                        </peer-type>
-                      </peer-types>
-                    </peers-configurations>
+                    <!-- Configuration for ipv6-uniceast -->
                   </address-family>
                   <address-family>
                     <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
-                    <peers-configurations>
-                      <peer-types>
-                        <peer-type>
-                          <peer-type>external</peer-type>
-                        </peer-type>
-                      </peer-types>
-                    </peers-configurations>
+                    <!-- Configuration for ipv4-unicast -->
                   </address-family>
                 </address-families>
               </adj-rib-in-pre>
@@ -50,9 +31,6 @@
           </network-instance-configuration>
         </bmp-route-monitoring>
       </bmp-data>
-      <session-stats>
-        <discontinuity-time>2015-06-19T16:01:27.384-07:00</discontinuity-time>
-      </session-stats>
     </bmp-monitoring-station>
   </bmp-monitoring-stations>
 </bmp>
