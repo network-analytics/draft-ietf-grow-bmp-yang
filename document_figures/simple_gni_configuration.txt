@@ -1,4 +1,0 @@
-!
- bmp-data bmp-route-monitoring network-instances network-instance bmp-ni-types-global-ni
- < Configuration E >
- !

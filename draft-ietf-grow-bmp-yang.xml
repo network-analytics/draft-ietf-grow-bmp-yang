@@ -81,12 +81,16 @@
            initiation messages are defined in <xref target="RFC7854"/>.
       </t>    
     </section>   
+    <section title="Implemenation guidelines" anchor="implementation_guidelines">
+        <t>The model..</t>
+    </section>
     <section title="Model description" anchor="model_description">
        <t>
               This document specifies a YANG module for configuring and
-           monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/>.  The model
-           provides parameters for configuring the session to BMP monitoring stations; the
-           selection of the BGP Routing Information Bases (RIBs) for Route Monitoring Messages; provides
+           monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/> 
+           on the monitored router.  The model provides parameters for configuring 
+           the session to BMP monitoring stations; the selection of the BGP 
+           Routing Information Bases (RIBs) for Route Monitoring Messages; provides
            operational metrics and enables resetting of BMP monitoring sessions.
        </t> 
 
@@ -502,6 +506,9 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_three.xml)
 
     </section>
 
+    <section title="Example four">
+       <t>TODO: turn global instance with only a couple of peers</t>
+    </section>
 
     </section> 
     </section> 
