@@ -1,0 +1,79 @@
+module ietf-bmp-tcp-dependencies {
+  yang-version 1.1;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-bmp-tcp-dependencies";
+  prefix bmp-tcp;
+
+  import ietf-bmp {
+    prefix bmp;
+  }
+
+  import ietf-tcp-common {
+    prefix tcpcmn;
+    reference
+      "I-D.ietf-netconf-tcp-client-server: YANG Groupings for TCP
+       Clients and TCP Servers.";
+  }
+  import ietf-key-chain {
+    prefix key-chain;
+    reference
+      "RFC 8177: YANG Key Chain.";
+  }
+
+  augment "/bmp:bmp/bmp:bmp-monitoring-stations/bmp:bmp-monitoring-station/bmp:connection/bmp:tcp-options" {
+    description "Augment the tcp options of the BMP model";
+
+    uses tcpcmn:tcp-common-grouping;
+    // taken from the bgp yang module
+    leaf secure-session-enable {
+      type boolean;
+      default "false";
+      description
+        "Does this session need to be secured?";
+    }
+    container secure-session {
+      when "../secure-session-enable = 'true'";
+      description
+        "Container for describing how a particular BMP session
+         is to be secured.";
+      choice authentication {
+        mandatory true;
+        case ao {
+          leaf ao-keychain {
+            type key-chain:key-chain-ref;
+            description
+              "Reference to the key chain that will be used by
+               this model. Applicable for TCP-AO and TCP-MD5
+               only";
+            reference
+              "RFC 8177: YANG Key Chain.";
+          }
+          description
+            "Uses TCP-AO to secure the session. Parameters for
+             those are defined as a grouping in the TCP YANG
+             model.";
+          reference
+            "RFC 5925 - The TCP Authentication Option.";
+        }
+        case md5 {
+          leaf md5-keychain {
+            type key-chain:key-chain-ref;
+            description
+              "Reference to the key chain that will be used by
+               this model. Applicable for TCP-AO and TCP-MD5
+               only";
+            reference
+              "RFC 8177: YANG Key Chain.";
+          }
+          description
+            "Uses TCP-MD5 to secure the session. Parameters for
+             those are defined as a grouping in the TCP YANG
+             model.";
+          reference
+            "RFC 5925: The TCP Authentication Option.";
+        }
+        description
+          "Choice of TCP authentication.";
+      }
+    }
+  }
+}

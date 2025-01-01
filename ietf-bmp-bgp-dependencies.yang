@@ -1,0 +1,141 @@
+module ietf-bmp-bgp-dependencies {
+  yang-version 1.1;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-bmp-bgp-dependencies";
+  prefix bmp-ietf-dep;
+
+  import ietf-bmp {
+    prefix bmp;
+  }
+
+  import ietf-routing {
+    prefix rt;
+    reference
+      "RFC 8349: A YANG Data Model for Routing Management
+       (NMDA Version).";
+  }
+
+  import ietf-bgp {
+    prefix bgp;
+    reference
+      "I-D.draft-ietf-idr-bgp-model-17:
+       BGP YANG module for Service Provider Network.";
+  }
+
+  import ietf-bgp-types {
+    prefix bt;
+    reference
+      "RFC AAAA: BGP YANG module for Service Provider Network.
+       RFC-EDITOR: please update XXX with the RFC ID assigned
+       to I-D.ietf-idr-bgp-model";
+  }
+  // Augment the BGP module to include data for network instances
+
+  augment "/rt:routing/rt:control-plane-protocols/"
+        + "rt:control-plane-protocol/bgp:bgp" {
+    description
+      "Augments the BGP container under control-plane-protocol.  It
+       can be used to configure the global BGP instance, but also the
+       network-instances under the module ietf-network-instance";
+    container bmp-data {
+      description
+        "Container for the configuration of BMP data
+         related to this BGP instance";
+      container bmp-monitoring-stations {
+        presence 
+          "If this container exists, the network instance must be
+          configured using this";
+        description
+          "Container for the configuration of BMP data
+           related to this BGP instance";
+        list bmp-monitoring-station {
+          key "id";
+          description
+            "Container for the configuration of BMP data for this
+             monitoring-station related to this BGP instance";
+          leaf id {
+            // TODO: We have not been able to configure
+            // the schema mount to recognize this yet. 
+            // Until we solve it, we will keep it as 
+            //type leafref {
+            //  path "/bmp:bmp/bmp:bmp-monitoring-stations/"
+            //        + "bmp:bmp-monitoring-station/bmp:id";
+            //}
+            type string;
+            description
+              "Identification string for the monitoring station";
+          }
+          container bmp-route-monitoring {
+            presence "The presence of this container means the
+                      Network instance it contains MUST
+                      be configured using it";
+            description
+              "Configuration of the data sources for
+               route-monitoring messages for this network-instance";
+            leaf enabled {
+              type boolean;
+              default "true";
+              description
+                "Enables routing monitoring
+                 messages for the network instance.";
+            }
+            container adj-rib-in-pre {
+              description
+                "Configuration for the adj-rib-in pre-policy";
+              reference
+                "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
+              uses bmp:bmp-ni-peer-ribs-filter;
+            }
+            container adj-rib-in-post {
+              description
+                "Configuration for the adj-rib-in post-policy";
+              reference
+                "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
+              uses bmp:bmp-ni-peer-ribs-filter;
+            }
+            container local-rib {
+              description
+                "Configuration for the local-rib";
+              reference
+                "RFC9069: Support for Local RIB in the BGP Monitoring
+                 Protocol (BMP), Section 3.";
+              container address-families {
+                description
+                  "List of address families to enable for
+                   local-rib.";
+                list address-family {
+                  key "address-family-id";
+                  description
+                    "Address family to enable for local-rib";
+                  leaf address-family-id {
+                    type identityref {
+                      base bt:afi-safi-type;
+                    }
+                    description
+                      "Address family id to enable for local-rib";
+                  }
+                  uses bmp:bmp-source-configuration;
+                }
+              }
+            }
+            container adj-rib-out-pre {
+              description
+                "Configuration for the adj-rib-out pre-policy";
+              uses bmp:bmp-ni-peer-ribs-filter;
+              reference
+                "RFC8671: Support for Adj-RIB-Out in the BGP
+                 Monitoring Protocol (BMP) , Section 3.";
+            }
+            container adj-rib-out-post {
+              description
+                "Configuration for the adj-rib-out post-policy";
+              uses bmp:bmp-ni-peer-ribs-filter;
+              reference
+                "RFC8671: Support for Adj-RIB-Out in the BGP
+                 Monitoring Protocol (BMP) , Section 3.";
+            }
+          }
+        }
+      }
+    }
+  }
+}
