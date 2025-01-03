@@ -15,14 +15,15 @@
         <active>
           <station-address>192.0.2.1</station-address>
           <station-port>57992</station-port>
-          <local-address>192.0.2.2</local-address>
+          <monitored-router-address>192.0.2.2</monitored-router-address>
         </active>
       </connection>
     <bmp-data>
       <bmp-route-monitoring>
         <network-instance-configuration>
-          <network-instance>
-            <network-instance-id>bmp-ni-types-global-ni</network-instance-id>
+            <network-instance-selectors>
+          <network-instance-selector>
+            <network-instance-selector-id>bmp-ni-types-global-ni</network-instance-selector-id>
             <adj-rib-in-pre>
               <address-families>
                 <address-family>
@@ -38,14 +39,14 @@
                 <address-family>
                   <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
                   <peers-configurations>
-                    <peer-types>
-                        <peer-type>
-                            <peer-type-id>external</peer-type-id>
-                        </peer-type>
-                    </peer-types>
+                    <bgp-peer-types>
+                        <bgp-peer-type>
+                            <bgp-peer-type-id>external</bgp-peer-type-id>
+                        </bgp-peer-type>
+                    </bgp-peer-types>
                     <peers>
                       <peer>
-                        <peer-id-str>198.51.100.1</peer-id-str>
+                        <peer-id>198.51.100.1</peer-id>
                         <filters>
                           <policy-filter>
                             <export-policy>test_policy</export-policy>
@@ -57,7 +58,8 @@
                 </address-family>
               </address-families>
             </adj-rib-in-pre>
-          </network-instance>
+          </network-instance-selector>
+      </network-instance-selectors>
         </network-instance-configuration>
       </bmp-route-monitoring>
     </bmp-data>
