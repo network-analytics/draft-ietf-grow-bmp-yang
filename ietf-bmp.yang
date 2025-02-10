@@ -85,13 +85,13 @@ module ietf-bmp {
        RFC-EDITOR: please update YYYY with this RFC ID";
   }
 
-  identity bmp-peer-types {
+  identity bmp-peer-selectors {
     description
       "Enum values for selecting peers";
   }
 
-  identity bmp-peer-types-all-peers {
-    base bmp-peer-types;
+  identity bmp-peer-selectors-all-peers {
+    base bmp-peer-selectors;
     description
       "This identity selects all peer's RIBs.
        When used, it acts as a 'default' configuration.";
@@ -345,9 +345,9 @@ module ietf-bmp {
              1. peer
              2. peer-groups
              3. peer-type
-             4. bmp-peer-types
+             4. bmp-peer-selectors
 
-             New child containers or new bmp-peer-types instances
+             New child containers or new bmp-peer-selectors instances
              SHOULD provide a way of unambiguislly selecting which
              configuration container should be selected for a peer in
              case mutiple matches. 
@@ -405,23 +405,23 @@ module ietf-bmp {
               uses bmp-route-monitoring-peer-configuration;
             }
           }
-          container bmp-peer-types {
+          container bmp-peer-selectors {
             description
               "Generic identification of peers to configure.";
-            list bmp-peer-type {
-              key "peer-types-bmp";
+            list bmp-peer-selector {
+              key "bmp-selector-id";
               description
                 "Identification of peers
                  for which we send BMP data to the collector
                  using a peer type defined using a peer-types-bmp.
                  For instance, to create a default for all
-                 peers use bmp-peer-types-all-peers";
-              leaf peer-types-bmp {
+                 peers use bmp-peer-selectors-all-peers";
+              leaf bmp-selector-id {
                 type identityref {
-                  base bmp-peer-types;
+                  base bmp-peer-selectors;
                 }
                 description
-                  "Peer type to configure";
+                  "Peers to configure using a BMP peer selector";
               }
               leaf enabled {
                 type boolean;
@@ -749,11 +749,11 @@ module ietf-bmp {
                route-monitoring messages";
             uses bmp-route-monitoring-sources;
           }
-          container bmp-route-mirroing {
-            presence "Enables BMP route mirroing towards BMP
+          container bmp-route-mirroring {
+            presence "Enables BMP route mirroring towards BMP
             monitoring station";
             description
-              "Configuration of route mirroing towards monitoring
+              "Configuration of route mirroring towards monitoring
               station";
           }
         }
@@ -761,7 +761,9 @@ module ietf-bmp {
         container session-stats {
           config false;
           description
-            "stats and operational values for the station";
+            "stats and operational values for the station. Total values
+            are counted since the last succesful connection or last connection
+            reset";
           leaf discontinuity-time {
             type yang:date-and-time;
             mandatory true;
@@ -783,38 +785,37 @@ module ietf-bmp {
           leaf total-route-monitoring-messages {
             type uint64;
             description
-              "Number of route-monitoring messages sent since last
-               successful connection";
+              "Number of route-monitoring messages";
           }
           leaf total-statistics-messages {
             type uint64;
             description
-              "Number of statistics messages sent since last
-               successful connection";
+              "Number of statistics messages sent";
           }
           leaf total-peer-down-messages {
             type uint64;
             description
-              "Number of peer-down messages sent since last
-               successful connection";
+              "Number of peer-down messages sent";
           }
           leaf total-peer-up-messages {
             type uint64;
             description
-              "Number of peer-up messages sent since last successful
-               connection";
+              "Number of peer-up messages sent";
           }
           leaf total-initiation-messages {
             type uint64;
             description
-              "Number of initiation messages sent since last
-               successful connection";
+              "Number of initiation messages sent";
           }
           leaf total-route-mirroring-messages {
             type uint64;
             description
-              "Number of route-mirroring messages sent since last
-               successful connection";
+              "Number of route-mirroring messages sent";
+          }
+          leaf total-termination-messages {
+            type uint64;
+            description
+              "Number of total termination messages sent";
           }
         }
         container actions {
@@ -844,9 +845,33 @@ module ietf-bmp {
               }
             }
           }
+          action session-counter-reset {
+            description
+              "Resets the counters of a bmp monitoring station.";
+            output {
+              choice outcome {
+                description
+                  "Output of the reset operation. Either a success or
+                   failure. For the latter, the reason for the
+                   error is provided.";
+                leaf success {
+                  type empty;
+                  description
+                    "Counter reset successful";
+                }
+                leaf failure {
+                  type string;
+                  description
+                    "Reset could not be performed.
+                     Reason is included in the field";
+                }
+              }
+            }
+          }
         }
       }
     }
+
   }
 
 }

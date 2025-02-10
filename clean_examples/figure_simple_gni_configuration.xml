@@ -14,11 +14,11 @@
         <bmp-route-monitoring>
           <network-instance-configuration>
             <network-instance-selectors>
-            <network-instance-selector>
-              <network-instance-selector-id>bmp-ni-types-global-ni</network-instance-selector-id>
-              <!-- configuration E -->
-            </network-instance-selector>
-        </network-instance-selectors>
+              <network-instance-selector>
+                <network-instance-selector-id>bmp-ni-types-global-ni</network-instance-selector-id>
+                <!-- configuration E -->
+              </network-instance-selector>
+            </network-instance-selectors>
           </network-instance-configuration>
         </bmp-route-monitoring>
       </bmp-data>

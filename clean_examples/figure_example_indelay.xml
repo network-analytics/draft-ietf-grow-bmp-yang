@@ -11,10 +11,10 @@
         </active>
         <initial-delay>10</initial-delay>
         <backoff>
-            <simple-exponential>
-                <initial-backoff>50</initial-backoff>
-                <maximum-backoff>600</maximum-backoff>
-            </simple-exponential>
+          <simple-exponential>
+            <initial-backoff>50</initial-backoff>
+            <maximum-backoff>600</maximum-backoff>
+          </simple-exponential>
         </backoff>
       </connection>
     </bmp-monitoring-station>

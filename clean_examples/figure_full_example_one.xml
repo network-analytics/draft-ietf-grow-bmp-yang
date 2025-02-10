@@ -14,34 +14,34 @@
         <bmp-route-monitoring>
           <network-instance-configuration>
             <network-instance-selectors>
-            <network-instance-selector>
-              <network-instance-selector-id>bmp-ni-types-global-ni</network-instance-selector-id>
-              <adj-rib-in-pre>
-                <address-families>
-                  <address-family>
-                    <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
-                  <peers-configurations>
-                      <bmp-peer-types>
-                        <bmp-peer-type>
-                            <peer-types-bmp>bmp-peer-types-all-peers</peer-types-bmp>
-                        </bmp-peer-type>
-                      </bmp-peer-types>
-                  </peers-configurations>
-                  </address-family>
-                  <address-family>
-                    <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
-                  <peers-configurations>
-                      <bmp-peer-types>
-                        <bmp-peer-type>
-                            <peer-types-bmp>bmp-peer-types-all-peers</peer-types-bmp>
-                        </bmp-peer-type>
-                      </bmp-peer-types>
-                  </peers-configurations>
-                  </address-family>
-                </address-families>
-              </adj-rib-in-pre>
-            </network-instance-selector>
-        </network-instance-selectors>
+              <network-instance-selector>
+                <network-instance-selector-id>bmp-ni-types-global-ni</network-instance-selector-id>
+                <adj-rib-in-pre>
+                  <address-families>
+                    <address-family>
+                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                      <peers-configurations>
+                        <bmp-peer-selectors>
+                          <bmp-peer-selector>
+                            <bmp-selector-id>bmp-peer-selectors-all-peers</bmp-selector-id>
+                          </bmp-peer-selector>
+                        </bmp-peer-selectors>
+                      </peers-configurations>
+                    </address-family>
+                    <address-family>
+                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                      <peers-configurations>
+                        <bmp-peer-selectors>
+                          <bmp-peer-selector>
+                            <bmp-selector-id>bmp-peer-selectors-all-peers</bmp-selector-id>
+                          </bmp-peer-selector>
+                        </bmp-peer-selectors>
+                      </peers-configurations>
+                    </address-family>
+                  </address-families>
+                </adj-rib-in-pre>
+              </network-instance-selector>
+            </network-instance-selectors>
           </network-instance-configuration>
         </bmp-route-monitoring>
       </bmp-data>

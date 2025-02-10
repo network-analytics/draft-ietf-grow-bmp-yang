@@ -115,30 +115,30 @@ module ietf-bmp-bgp-dependencies {
              1. peers
              2. peer-groups
              3. peer-type
-             4. bmp-peer-types
+             4. bmp-peer-selectors
 
-             New child containers or new bmp-peer-types instances
+             New child containers or new bmp-peer-selectors instances
              SHOULD provide a way of unambiguislly selecting which
              configuration container should be selected for a peer in
              case mutiple matches.
             ";
-          container bmp-peer-types {
+          container bmp-peer-selectors {
             description
               "Generic identification of peers to configure.";
-            list bmp-peer-type {
-              key "peer-types-bmp";
+            list bmp-peer-selector {
+              key "bmp-selector-id";
               description
                 "Identification of peers
                  for which we send BMP data to the collector
                  using a peer type defined using a peer-types-bmp.
                  For instance, to create a default for all
-                 peers use bmp-peer-types-all-peers";
-              leaf peer-types-bmp {
+                 peers use bmp-peer-selectors-all-peers";
+              leaf bmp-selector-id {
                 type identityref {
-                  base bmp:bmp-peer-types;
+                  base bmp:bmp-peer-selectors;
                 }
                 description
-                  "Peer type to configure";
+                  "Peers to configure using a BMP peer selector";
               }
               leaf enabled {
                 type boolean;

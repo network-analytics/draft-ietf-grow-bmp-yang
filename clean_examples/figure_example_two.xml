@@ -89,21 +89,21 @@
                     <address-family>
                         <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
                       <peers-configurations>
-                          <bmp-peer-types>
-                        <bmp-peer-type>
-                          <peer-types-bmp>bmp-peer-types-all-peers</peer-types-bmp>
-                        </bmp-peer-type>
-                      </bmp-peer-types>
+                      <bmp-peer-selectors>
+                        <bmp-peer-selector>
+                            <bmp-selector-id>bmp-peer-selectors-all-peers</bmp-selector-id>
+                        </bmp-peer-selector>
+                      </bmp-peer-selectors>
                   </peers-configurations>
                     </address-family>
                     <address-family>
                         <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
                       <peers-configurations>
-                    <bmp-peer-types>
-                        <bmp-peer-type>
-                          <peer-types-bmp>bmp-peer-types-all-peers</peer-types-bmp>
-                        </bmp-peer-type>
-                    </bmp-peer-types>
+                    <bmp-peer-selectors>
+                        <bmp-peer-selector>
+                          <bmp-selector-id>bmp-peer-selectors-all-peers</bmp-selector-id>
+                      </bmp-peer-selector>
+                    </bmp-peer-selectors>
                       </peers-configurations>
                     </address-family>
                   </address-families>
