@@ -14,7 +14,7 @@ module ietf-bmp {
   import ietf-bgp-types {
     prefix bt;
     description 
-      "The bgp types is a simple model that contains just types.
+      "The bgp types is a model that contains just types.
       Vendors can include it without implications.";
     reference
       "RFC AAAA: BGP YANG module for Service Provider Network.
@@ -51,7 +51,14 @@ module ietf-bmp {
         <mailto:thomas.graf@swisscom.com>
 
      Author:  Benoit Claise
-        <mailto:benoit.claise@huawei.com>";
+        <mailto:benoit.claise@huawei.com>
+
+     Author:  Dhananjay Patki
+        <mailto:dhpatki@cisco.com>
+
+     Author:  Dhananjay Patki
+        <mailto:snprasad@cisco.com>";
+
   description
     "This module specifies a structure for BMP
      (BGP Monitoring Protocol) configuration and monitoring.
@@ -93,7 +100,7 @@ module ietf-bmp {
   identity bmp-peer-selectors-all-peers {
     base bmp-peer-selectors;
     description
-      "This identity selects all peer's RIBs.
+      "This identity selects all peer under the RIB.
        When used, it acts as a 'default' configuration.";
   }
 
@@ -113,7 +120,7 @@ module ietf-bmp {
   identity bmp-ni-types-global-ni {
     base bmp-ni-types;
     description
-      "Selecting the global or main  network instance";
+      "Selecting the global or main network instance";
   }
 
   identity bmp-ni-types-non-global-ni {
@@ -126,7 +133,7 @@ module ietf-bmp {
   feature bmp-filter-based-on-route-policy {
     description
       "This feature means that the device
-      is capable of filtering prefixes in BMP  monitoring sessions";
+      is capable of filtering prefixes in BMP monitoring sessions";
   } 
 
 
@@ -176,7 +183,7 @@ module ietf-bmp {
               leaf  monitored-router-address{
                 type inet:ip-address;
                 description
-                  "Local IP address to source the  connection";
+                  "Local IP address to source the connection";
               }
             }
             case monitored-router-interface {
@@ -271,7 +278,7 @@ module ietf-bmp {
   grouping bmp-route-monitoring-peer-configuration {
     description
       "Group containing some general characteristics for configuring
-       a Route Monitoring for a  peer";
+       a Route Monitoring for a peer";
     container filters {
       description
         "Includes containers specifying filters for deciding

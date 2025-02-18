@@ -101,11 +101,11 @@
     <section title="Model description" anchor="model_description">
       <t>
               This document specifies a YANG module for configuring and
-           monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/> 
-           on the monitored router.  The model provides parameters for configuring 
-           the session to BMP monitoring stations; the selection of the BGP 
-           Routing Information Bases (RIBs) for Route Monitoring Messages; provides
-           operational metrics and enables resetting of BMP monitoring sessions.
+          monitoring the BGP Monitoring Protocol (BMP)  <xref
+              target="RFC7854"/> on the monitored router.  The model provides
+              parameters for configuring the session to BMP monitoring
+              stations; configuration of BMP messages; provides operational
+              metrics and enables resetting of BMP monitoring sessions.
        </t>
       <t>The model is included in <xref target="model-content"/>. In this
            section, we provide details and examples of each of its parts.</t>
@@ -124,7 +124,7 @@
             examples of their configuration.</t>
         <section title="Active connection">
           <t>For an active connection, the IP address and port of the monitoring
-          station, together with the local endpoint MUST be provided. The local
+          station, together with the local endpoint must be provided. The local
             endpoint can be a local IP address or a source interface. One can
             optionally provide the local port for establishing the connection.
             If the monitoring station is connected over a network-instance
@@ -143,12 +143,15 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_active_connection_option.xml)
         <section title="Passive connection">
           <t>In a passive connection, the IP of the monitoring station, the local endpoint and local port
             for the incoming connection must be specified. If the port of the
-            monitoring station is provided, it MUST match the incoming
+            monitoring station is provided, it must match the incoming
             connection. If the monitoring station is connected through a
-            network-instance instead of the global one, this one MUST also be
+            network-instance instead of the global one, this one must also be
             specified.</t>
           <t>An incoming connection not matching a valid entry MUST be ignored by
             the router.</t>
+          <t><xref target="passive_connection_option"/> includes an example of
+            configuring a passive connection. In this example, we specify the
+            network-instance where we want to receive the connection.</t>
           <figure anchor="passive_connection_option">
             <name>Passive connection example</name>
             <sourcecode><![CDATA[
@@ -162,10 +165,10 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_passive_connection_option.xml)
             connection supporting the BMP session:</t>
         <t>
           <ul spacing="compact">
-            <li>For configuring TCP keepalives, the connection container uses the tcp-common-grouping from <xref target="I-D.ietf-netconf-tcp-client-server"/>. Note that the implementation MUST support module ietf-bmp-tcp-dependencies in addition to the main module, to support these elements.  Please see <xref target="I-D.ietf-netconf-tcp-client-server" section="2.1.3.1" sectionFormat="of"/> for the explanation of each of its parameters. Note that for the configuration of these parameters, the device must have the feature "tcp-client-keepalives" enabled. See also <xref target="RFC9293" section="3.8.4" sectionFormat="of"/></li>
             <li>The maximum segment of the TCP connection. See  <xref target="RFC9293" section="3.7.1" sectionFormat="of"/>.</li>
             <li>Enabling MTU discovery for the path. See <xref target="RFC9293" section="3.7.2" sectionFormat="of"/>.</li>
-            <li>Session security. Provides options for authentication using AO and MD5. This part of the model was taken from the BGP yang model <xref target="I-D.ietf-idr-bgp-model"/>. Note that part also requires the support of the ietf-bmp-tcp-dependencies module.</li>
+            <li>For configuring TCP keepalives, the connection container uses the tcp-common-grouping from <xref target="I-D.ietf-netconf-tcp-client-server"/>. Note that the implementation must support module ietf-bmp-tcp-dependencies in addition to the main module, to support these elements.  Please see <xref target="I-D.ietf-netconf-tcp-client-server" section="2.1.3.1" sectionFormat="of"/> for the explanation of each of its parameters. Note that for the configuration of these parameters, the device must have the feature "tcp-client-keepalives" enabled. See also <xref target="RFC9293" section="3.8.4" sectionFormat="of"/></li>
+            <li>Session security. Provides options for authentication using AO and MD5. This part of the model was taken from the BGP yang model <xref target="I-D.ietf-idr-bgp-model"/>. Note that this feature requires also requires the support of the ietf-bmp-tcp-dependencies module.</li>
           </ul>
         </t>
         <t>Figures <xref target="tcp_example1" format="counter"/> and <xref target="tcp_example2" format="counter"/> include examples configuring the previous TCP parameters in the model.</t>
@@ -194,7 +197,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_tcp_example2.xml)
             <li>Backoff time: Configuration of the backoff time strategy after failing to connect to the monitoring station. The model includes a basic exponential backoff with a default initial backoff of 30 seconds and a maximum of 720 seconds, as suggested in <xref target="RFC7854" section="3.2" sectionFormat="of"/>.</li>
           </ul>
         </t>
-        <t>In the example in <xref target="example_indelay"/>, we configure an initial-delay of 10. Configuring an initial-backoff of 50 seconds and 600 of maximum-backoff.</t>
+        <t>In the example in <xref target="example_indelay"/>, we configure an initial-delay of 10, an initial-backoff of 50 seconds and 600 of maximum-backoff.</t>
         <t>
           <figure anchor="example_indelay">
             <name>Example of the initial-delay and simple exponential backoff.</name>
@@ -205,12 +208,13 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_indelay.xml)
         </t>
       </section>
       <section title="BMP data">
-        <t>The bmp-data container defines the configuration parameters for the data that the device sends to the monitoring station using the various BMP messages. See <xref target="RFC7854" section="4" sectionFormat="of"/>.</t>
-        <t>The BMP model defines options for the initiation message, the statistics report, the route mirroring, and the routing monitoring. The first two have simple configurations options and are shortly described next. The Routing monitoring is the most complex of all and it is detailed in <xref target="route_monitoring"/>.</t>
+        <t>The bmp-data container defines the configuration parameters for the data that the device sends to the monitoring station using BMP messages. See <xref target="RFC7854" section="4" sectionFormat="of"/>.</t>
+        <t>The BMP model defines options for the initiation message, the statistics report, the route mirroring, and the routing monitoring. The first three have simple configurations options and are shortly described next. The Routing monitoring is the most complex of all and it is detailed in <xref target="route_monitoring"/>.</t>
         <t>
           <ul spacing="compact">
             <li>Initiation-message: Content for an information TLV type-0 for identification of the device. See <xref target="RFC7854" section="4.3" sectionFormat="bare"/> and <xref target="RFC7854" section="4.4" sectionFormat="of"/></li>
             <li>Statistics-interval: The statistics report is enabled by the presence of the bmp-statistics-report container. The statistics-interval is mandatory if the bmp-statistics-report container exists and defines the interval of the statistics report. See <xref target="RFC7854" section="4.8" sectionFormat="of"/>.</li>
+            <li>Route-mirroring: Route Mirroring messages serve as an exact replica of the messages received by the device. See <xref target="RFC7854" section="6" sectionFormat="of"/>. Enabling route mirroring messages towards a particular BMP monitoring station only requires the presence of the container "bmp-route-monitoring" within the monitoring station container.</li>
           </ul>
         </t>
         <t>An example of configuring the previous options is included in <xref target="example_init_msg"/></t>
@@ -271,7 +275,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
           <section title="Network instances">
             <t>The routing monitoring configuration starts with the configuration of network instances. A network instance can be configured individual, or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. We explain each next</t>
             <t>The model currently defines two bmp-ni-types identities: "bmp-ni-types-all-ni" which selects all network instances, and "bmp-ni-types-non-global-ni" which selects all network instances, except the global one. The former can be used as a "default" configuration for simple cases.</t>
-            <t>The model offers two ways of configuring a network-instance individually. The main one is under container "bmp-data/bmp-monitoring-stations/" under the "routing/control-plane-protocols/control-plane-protocol/bgp". The second one is specifying the name under the "bmp/bmp-route-monitoring/network-instance". The former one is the prefered method, since it allows for better validation of the data. This method requires the support of schema-mount and the ietf-bmp-bgp-dependencies.yang module (which is optional). The latter method does not validate some leaves, but it does not require support for schema-mount by the device.</t>
+            <t>The model offers two ways of configuring a network-instance individually. The main one is under container "bmp-data/bmp-monitoring-stations/" under the "routing/control-plane-protocols/control-plane-protocol/bgp". The second one is specifying the name under the "bmp/bmp-route-monitoring/network-instance". The former one requires the support of schema-mount and the ietf-bmp-bgp-dependencies.yang module (which is optional). The latter does not require support for schema-mount by the device.</t>
             <t>An empty configuration disables routing monitoring messages for the selected network-instances. Operators can also use the "enable" leaf to disable explicitly the routing messages for the network instance. </t>
             <t>The route-monitoring data for a network instance can be configured by maximum one element under the network-instance-configuration container.  There SHOULD  be clear rules to which element to apply to a network instance in case multiple elements can select it. We provide rules and examples in the next part of the section.</t>
             <t>The rules for selecting which element configures a network instance are presented next. Each point is evaluated only if the previous points do not hold.</t>
@@ -279,7 +283,8 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
               <ul spacing="compact">
                 <li>If the BGP container under the network-instance includes a BMP/Route monitoring container, it SHOULD be configured by it. Note that if the monitoring-station is not present in the container, the route monitoring will be disabled for this network instance.</li>
                 <li>If the name of the network instance is referenced in "network-instance-configuration/network-instances/network-instance", the network instance SHOULD be configured using this element.</li>
-                <li>If the bmp-ni-types-global-ni under the "network-instance-configuration/network-instance-selectors" exist, the network instance SHOULD be configured using this element.</li>
+                <li>If the selector 'bmp-ni-types-global-ni' under the "network-instance-configuration/network-instance-selectors" exist, the global network instance SHOULD be configured using this element. Note that if a vendor has a name for the global network instance, the previous step will take priority over using the bmp-ni-types-global-ni selector.</li>
+                <li>If the selector 'bmp-ni-types-non-global-ni' under the "network-instance-configuration/network-instance-selectors" exist, any non-global network instance should be configured using its content.
                 <li>Any Network instance not referenced by any rule above SHOULD be configured using the bmp-ni-types-all-ni if one exists. If it does not exist, then the network instance is not configured (and therefore no route monitoring messages from the network instance are sent to the monitoring station).</li>
               </ul>
             </t>
@@ -428,9 +433,8 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_four.xml)
               </t>
             </section>
           </section>
-        </section>
-      </section>
-      <!-- End of BMP data-->
+        </section>  <!-- End of BMP route monitoring-->
+      </section>  <!-- End of BMP data-->
       <section title="Session stats">
         <t>The non-configurable container "session-stats" includes various metrics for the session with the monitoring station.</t>
       </section>
