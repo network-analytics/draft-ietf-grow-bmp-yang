@@ -284,7 +284,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
                 <li>If the BGP container under the network-instance includes a BMP/Route monitoring container, it SHOULD be configured by it. Note that if the monitoring-station is not present in the container, the route monitoring will be disabled for this network instance.</li>
                 <li>If the name of the network instance is referenced in "network-instance-configuration/network-instances/network-instance", the network instance SHOULD be configured using this element.</li>
                 <li>If the selector 'bmp-ni-types-global-ni' under the "network-instance-configuration/network-instance-selectors" exist, the global network instance SHOULD be configured using this element. Note that if a vendor has a name for the global network instance, the previous step will take priority over using the bmp-ni-types-global-ni selector.</li>
-                <li>If the selector 'bmp-ni-types-non-global-ni' under the "network-instance-configuration/network-instance-selectors" exist, any non-global network instance should be configured using its content.
+                <li>If the selector 'bmp-ni-types-non-global-ni' under the "network-instance-configuration/network-instance-selectors" exist, any non-global network instance should be configured using its content.</li>
                 <li>Any Network instance not referenced by any rule above SHOULD be configured using the bmp-ni-types-all-ni if one exists. If it does not exist, then the network instance is not configured (and therefore no route monitoring messages from the network instance are sent to the monitoring station).</li>
               </ul>
             </t>

@@ -34,6 +34,11 @@ module ietf-bmp {
     reference
       "RFC 9067: A YANG Data Model for Routing Policy";
   }
+  import ietf-network-instance {
+    prefix ni;
+    reference
+      "RFC 8529: YANG Data Model for Network Instances";
+  }
 
   organization
     "IETF GROW Working Group";
@@ -155,7 +160,10 @@ module ietf-bmp {
             "The device starts the connection to
              the monitoring station";
           leaf network-instance {
-            type string;
+            type leafref {
+              path "/ni:network-instances/ni:network-instance/"
+                 + "ni:name";
+            }
             description
               "If present, specifies the network instance used to
               reach the monitoring station.  If not provided, the
@@ -212,7 +220,10 @@ module ietf-bmp {
             "The device waits for the connection in a local
             endpoint";
           leaf network-instance {
-            type string;
+            type leafref {
+              path "/ni:network-instances/ni:network-instance/"
+                 + "ni:name";
+            }
             description
               "If present, specifies the network instance used to
               reach the monitoring station.  If not provided, the
@@ -355,9 +366,9 @@ module ietf-bmp {
              4. bmp-peer-selectors
 
              New child containers or new bmp-peer-selectors instances
-             SHOULD provide a way of unambiguislly selecting which
+             SHOULD provide a way of unambiguoully selecting which
              configuration container should be selected for a peer in
-             case mutiple matches. 
+             case multiple matches. 
 
              Note that if the implementation supports module
              ietf-bmp-bgp-dependencies, the peer configurations under
@@ -555,7 +566,7 @@ module ietf-bmp {
 
         Network-instance can be at most configured by one of the
         containers. If the network instance is not covered by any,
-        then no BMP reoute monitoring message should include that
+        then no BMP route monitoring message should include that
         network instance. If more than one container matches 
         the network instance, the priority for selecting the 
         container to use for configuration is:
@@ -572,7 +583,7 @@ module ietf-bmp {
          4. the configuration under network-instance-groups under the
             element bmp-ni-types-all-ni.
 
-         If the implemenetation has a name for the global network
+         If the implementation has a name for the global network
          instance (e.g. 'main') it can be configure directly under
          the network-instances container.
 
@@ -583,12 +594,12 @@ module ietf-bmp {
 
       container network-instances {
         description 
-          "Configuration for specifc network intances";
+          "Configuration for specific network instances";
 
         list network-instance {
           key "network-instance-id";
           description
-            "Network instance to monitory using BMP.";
+            "Network instance to monitor using BMP.";
           leaf network-instance-id {
             type string;
             description
@@ -681,7 +692,7 @@ module ietf-bmp {
             description
               "Initial delay of the connection to the station.
               This can be useful for cases in which the operator
-              wants to let the BGP sessions estabilize before
+              wants to let the BGP sessions stabilize before
               starting the BMP sessions";
           }
           container backoff {
@@ -768,8 +779,8 @@ module ietf-bmp {
         container session-stats {
           config false;
           description
-            "stats and operational values for the station. Total values
-            are counted since the last succesful connection or last connection
+            "stats and operational values for the station. Total values are
+            counted since the last successful connection or last connection
             reset";
           leaf discontinuity-time {
             type yang:date-and-time;
@@ -824,6 +835,218 @@ module ietf-bmp {
             description
               "Number of total termination messages sent";
           }
+
+          grouping bmp-af-stats-with-peers {
+            description
+              "Generic stats for an AF that can be disagregated by peers";
+
+            container peers-stats {
+              description
+               "Peer stats";
+              list peer {
+                key "peer-id";
+
+                description
+                  "List of peers";
+
+                leaf peer-id {
+                  type string;
+                  description 
+                    "Peer id";
+                }
+
+                leaf enabled {
+                  type boolean;
+                  description
+                    "Value indicating if Route Monitoring messages are
+                    currently enabled for the peer under this Network-instance,
+                    Address-Family, and RIB";
+                }
+
+                leaf total-route-monitoring-updated-prefixes-per-peer {
+                  type uint64;
+                  description
+                    "Number of prefixes updated for this peer";
+                }
+                leaf total-route-monitoring-withdraw-prefixes-per-peer {
+                  type uint64;
+                  description
+                    "Number of prefixes withdraw for this peer";
+                }
+
+              }
+            }
+          }
+
+          grouping bmp-af-stats {
+
+            description
+              "Group for  stats for Address family";
+          
+            leaf enabled {
+                type boolean;
+                description
+                  "Value indicating if any Route Monitoring messages
+                  are currently enabled for the address family
+                  within the RIB";
+              }
+              leaf total-route-monitoring-updated-prefixes-per-af {
+                type uint64;
+                description
+                  "Number of prefixes updated for this address family";
+              }
+              leaf total-route-monitoring-withdraw-prefixes-per-af {
+                type uint64;
+                description
+                  "Number of prefixes withdraw for this address family";
+              }
+
+          }
+
+          grouping bmp-rib-with-peers-stats {
+            description
+              "Generic stats for a RIB with peers";
+            container address-families {
+            description
+              "List of address families to list stats.";
+            list address-family {
+              key "address-family-id";
+              description
+                "Address family to enable for local-rib";
+              leaf address-family-id {
+                type identityref {
+                  base bt:afi-safi-type;
+                }
+
+                description
+                  "Address family id to enable for local-rib";
+              }
+                uses bmp-af-stats;
+                uses bmp-af-stats-with-peers;
+              }
+            }
+
+          }
+
+          grouping bmp-rib-stats {
+            description
+              "Generic stats per rib";
+            leaf enabled {
+              type boolean;
+              description
+                "Value indicating if any Route Monitoring messages are currently
+                enabled for the RIB";
+            }
+            leaf total-route-mirroring-messages-per-rib {
+              type uint64;
+              description
+                "Number of route-mirroring messages sent for this RIB";
+            }
+            
+          }
+
+
+          container route-monitoring-stats {
+            description 
+              "Stats of route monitoring messages disaggregated by RIB and
+              peers where applicable.";
+            container network-instances-stats {
+              description
+                "Stats per network-instance";
+              list network-instance {
+                key 'network-instance-name';
+
+                description
+                  "Network instance stats list";
+
+                leaf network-instance-name {
+                  type leafref {
+                    path "/ni:network-instances/ni:network-instance/"
+                       + "ni:name";
+                  }
+                  description 
+                    "Name of the network instance";
+                }
+                leaf enabled {
+                  type boolean;
+                  description
+                    "Value indicating if Route Monitoring messages are
+                    currently enabled for the Network Instance";
+                }
+
+                leaf total-route-mirroring-messages-per-ni {
+                  type uint64;
+                  description
+                    "Number of route-mirroring messages sent for this Network
+                    Instance";
+                }
+
+                container ribs-stats {
+                  description 
+                    "Stats for the different RIBs";
+                  container adj-rib-in-pre {
+                    description
+                      "Stats for adj-rib-in-pre";
+                    uses bmp-rib-stats;
+                    uses bmp-rib-with-peers-stats;
+
+                  }
+
+                  container adj-rib-in-post {
+                    description
+                      "Stats for adj-rib-in-post";
+                    uses bmp-rib-stats;
+                    uses bmp-rib-with-peers-stats;
+
+                  }
+
+                  container local-rib {
+                    description
+                      "Stats for local-rib";
+                    uses bmp-rib-stats;
+                    container address-families {
+                      description
+                        "List of address families to for stats.";
+                      list address-family {
+                        key "address-family-id";
+                        description
+                          "Address family to enable for local-rib";
+                        leaf address-family-id {
+                          type identityref {
+                            base bt:afi-safi-type;
+                          }
+                          description
+                            "Address family id to enable for local-rib";
+                        }
+                          uses bmp-af-stats;
+                        }
+                      }
+
+                  }
+
+                  container adj-rib-out-pre {
+                    description
+                      "Stats for adj-rib-out-pre";
+                    uses bmp-rib-stats;
+                    uses bmp-rib-with-peers-stats;
+
+                  }
+
+                  container adj-rib-out-post {
+                    description
+                      "Stats for adj-rib-out-post";
+                    uses bmp-rib-stats;
+                    uses bmp-rib-with-peers-stats;
+
+                  }
+
+
+                }
+            }
+
+            }
+
+            }
         }
         container actions {
           nacm:default-deny-all;
