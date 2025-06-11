@@ -15,7 +15,7 @@
           <network-instance-configuration>
             <network-instance-selectors>
               <network-instance-selector>
-                <network-instance-selector-id>bmp-ni-types-global-ni</network-instance-selector-id>
+                <network-instance-selector-id>bmp-ni-types-all-ni</network-instance-selector-id>
                 <!-- Configuration D -->
               </network-instance-selector>
             </network-instance-selectors>

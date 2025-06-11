@@ -118,9 +118,9 @@ module ietf-bmp-bgp-dependencies {
              4. bmp-peer-selectors
 
              New child containers or new bmp-peer-selectors instances
-             SHOULD provide a way of unambiguislly selecting which
+             SHOULD provide a way of unambiguously selecting which
              configuration container should be selected for a peer in
-             case mutiple matches.
+             case multiple matches.
             ";
           container bmp-peer-selectors {
             description
