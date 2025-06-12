@@ -1,0 +1,84 @@
+module ietf-bmp-ni-deviations {
+  yang-version 1.1;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-bmp-ni-deviations";
+  prefix bmp-dev;
+
+  import ietf-bmp {
+    prefix bmp;
+  }
+
+  organization
+    "IETF GROW Working Group";
+  contact
+    "WG Web:   <https://datatracker.ietf.org/wg/grow/>";
+
+  description
+    "This module specifies a structure for BMP
+     (BGP Monitoring Protocol) configuration and monitoring.
+
+     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
+     'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED',
+     'NOT RECOMMENDED', 'MAY', and 'OPTIONAL' in this document
+     are to be interpreted as described in BCP 14 (RFC 2119)
+     (RFC 8174) when, and only when, they appear in all
+     capitals, as shown here.
+
+     Copyright (c) 2022 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject to
+     the license terms contained in, the Revised BSD License set
+     forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (https://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC 9196
+     (https://www.rfc-editor.org/info/rfc9196); see the RFC itself
+     for full legal notices.";
+
+  revision 2025-06-09 {
+    description
+      "Change network-instance-id type from string to leafref.";
+    reference
+      "RFC YYYY: BMP YANG Module
+       RFC-EDITOR: please update YYYY with this RFC ID";
+  }
+
+  // Deviation: network-instance in bmp-ip-connection/active
+  deviation "/bmp:bmp/bmp:bmp-monitoring-stations/bmp:bmp-monitoring-station/bmp:connection/bmp:passive-or-active/bmp:active/bmp:active/bmp:network-instance" {
+    description
+      "Change type to string instead of leafref to network-instance name.";
+    deviate replace {
+      type string;
+    }
+  }
+
+  // Deviation: network-instance in bmp-ip-connection/passive
+  deviation "/bmp:bmp/bmp:bmp-monitoring-stations/bmp:bmp-monitoring-station/bmp:connection/bmp:passive-or-active/bmp:passive/bmp:passive/bmp:network-instance" {
+    description
+      "Change type to string instead of leafref to network-instance name.";
+    deviate replace {
+      type string;
+    }
+  }
+
+  // Deviation: network-instance-id in route-monitoring
+  deviation "/bmp:bmp/bmp:bmp-monitoring-stations/bmp:bmp-monitoring-station/bmp:bmp-data/bmp:bmp-route-monitoring/bmp:network-instance-configuration/bmp:network-instances/bmp:network-instance/bmp:network-instance-id" {
+    description
+      "Change type to string instead of leafref to network-instance name.";
+    deviate replace {
+      type string;
+    }
+  }
+
+
+  // Deviation: network-instance-name in route-monitoring-stats (state data)
+  deviation "/bmp:bmp/bmp:bmp-monitoring-stations/bmp:bmp-monitoring-station/bmp:session-stats/bmp:route-monitoring-stats/bmp:network-instances-stats/bmp:network-instance/bmp:network-instance-name" {
+    description
+      "Change type to string instead of leafref to network-instance name (state data).";
+    deviate replace {
+      type string;
+    }
+  }
+}

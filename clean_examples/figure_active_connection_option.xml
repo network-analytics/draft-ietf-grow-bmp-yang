@@ -7,7 +7,7 @@
         <active>
           <station-address>192.0.2.1</station-address>
           <station-port>57992</station-port>
-          <local-address>192.0.2.2</local-address>
+          <monitored-router-address>192.0.2.2</monitored-router-address>
         </active>
       </connection>
     </bmp-monitoring-station>

@@ -7,10 +7,10 @@
         <active>
           <station-address>192.0.2.1</station-address>
           <station-port>57992</station-port>
-          <local-address>192.0.2.2</local-address>
+          <monitored-router-address>192.0.2.2</monitored-router-address>
         </active>
         <tcp-options>
-          <keepalives>
+          <keepalives xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp-tcp-dependencies">
             <idle-time>15</idle-time>
             <max-probes>3</max-probes>
             <probe-interval>30</probe-interval>

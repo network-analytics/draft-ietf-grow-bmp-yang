@@ -2,7 +2,7 @@
 <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
   <bmp-monitoring-stations>
     <bmp-monitoring-station>
-      <id>1</id>
+      <id>monitoring_station_one</id>
       <connection>
         <active>
           <station-address>192.0.2.1</station-address>
@@ -15,27 +15,33 @@
           <network-instance-configuration>
             <network-instance-selectors>
               <network-instance-selector>
-                <network-instance-selector-id>bmp-ni-types-all-ni</network-instance-selector-id>
+                <network-instance-selector-id>bmp-ni-types-global-ni</network-instance-selector-id>
                 <adj-rib-in-pre>
                   <address-families>
                     <address-family>
                       <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
                       <peers-configurations>
-                        <bgp-peer-types>
-                          <bgp-peer-type>
-                            <bgp-peer-type-id>external</bgp-peer-type-id>
-                          </bgp-peer-type>
-                        </bgp-peer-types>
+                        <peers>
+                          <peer>
+                            <peer-id>198.51.100.1</peer-id>
+                          </peer>
+                          <peer>
+                            <peer-id>198.51.100.2</peer-id>
+                          </peer>
+                        </peers>
                       </peers-configurations>
                     </address-family>
                     <address-family>
                       <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
                       <peers-configurations>
-                        <bgp-peer-types>
-                          <bgp-peer-type>
-                            <bgp-peer-type-id>external</bgp-peer-type-id>
-                          </bgp-peer-type>
-                        </bgp-peer-types>
+                        <peers>
+                          <peer>
+                            <peer-id>198.51.100.1</peer-id>
+                          </peer>
+                          <peer>
+                            <peer-id>198.51.100.2</peer-id>
+                          </peer>
+                        </peers>
                       </peers-configurations>
                     </address-family>
                   </address-families>

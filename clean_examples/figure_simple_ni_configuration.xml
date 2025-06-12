@@ -7,17 +7,19 @@
         <active>
           <station-address>192.0.2.1</station-address>
           <station-port>57992</station-port>
-          <local-address>192.0.2.2</local-address>
+          <monitored-router-address>192.0.2.2</monitored-router-address>
         </active>
       </connection>
       <bmp-data>
         <bmp-route-monitoring>
           <network-instance-configuration>
-            <network-instance>
-              <network-instance-id>bmp-ni-types-all-ni</network-instance-id>
-              <!-- Configuration D -->
-            </network-instance>
-        </network-instance-configuration>
+            <network-instance-selectors>
+              <network-instance-selector>
+                <network-instance-selector-id>bmp-ni-types-all-ni</network-instance-selector-id>
+                <!-- Configuration D -->
+              </network-instance-selector>
+            </network-instance-selectors>
+          </network-instance-configuration>
         </bmp-route-monitoring>
       </bmp-data>
     </bmp-monitoring-station>

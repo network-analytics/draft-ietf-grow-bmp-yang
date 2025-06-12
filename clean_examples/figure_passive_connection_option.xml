@@ -7,8 +7,8 @@
         <passive>
           <network-instance>test</network-instance>
           <station-address>192.0.2.1</station-address>
-          <local-address>192.0.2.2</local-address>
-          <local-port>57993</local-port>
+          <monitored-router-address>192.0.2.2</monitored-router-address>
+          <monitored-router-port>57993</monitored-router-port>
         </passive>
       </connection>
     </bmp-monitoring-station>
