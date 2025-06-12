@@ -85,6 +85,19 @@
     </abstract>
   </front>
   <middle>
+    <section title="Introduction">
+        <t>
+            The BGP Monitoring Protocol (BMP) provides a mechanism for
+            monitoring BGP sessions.  This document defines a YANG data model
+            for BMP, enabling operators to configure and manage BMP sessions;
+            control the data exported to monitoring stations; and 
+            collect statistics for each BMP session.
+            The model is designed to
+            accommodate both simple and advanced deployment scenarios,
+            supporting granular control over network instances, RIBs, address
+            families, and peers.
+        </t>
+    </section>
     <section title="Terminology" anchor="terminology">
       <t>
          The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
@@ -471,31 +484,31 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-trees.txt)
         </t>
       </section>
       <section title="Base BMP YANG Module" anchor="ietf-bmp">
-        <t>&lt;CODE BEGINS&gt; file "ietf-bmp@2022-01-27.yang"</t>
         <figure>
           <sourcecode><![CDATA[
+<CODE BEGINS> file "ietf-bmp@2022-01-27.yang"
 INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
+<CODE ENDS>
             ]]></sourcecode>
         </figure>
-        <t>&lt;CODE ENDS&gt;</t>
       </section>
       <section title="BGP dependencies for BMP YANG Module" anchor="ietf-bmp-bgp-dependencies.yang">
-        <t>&lt;CODE BEGINS&gt; file "ietf-bmp-bgp-dependencies.yang@2022-01-27.yang"</t>
         <figure>
           <sourcecode><![CDATA[
+<CODE BEGINS> file "ietf-bmp-bgp-dependencies.yang@2022-01-27.yang"
 INSERT_TEXT_FROM_FILE(ietf-bmp-bgp-dependencies.yang)
+<CODE ENDS>
             ]]></sourcecode>
         </figure>
-        <t>&lt;CODE ENDS&gt;</t>
       </section>
       <section title="TCP dependencies for BMP YANG Module" anchor="ietf-bmp-tcp-dependencies.yang">
-        <t>&lt;CODE BEGINS&gt; file "ietf-bmp-tcp-dependencies.yang@2022-01-27.yang"</t>
         <figure>
           <sourcecode><![CDATA[
+<CODE BEGINS> file "ietf-bmp-tcp-dependencies.yang@2022-01-27.yang"
 INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
+<CODE ENDS>
             ]]></sourcecode>
         </figure>
-        <t>&lt;CODE ENDS&gt;</t>
       </section>
     </section>
     <section title="Security Considerations" anchor="security-considerations">
@@ -523,8 +536,8 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
     <section title="IANA Considerations" anchor="iana-considerations">
       <section title="The IETF XML Registry">
         <t>
-      	   This document registers a URIs in the IETF XML 
-      	   registry <xref target="RFC3688"/>.  Following the format in 
+           This document registers a URIs in the IETF XML 
+           registry <xref target="RFC3688"/>.  Following the format in 
            <xref target="RFC3688"/>, the following registrations are
            requested:</t>
         <t>
@@ -634,7 +647,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_one.xml)
             <t> For the global network instance,
             the device sends updates for adj-rib-in-pre, address families IPv4
             and IPv6. It sends updates for all external peers except peer
-            128.66.1.1, which is disabled.</t>
+            198.51.100.11, which is disabled.</t>
             <t>Network instance monitoring is disabled for route monitoring messages. </t>
             <t>For the rest of network
             instances, we are enabling messages from adj-rib-in-pre, address
