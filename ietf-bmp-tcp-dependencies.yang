@@ -6,7 +6,6 @@ module ietf-bmp-tcp-dependencies {
   import ietf-bmp {
     prefix bmp;
   }
-
   import ietf-tcp-common {
     prefix tcpcmn;
     reference
@@ -68,10 +67,12 @@ module ietf-bmp-tcp-dependencies {
       "RFC YYYY: BMP YANG Module
        RFC-EDITOR: please update YYYY with this RFC ID";
   }
-  augment "/bmp:bmp/bmp:bmp-monitoring-stations/"
-    + "bmp:bmp-monitoring-station/bmp:connection/bmp:tcp-options" {
-    description "Augment the tcp options of the BMP model";
 
+  augment "/bmp:bmp/bmp:bmp-monitoring-stations/"
+        + "bmp:bmp-monitoring-station/"
+        + "bmp:connection/bmp:tcp-options" {
+    description
+      "Augment the tcp options of the BMP model";
     uses tcpcmn:tcp-common-grouping;
     container secure-session {
       presence "Means the session should be secure. ";
@@ -80,7 +81,15 @@ module ietf-bmp-tcp-dependencies {
          is to be secured.";
       choice authentication {
         mandatory true;
+        description
+          "Choice of TCP authentication.";
         case ao {
+          description
+            "Uses TCP-AO to secure the session. Parameters for
+             those are defined as a grouping in the TCP YANG
+             model.";
+          reference
+            "RFC 5925 - The TCP Authentication Option.";
           leaf ao-keychain {
             type key-chain:key-chain-ref;
             description
@@ -90,14 +99,14 @@ module ietf-bmp-tcp-dependencies {
             reference
               "RFC 8177: YANG Key Chain.";
           }
+        }
+        case md5 {
           description
-            "Uses TCP-AO to secure the session. Parameters for
+            "Uses TCP-MD5 to secure the session. Parameters for
              those are defined as a grouping in the TCP YANG
              model.";
           reference
-            "RFC 5925 - The TCP Authentication Option.";
-        }
-        case md5 {
+            "RFC 5925: The TCP Authentication Option.";
           leaf md5-keychain {
             type key-chain:key-chain-ref;
             description
@@ -107,15 +116,7 @@ module ietf-bmp-tcp-dependencies {
             reference
               "RFC 8177: YANG Key Chain.";
           }
-          description
-            "Uses TCP-MD5 to secure the session. Parameters for
-             those are defined as a grouping in the TCP YANG
-             model.";
-          reference
-            "RFC 5925: The TCP Authentication Option.";
         }
-        description
-          "Choice of TCP authentication.";
       }
     }
   }

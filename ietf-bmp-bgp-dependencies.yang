@@ -6,21 +6,18 @@ module ietf-bmp-bgp-dependencies {
   import ietf-bmp {
     prefix bmp;
   }
-
   import ietf-routing {
     prefix rt;
     reference
       "RFC 8349: A YANG Data Model for Routing Management
        (NMDA Version).";
   }
-
   import ietf-bgp {
     prefix bgp;
     reference
       "I-D.draft-ietf-idr-bgp-model-17:
        BGP YANG module for Service Provider Network.";
   }
-
   import iana-bgp-types {
     prefix bt;
     reference
@@ -78,6 +75,7 @@ module ietf-bmp-bgp-dependencies {
       "RFC YYYY: BMP YANG Module
        RFC-EDITOR: please update YYYY with this RFC ID";
   }
+
   grouping bmp-ni-peer-ribs-filter {
     description
       "Containers for configuring RIBs under the ietf-bgp:bgp
@@ -112,6 +110,7 @@ module ietf-bmp-bgp-dependencies {
             peer is not covered by any, then no BMP message should
             include information from/to that peer.  If the peer is
             covered by more than one, then the priority is:
+
              1. peers
              2. peer-groups
              3. peer-type
@@ -237,7 +236,6 @@ module ietf-bmp-bgp-dependencies {
   }
 
   // Augment the BGP module to include data for network instances
-  
 
   augment "/rt:routing/rt:control-plane-protocols/"
         + "rt:control-plane-protocol/bgp:bgp" {
@@ -329,18 +327,18 @@ module ietf-bmp-bgp-dependencies {
             container adj-rib-out-pre {
               description
                 "Configuration for the adj-rib-out pre-policy";
-              uses bmp-ni-peer-ribs-filter;
               reference
                 "RFC8671: Support for Adj-RIB-Out in the BGP
                  Monitoring Protocol (BMP) , Section 3.";
+              uses bmp-ni-peer-ribs-filter;
             }
             container adj-rib-out-post {
               description
                 "Configuration for the adj-rib-out post-policy";
-              uses bmp-ni-peer-ribs-filter;
               reference
                 "RFC8671: Support for Adj-RIB-Out in the BGP
                  Monitoring Protocol (BMP) , Section 3.";
+              uses bmp-ni-peer-ribs-filter;
             }
           }
         }
