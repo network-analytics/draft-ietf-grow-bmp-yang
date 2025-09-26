@@ -86,7 +86,7 @@
   </front>
   <middle>
     <section title="Introduction">
-        <t>
+      <t>
             The BGP Monitoring Protocol (BMP) provides a mechanism for
             monitoring BGP sessions.  This document defines a YANG data model
             for BMP, enabling operators to configure and manage BMP sessions;
@@ -114,8 +114,7 @@
     <section title="Model description" anchor="model_description">
       <t>
               This document specifies a YANG module for configuring and
-          monitoring the BGP Monitoring Protocol (BMP)  <xref
-              target="RFC7854"/> on the monitored router.  The model provides
+          monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/> on the monitored router.  The model provides
               parameters for configuring the session to BMP monitoring
               stations; configuration of BMP messages; provides operational
               metrics and enables resetting of BMP monitoring sessions.
@@ -447,8 +446,10 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_four.xml)
               </t>
             </section>
           </section>
-        </section>  <!-- End of BMP route monitoring-->
-      </section>  <!-- End of BMP data-->
+        </section>
+        <!-- End of BMP route monitoring-->
+      </section>
+      <!-- End of BMP data-->
       <section title="Session stats">
         <t>The non-configurable container "session-stats" includes various metrics for the session with the monitoring station.</t>
       </section>
@@ -469,29 +470,6 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_four.xml)
             support these dependencies.</t>
     </section>
     <section title="BMP YANG module" anchor="model-content">
-      <section title="Tree View" anchor="ietf-bmp-tree-view">
-        <t>
-        The following tree diagram provides an overview of the base ietf-bmp.yang
-            data model. It also includes the trees for the modules ietf-bmp-bgp-dependencies.yang and ietf-bmp-tcp-dependencies.yang
-            that adds some options to the models in case the implementation supports these models (and their requisites)
-        </t>
-        <t>
-          <figure>
-            <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(ietf-bmp-trees.txt)
-           ]]></sourcecode>
-          </figure>
-        </t>
-      </section>
-      <section title="Base BMP YANG Module" anchor="ietf-bmp">
-        <figure>
-          <sourcecode><![CDATA[
-<CODE BEGINS> file "ietf-bmp@2022-01-27.yang"
-INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
-<CODE ENDS>
-            ]]></sourcecode>
-        </figure>
-      </section>
       <section title="BGP dependencies for BMP YANG Module" anchor="ietf-bmp-bgp-dependencies.yang">
         <figure>
           <sourcecode><![CDATA[
@@ -534,38 +512,48 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
       </t>
     </section>
     <section title="IANA Considerations" anchor="iana-considerations">
-      <section title="The IETF XML Registry">
-        <t>
-           This document registers a URIs in the IETF XML 
-           registry <xref target="RFC3688"/>.  Following the format in 
-           <xref target="RFC3688"/>, the following registrations are
-           requested:</t>
-        <t>
-          <figure>
-            <sourcecode>
+      <t>IANA is requested to register the following URI in the "ns"
+   registry within the "IETF XML Registry" group <xref target="RFC3688"/>:</t>
+      <sourcecode type="text"><![CDATA[
    URI: urn:ietf:params:xml:ns:yang:ietf-bmp
-   Registrant Contact: The IESG.
-   XML: N/A, the requested URI is an XML namespace.
-             </sourcecode>
-          </figure>
-        </t>
-      </section>
-      <section title="The YANG Module Name Registration">
-        <t>
-           This document registers the following YANG module in the "
-           YANG Module Names" registry  
-           registry <xref target="RFC6020"/>:</t>
-        <t>
-          <figure>
-            <sourcecode>
+   Registrant Contact:  The IESG.
+   XML: N/A; the requested URI is an XML namespace.
+        ]]></sourcecode>
+      <sourcecode type="text"><![CDATA[
+   URI: urn:ietf:params:xml:ns:yang:ietf-bmp-tcp-dependencies
+   Registrant Contact:  The IESG.
+   XML: N/A; the requested URI is an XML namespace.
+        ]]></sourcecode>
+      <sourcecode type="text"><![CDATA[
+   URI: urn:ietf:params:xml:ns:yang:ietf-bmp-bgp-dependencies
+   Registrant Contact:  The IESG.
+   XML: N/A; the requested URI is an XML namespace.
+        ]]></sourcecode>
+
+      <t>IANA is requested to register the following YANG module in the "YANG
+            Module Names" registry <xref target="RFC6020"/> within the "YANG Parameters"
+            registry group.</t>
+      <sourcecode type="text"><![CDATA[
    Name: ietf-bmp
+   Maintained by IANA?  N
    Namespace: urn:ietf:params:xml:ns:yang:ietf-bmp
    Prefix: bmp
-   Reference: [This RFC-to-be]
-             </sourcecode>
-          </figure>
-        </t>
-      </section>
+   Reference: RFC-XXXX
+        ]]></sourcecode>
+      <sourcecode type="text"><![CDATA[
+   Name: ietf-bmp-tcp-dependencies
+   Maintained by IANA?  N
+   Namespace: urn:ietf:params:xml:ns:yang:ietf-bmp-tcp-dependencies
+   Prefix: bmp-tcp
+   Reference: RFC-XXXX
+        ]]></sourcecode>
+      <sourcecode type="text"><![CDATA[
+   Name: ietf-bmp-bgp-dependencies
+   Maintained by IANA?  N
+   Namespace: urn:ietf:params:xml:ns:yang:ietf-bmp-bgp-dependencies
+   Prefix: bmp-bgp
+   Reference: RFC-XXXX
+        ]]></sourcecode>
     </section>
     <section title="Open Issues">
       <t>
@@ -615,6 +603,29 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
       </t>
     </section>    
   -->
+    <section title="BMP YANG model tree" anchor="ietf-bmp-tree-view">
+      <t>
+        The following tree diagram provides an overview of the base ietf-bmp.yang
+            data model. It also includes the trees for the modules ietf-bmp-bgp-dependencies.yang and ietf-bmp-tcp-dependencies.yang
+            that adds some options to the models in case the implementation supports these models (and their requisites)
+        </t>
+      <t>
+        <figure>
+          <sourcecode><![CDATA[
+INSERT_TEXT_FROM_FILE(ietf-bmp-trees.txt)
+           ]]></sourcecode>
+        </figure>
+      </t>
+    </section>
+    <section title="Base BMP YANG Module" anchor="ietf-bmp">
+      <figure>
+        <sourcecode><![CDATA[
+<CODE BEGINS> file "ietf-bmp@2022-01-27.yang"
+INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
+<CODE ENDS>
+            ]]></sourcecode>
+      </figure>
+    </section>
     <section title="Examples">
       <t>This section shows some examples of BMP configuration using the
             model.</t>

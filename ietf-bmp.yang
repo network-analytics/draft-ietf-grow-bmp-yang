@@ -11,7 +11,7 @@ module ietf-bmp {
     reference
       "RFC 6991: Common YANG Data Types";
   }
-  import ietf-bgp-types {
+  import iana-bgp-types {
     prefix bt;
     description 
       "The bgp types is a model that contains just types.
@@ -80,7 +80,7 @@ module ietf-bmp {
      (RFC 8174) when, and only when, they appear in all
      capitals, as shown here.
 
-     Copyright (c) 2022 IETF Trust and the persons identified as
+     Copyright (c) 2025 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -201,9 +201,7 @@ module ietf-bmp {
             }
             case monitored-router-interface {
               leaf  monitored-router-interface {
-                type leafref {
-                  path "/if:interfaces/if:interface/if:name";
-                }
+                type if:interface-ref;
                 description
                   "Local interface to source the connection.";
               }
@@ -259,9 +257,7 @@ module ietf-bmp {
             }
             case monitored-router-interface {
               leaf monitored-router-interface {
-                type leafref {
-                  path "/if:interfaces/if:interface/if:name";
-                }
+                type if:interface-ref;
                 description
                   "Local interface to accept the connection.";
               }

@@ -19,11 +19,11 @@
                 <adj-rib-in-pre>
                   <address-families>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv6-unicast</address-family-id>
                       <!-- Configuration for ipv6-uniceast -->
                     </address-family>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv4-unicast</address-family-id>
                       <!-- Configuration for ipv4-unicast -->
                     </address-family>
                   </address-families>
