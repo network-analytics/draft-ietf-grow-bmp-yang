@@ -179,7 +179,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_passive_connection_option.xml)
           <ul spacing="compact">
             <li>The maximum segment size of the TCP connection. See  <xref target="RFC9293" section="3.7.1" sectionFormat="of"/>.</li>
             <li>Enabling MTU discovery for the path. See <xref target="RFC9293" section="3.7.2" sectionFormat="of"/>.</li>
-            <li>For configuring TCP keepalives, the connection container uses the tcp-common-grouping from <xref target="I-D.ietf-netconf-tcp-client-server"/>. Note that the implementation must support module ietf-bmp-tcp-dependencies in addition to the main module to support these elements.  Please see <xref target="I-D.ietf-netconf-tcp-client-server" section="2.1.3.1" sectionFormat="of"/> for the explanation of each of its parameters. The device must have the feature "tcp-client-keepalives" enabled. See also <xref target="RFC9293" section="3.8.4" sectionFormat="of"/></li>
+            <li>For configuring TCP keepalives, the connection container uses the tcp-common-grouping from <xref target="RFC9643"/>. Note that the implementation must support module ietf-bmp-tcp-dependencies in addition to the main module to support these elements.  Please see <xref target="RFC9643" section="2.1.3.1" sectionFormat="of"/> for the explanation of each of its parameters. The device must have the feature "tcp-client-keepalives" enabled. See also <xref target="RFC9293" section="3.8.4" sectionFormat="of"/></li>
             <li>Session security. Provides options for authentication using AO and MD5. This part of the model was taken from the BGP YANG model <xref target="I-D.ietf-idr-bgp-model"/>. This feature also requires support of the ietf-bmp-tcp-dependencies module.</li>
           </ul>
         </t>
@@ -584,8 +584,8 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
       <?rfc include="reference.RFC.1191.xml"?>
       <?rfc include="reference.RFC.8177.xml"?>
       <?rfc include="reference.RFC.9293.xml"?>
+      <?rfc include='reference.RFC.9643.xml'?>
       <?rfc include='reference.I-D.ietf-idr-bgp-model.xml'?>
-      <?rfc include='reference.I-D.ietf-netconf-tcp-client-server.xml'?>
     </references>
     <!--
     <references title="Informative References">

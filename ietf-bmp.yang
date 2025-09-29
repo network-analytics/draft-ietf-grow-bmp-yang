@@ -281,7 +281,7 @@ module ietf-bmp {
     }
   }
 
-  grouping bmp-route-monitoring-peer-configuration {
+  grouping bmp-route-monitoring-peer-grouping {
     description
       "General configuration options for route monitoring
        of a peer.";
@@ -385,7 +385,7 @@ module ietf-bmp {
                 description
                   "Enables route monitoring messages for this peer.";
               }
-              uses bmp-route-monitoring-peer-configuration;
+              uses bmp-route-monitoring-peer-grouping;
             }
           }
           container peer-groups {
@@ -407,7 +407,7 @@ module ietf-bmp {
                   "Enables route monitoring messages for
                    this peer group.";
               }
-              uses bmp-route-monitoring-peer-configuration;
+              uses bmp-route-monitoring-peer-grouping;
             }
           }
           container bmp-peer-selectors {
@@ -436,7 +436,7 @@ module ietf-bmp {
                   "Enables routing monitoring messages
                    for the peer(s).";
               }
-              uses bmp-route-monitoring-peer-configuration;
+              uses bmp-route-monitoring-peer-grouping;
             }
           }
           container bgp-peer-types {
@@ -462,14 +462,14 @@ module ietf-bmp {
                 "Enables routing monitoring messages
                  for the peer(s).";
             }
-            uses bmp-route-monitoring-peer-configuration;
+            uses bmp-route-monitoring-peer-grouping;
           }
         }
       }
     }
   }
 
-  grouping generic-network-instance-configuration {
+  grouping generic-network-instance-grouping {
     description
       "Generic configuration of a network instance.";
     leaf enabled {
@@ -513,7 +513,7 @@ module ietf-bmp {
             description
               "Address family id to enable for local-rib";
           }
-          uses bmp-route-monitoring-peer-configuration;
+          uses bmp-route-monitoring-peer-grouping;
         }
       }
     }
@@ -594,7 +594,7 @@ module ietf-bmp {
             description
               "Name of the network instance.";
           }
-          uses generic-network-instance-configuration;
+          uses generic-network-instance-grouping;
         }
       }
       container network-instance-selectors {
@@ -615,7 +615,7 @@ module ietf-bmp {
                based on a bmp-ni-types identity (e.g.
                bmp-ni-types-all-ni for all of them).";
           }
-          uses generic-network-instance-configuration;
+          uses generic-network-instance-grouping;
         }
       }
     }
@@ -788,14 +788,12 @@ module ietf-bmp {
                      currently enabled for the peer under this
                      network instance, address family, and RIB.";
                 }
-                leaf 
-                total-route-monitoring-updated-prefixes-per-peer {
+                leaf total-route-mnt-updated-prefixes-per-peer {
                   type uint64;
                   description
                     "Number of prefixes updated for this peer.";
                 }
-                leaf 
-                total-route-monitoring-withdraw-prefixes-per-peer {
+                leaf total-route-mnt-withdraw-prefixes-per-peer {
                   type uint64;
                   description
                     "Number of prefixes withdrawn for this peer.";

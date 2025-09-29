@@ -9,7 +9,7 @@ module ietf-bmp-tcp-dependencies {
   import ietf-tcp-common {
     prefix tcpcmn;
     reference
-      "I-D.ietf-netconf-tcp-client-server: YANG Groupings for TCP
+      "RFC 9643: YANG Groupings for TCP
        Clients and TCP Servers.";
   }
   import ietf-key-chain {

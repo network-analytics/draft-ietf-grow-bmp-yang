@@ -106,10 +106,11 @@ module ietf-bmp-bgp-dependencies {
         container peers-configurations {
           description
             "Every peer under the configured network instance can be
-            at most configured by one of the next containers.  If the
-            peer is not covered by any, then no BMP message should
-            include information from/to that peer.  If the peer is
-            covered by more than one, then the priority is:
+             at most configured by one of the next containers.
+             If the peer is not covered by any, then no BMP
+             message should include information from/to that
+             peer. If the peer is covered by more than one,
+             then the priority is:
 
              1. peers
              2. peer-groups
@@ -248,9 +249,8 @@ module ietf-bmp-bgp-dependencies {
         "Container for the configuration of BMP data
          related to this BGP instance";
       container bmp-monitoring-stations {
-        presence 
-          "If this container exists, the network instance must be
-          configured using this";
+        presence "If this container exists, the network
+                  instance must be configured using this";
         description
           "Container for the configuration of BMP data
            related to this BGP instance";
