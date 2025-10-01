@@ -19,34 +19,34 @@
         </active>
       </connection>
     <bmp-data>
-      <bmp-route-monitoring>
+      <route-monitoring>
         <network-instance-configuration>
             <network-instance-selectors>
           <network-instance-selector>
-            <network-instance-selector-id>bmp-ni-types-global-ni</network-instance-selector-id>
+            <id>global-ni</id>
             <adj-rib-in-pre>
               <address-families>
                 <address-family>
-                  <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv6-unicast</address-family-id>
+                  <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv6-unicast</id>
                   <peers-configurations>
                     <bmp-peer-selectors>
                       <bmp-peer-selector>
-                        <bmp-selector-id>bmp-peer-selectors-all-peers</bmp-selector-id>
+                        <id>all-peers</id>
                       </bmp-peer-selector>
                     </bmp-peer-selectors>
                   </peers-configurations>
                 </address-family>
                 <address-family>
-                  <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv4-unicast</address-family-id>
+                  <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv4-unicast</id>
                   <peers-configurations>
                     <bgp-peer-types>
                         <bgp-peer-type>
-                            <bgp-peer-type-id>external</bgp-peer-type-id>
+                            <id>external</id>
                         </bgp-peer-type>
                     </bgp-peer-types>
                     <peers>
                       <peer>
-                        <peer-id>198.51.100.1</peer-id>
+                        <id>198.51.100.1</id>
                         <filters>
                           <policy-filter>
                             <export-policy>test_policy</export-policy>
@@ -61,7 +61,7 @@
           </network-instance-selector>
       </network-instance-selectors>
         </network-instance-configuration>
-      </bmp-route-monitoring>
+      </route-monitoring>
     </bmp-data>
   </bmp-monitoring-station>
 </bmp-monitoring-stations>

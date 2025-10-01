@@ -84,12 +84,12 @@ module ietf-bmp-bgp-dependencies {
       description
         "container for lists of address-families";
       list address-family {
-        key "address-family-id";
+        key "id";
         description
           "List of address families.
            The name of the address family, as defined
            in the BGP model is used for keying.";
-        leaf address-family-id {
+        leaf id {
           type identityref {
             base bt:afi-safi-type;
           }
@@ -126,14 +126,14 @@ module ietf-bmp-bgp-dependencies {
             description
               "Generic identification of peers to configure.";
             list bmp-peer-selector {
-              key "bmp-selector-id";
+              key "id";
               description
                 "Identification of peers
                  for which we send BMP data to the collector
                  using a peer type defined using a peer-types-bmp.
                  For instance, to create a default for all
-                 peers use bmp-peer-selectors-all-peers";
-              leaf bmp-selector-id {
+                 peers use all-peers";
+              leaf id {
                 type identityref {
                   base bmp:bmp-peer-selectors;
                 }
@@ -147,7 +147,7 @@ module ietf-bmp-bgp-dependencies {
                   "Enables routing monitoring messages
                    for the peer(s).";
               }
-              uses bmp:bmp-route-monitoring-peer-configuration;
+              uses bmp:route-monitoring-peer-grouping;
             }
           }
           container peer-types {
@@ -173,7 +173,7 @@ module ietf-bmp-bgp-dependencies {
                 "Enables routing monitoring messages
                  for the peer(s).";
             }
-            uses bmp:bmp-route-monitoring-peer-configuration;
+            uses bmp:route-monitoring-peer-grouping;
           }
           container peer-groups {
             description
@@ -200,7 +200,7 @@ module ietf-bmp-bgp-dependencies {
                   "Enables routing monitoring messages
                    for the peer-group(s).";
               }
-              uses bmp:bmp-route-monitoring-peer-configuration;
+              uses bmp:route-monitoring-peer-grouping;
             }
           }
           container peers {
@@ -208,11 +208,11 @@ module ietf-bmp-bgp-dependencies {
               "Identification of peers
                for which we send BMP data to the collector";
             list peer {
-              key "peer-id";
+              key "id";
               description
                 "Identification of peers
                  for which we send BMP data to the collector";
-              leaf peer-id {
+              leaf id {
                 type leafref {
                   path "../../../../../../../../../../../"
                      + "bgp:neighbors/bgp:neighbor/"
@@ -228,7 +228,7 @@ module ietf-bmp-bgp-dependencies {
                   "Enables routing monitoring messages
                    for the peer(s).";
               }
-              uses bmp:bmp-route-monitoring-peer-configuration;
+              uses bmp:route-monitoring-peer-grouping;
             }
           }
         }
@@ -271,7 +271,7 @@ module ietf-bmp-bgp-dependencies {
             description
               "Identification string for the monitoring station";
           }
-          container bmp-route-monitoring {
+          container route-monitoring {
             presence "The presence of this container means the
                       Network instance it contains MUST
                       be configured using it";
@@ -310,17 +310,17 @@ module ietf-bmp-bgp-dependencies {
                   "List of address families to enable for
                    local-rib.";
                 list address-family {
-                  key "address-family-id";
+                  key "id";
                   description
                     "Address family to enable for local-rib";
-                  leaf address-family-id {
+                  leaf id {
                     type identityref {
                       base bt:afi-safi-type;
                     }
                     description
                       "Address family id to enable for local-rib";
                   }
-                  uses bmp:bmp-route-monitoring-peer-configuration;
+                  uses bmp:route-monitoring-peer-grouping;
                 }
               }
             }

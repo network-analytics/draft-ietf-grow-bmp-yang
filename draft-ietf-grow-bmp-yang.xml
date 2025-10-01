@@ -225,7 +225,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_indelay.xml)
         <t>
           <ul spacing="compact">
             <li>Initiation-message: Content for an information TLV type-0 for identification of the device. See <xref target="RFC7854" section="4.3" sectionFormat="bare"/> and <xref target="RFC7854" section="4.4" sectionFormat="of"/></li>
-            <li>Statistics-interval: The statistics report is enabled by the presence of the bmp-statistics-report container. The statistics-interval is mandatory if the bmp-statistics-report container exists and defines the interval of the statistics report. See <xref target="RFC7854" section="4.8" sectionFormat="of"/>.</li>
+            <li>Statistics-interval: The statistics report is enabled by the presence of the statistics-report container. The statistics-interval is mandatory if the statistics-report container exists and defines the interval of the statistics report. See <xref target="RFC7854" section="4.8" sectionFormat="of"/>.</li>
             <li>Route-mirroring: Route Mirroring messages serve as an exact replica of the messages received by the device. See <xref target="RFC7854" section="6" sectionFormat="of"/>. Enabling route mirroring messages towards a particular BMP monitoring station only requires the presence of the container "bmp-route-mirroing" within the monitoring station container.</li>
           </ul>
         </t>
@@ -286,8 +286,8 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
           <t>We'll describe each of the 4 hierarchies, and provide examples for each, in the next sections.</t>
           <section title="Network instances">
             <t>The route monitoring configuration starts with the configuration of network instances. A network instance can be configured individually, or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. We explain each next.</t>
-            <t>The model currently defines two bmp-ni-types identities: "bmp-ni-types-all-ni" which selects all network instances, and "bmp-ni-types-non-global-ni" which selects all network instances except the global one. The former can be used as a "default" configuration for simple cases.</t>
-            <t>The model offers two ways of configuring a network-instance individually. The main one is under container "bmp-data/bmp-monitoring-stations/" under the "routing/control-plane-protocols/control-plane-protocol/bgp". The second one is specifying the name under the "bmp/bmp-route-monitoring/network-instance". The former one requires the support of schema-mount and the ietf-bmp-bgp-dependencies.yang module (which is optional). The latter does not require support for schema-mount by the device.</t>
+            <t>The model currently defines two bmp-ni-types identities: "all-ni" which selects all network instances, and "non-global-ni" which selects all network instances except the global one. The former can be used as a "default" configuration for simple cases.</t>
+            <t>The model offers two ways of configuring a network-instance individually. The main one is under container "bmp-data/bmp-monitoring-stations/" under the "routing/control-plane-protocols/control-plane-protocol/bgp". The second one is specifying the name under the "bmp/route-monitoring/network-instance". The former one requires the support of schema-mount and the ietf-bmp-bgp-dependencies.yang module (which is optional). The latter does not require support for schema-mount by the device.</t>
             <t>An empty configuration disables routing monitoring messages for the selected network-instances. Operators can also use the "enable" leaf to disable explicitly the routing messages for the network instance. </t>
             <t>The route-monitoring data for a network instance can be configured by at most one element under the network-instance-configuration container.  There SHOULD  be clear rules for which element to apply to a network instance in case multiple elements can select it. We provide rules and examples in the next part of the section.</t>
             <t>The rules for selecting which element configures a network instance are presented next. Each point is evaluated only if the previous points do not hold.</t>
@@ -295,9 +295,9 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
               <ul spacing="compact">
                 <li>If the BGP container under the network-instance includes a BMP/Route monitoring container, it SHOULD be configured by it. Note that if the monitoring-station is not present in the container, the route monitoring will be disabled for this network instance.</li>
                 <li>If the name of the network instance is referenced in "network-instance-configuration/network-instances/network-instance", the network instance SHOULD be configured using this element.</li>
-                <li>If the selector 'bmp-ni-types-global-ni' under the "network-instance-configuration/network-instance-selectors" exist, the global network instance SHOULD be configured using this element. Note that if a vendor has a name for the global network instance, the previous step (i.e, network instance name) will take priority over using the bmp-ni-types-global-ni selector.</li>
-                <li>If the selector 'bmp-ni-types-non-global-ni' under the "network-instance-configuration/network-instance-selectors" exist, any non-global network instance should be configured using its content.</li>
-                <li>Any Network instance not referenced by any rule above SHOULD be configured using the bmp-ni-types-all-ni if one exists. If it does not exist, then the network instance is not configured (and therefore no route monitoring messages from the network instance are sent to the monitoring station).</li>
+                <li>If the selector 'global-ni' under the "network-instance-configuration/network-instance-selectors" exist, the global network instance SHOULD be configured using this element. Note that if a vendor has a name for the global network instance, the previous step (i.e, network instance name) will take priority over using the global-ni selector.</li>
+                <li>If the selector 'non-global-ni' under the "network-instance-configuration/network-instance-selectors" exist, any non-global network instance should be configured using its content.</li>
+                <li>Any Network instance not referenced by any rule above SHOULD be configured using the all-ni if one exists. If it does not exist, then the network instance is not configured (and therefore no route monitoring messages from the network instance are sent to the monitoring station).</li>
               </ul>
             </t>
             <t>Any extension of the bmp-ni-types SHOULD provide explanations of how to deal with case in which multiple elements select the same network instance. </t>
@@ -319,7 +319,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_simple_ni_configuration.xml)
            ]]></sourcecode>
               </figure>
             </t>
-            <t>The example in <xref target="simple_ni_configuration"/> shows a "simple" configuration. In this case, all network instances would get "Configuration D". Note that `bmp-ni-types-all-ni` would also cover the global instance.</t>
+            <t>The example in <xref target="simple_ni_configuration"/> shows a "simple" configuration. In this case, all network instances would get "Configuration D". Note that `all-ni` would also cover the global instance.</t>
             <t>Another simple configuration would just involve configuring the global network instance. In this case, information of non-global network instances would not be sent to the monitoring station. This is depicted in <xref target="simple_gni_configuration"/></t>
             <t>
               <figure anchor="simple_gni_configuration">
@@ -354,7 +354,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_one.xml)
                 <li>For the global network instance, adj-rib-in-pre and adj-rib-in-post RIBs are enabled. In each of them IPv4 and IPv6 address families are configured. The configuration can be the same or not, depending on the requirements of the operators. Any other RIB and address families are disabled.</li>
                 <li>Network instance "network-instance-one"  is disabled, meaning that routing monitoring messages are disabled for that network instance.</li>
                 <li>Network instance "network-instance-two" has adj-rib-out-post enabled, but only address family ipv4-unicast is configured. The ipv6-unicast will not be configured for this instance.</li>
-                <li>For all other network instances, adj-rib-in-pre with IPv4 and IPv6 address families are configured, thanks to the configuration of bmp-ni-types-all-ni</li>
+                <li>For all other network instances, adj-rib-in-pre with IPv4 and IPv6 address families are configured, thanks to the configuration of all-ni</li>
               </ul>
             </t>
             <t>If an operator only wants to configure the IPv4/IPv6 of adj-rib-pre-in for the global instance,  the configuration in <xref target="example_rib_af_two"/> plus the peer configuration (coming in next section) will be enough. We note again that even if the configuration of both address families is the same, they must be explicitly configured for each of them.</t>
@@ -389,7 +389,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
               </ul>
             </t>
             <t>An empty configuration of a peer type disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
-            <t>Note that if an operator only wants the information of a few peers, it can enable them individually  using their peer-id. If no other configuration exists, only the messages from those enabled peers will be transmitted to the monitoring station.</t>
+            <t>Note that if an operator only wants the information of a few peers, it can enable them individually  using their id. If no other configuration exists, only the messages from those enabled peers will be transmitted to the monitoring station.</t>
             <t>Any additional bmp-peer-types identity created SHOULD describe how to unambiguously select a peer when there are conflicting options (multiple options covering the peer).</t>
             <t>We'll provide examples of the peers configuration after describing the filter containers.</t>
           </section>
@@ -650,7 +650,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_one.xml)
             The configuration of route monitoring messages is more complex than
             in the previous example.  It shows how to combine the configuration
             of general identities of network instances and peers (e.g.
-            bmp-ni-types-all-ni for NI, external for peers), and individual
+            all-ni for NI, external for peers), and individual
             configurations to support a more complex requirement. This is what
                 the example expects to configure:</t>
         <t>

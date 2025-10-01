@@ -11,29 +11,29 @@
         </active>
       </connection>
       <bmp-data>
-        <bmp-route-monitoring>
+        <route-monitoring>
           <network-instance-configuration>
             <network-instance-selectors>
               <network-instance-selector>
-                <network-instance-selector-id>bmp-ni-types-all-ni</network-instance-selector-id>
+                <id>all-ni</id>
                 <adj-rib-in-pre>
                   <address-families>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv6-unicast</address-family-id>
+                      <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv6-unicast</id>
                       <peers-configurations>
                         <bgp-peer-types>
                           <bgp-peer-type>
-                            <bgp-peer-type-id>external</bgp-peer-type-id>
+                            <id>external</id>
                           </bgp-peer-type>
                         </bgp-peer-types>
                       </peers-configurations>
                     </address-family>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv4-unicast</address-family-id>
+                      <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv4-unicast</id>
                       <peers-configurations>
                         <bgp-peer-types>
                           <bgp-peer-type>
-                            <bgp-peer-type-id>external</bgp-peer-type-id>
+                            <id>external</id>
                           </bgp-peer-type>
                         </bgp-peer-types>
                       </peers-configurations>
@@ -43,7 +43,7 @@
               </network-instance-selector>
             </network-instance-selectors>
           </network-instance-configuration>
-        </bmp-route-monitoring>
+        </route-monitoring>
       </bmp-data>
     </bmp-monitoring-station>
   </bmp-monitoring-stations>

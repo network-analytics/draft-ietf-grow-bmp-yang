@@ -11,30 +11,30 @@
         </active>
       </connection>
       <bmp-data>
-        <bmp-route-monitoring>
+        <route-monitoring>
           <network-instance-configuration>
             <network-instance-selectors>
               <network-instance-selector>
-                <network-instance-selector-id>bmp-ni-types-all-ni</network-instance-selector-id>
+                <id>all-ni</id>
                 <!-- Configuration A -->
               </network-instance-selector>
               <network-instance-selector>
-                <network-instance-selector-id>bmp-ni-types-global-ni</network-instance-selector-id>
+                <id>global-ni</id>
                 <!-- Configuration B -->
               </network-instance-selector>
             </network-instance-selectors>
             <network-instances>
               <network-instance>
-                <network-instance-id>network-instance-two</network-instance-id>
+                <id>network-instance-two</id>
                 <!-- Configuration C -->
               </network-instance>
               <network-instance>
-                <network-instance-id>network-instance-one</network-instance-id>
+                <id>network-instance-one</id>
                 <enabled>false</enabled>
               </network-instance>
             </network-instances>
           </network-instance-configuration>
-        </bmp-route-monitoring>
+        </route-monitoring>
       </bmp-data>
     </bmp-monitoring-station>
   </bmp-monitoring-stations>

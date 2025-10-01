@@ -39,7 +39,7 @@ module ietf-bmp-ni-deviations {
 
   revision 2025-06-09 {
     description
-      "Change network-instance-id type from string to leafref.";
+      "Change id type from string to leafref.";
     reference
       "RFC YYYY: BMP YANG Module
        RFC-EDITOR: please update YYYY with this RFC ID";
@@ -63,8 +63,8 @@ module ietf-bmp-ni-deviations {
     }
   }
 
-  // Deviation: network-instance-id in route-monitoring
-  deviation "/bmp:bmp/bmp:bmp-monitoring-stations/bmp:bmp-monitoring-station/bmp:bmp-data/bmp:bmp-route-monitoring/bmp:network-instance-configuration/bmp:network-instances/bmp:network-instance/bmp:network-instance-id" {
+  // Deviation: id in route-monitoring
+  deviation "/bmp:bmp/bmp:bmp-monitoring-stations/bmp:bmp-monitoring-station/bmp:bmp-data/bmp:route-monitoring/bmp:network-instance-configuration/bmp:network-instances/bmp:network-instance/bmp:id" {
     description
       "Change type to string instead of leafref to network-instance name.";
     deviate replace {

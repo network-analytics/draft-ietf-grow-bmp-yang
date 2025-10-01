@@ -109,10 +109,10 @@ module ietf-bmp {
 
   identity bmp-peer-selectors {
     description
-      "Enum values for selecting peers";
+      "Generic Identity for selecting peers";
   }
 
-  identity bmp-peer-selectors-all-peers {
+  identity all-peers {
     base bmp-peer-selectors;
     description
       "This identity selects all peers under the RIB.
@@ -121,24 +121,24 @@ module ietf-bmp {
 
   identity bmp-ni-types {
     description
-      "Enum values for selecting one or more network instances for
+      "Identities for selecting one or more network instances for
        configuration";
   }
 
-  identity bmp-ni-types-all-ni {
+  identity all-ni {
     base bmp-ni-types;
     description
       "This identity is an explicit way
        to select all network instances.";
   }
 
-  identity bmp-ni-types-global-ni {
+  identity global-ni {
     base bmp-ni-types;
     description
-      "Selecting the global or main network instance";
+      "Identity for Selecting the global or main network instance";
   }
 
-  identity bmp-ni-types-non-global-ni {
+  identity non-global-ni {
     base bmp-ni-types;
     description
       "This identity is an explicit way
@@ -281,7 +281,7 @@ module ietf-bmp {
     }
   }
 
-  grouping bmp-route-monitoring-peer-grouping {
+  grouping route-monitoring-peer-grouping {
     description
       "General configuration options for route monitoring
        of a peer.";
@@ -326,10 +326,10 @@ module ietf-bmp {
       description
         "List of address families for route monitoring.";
       list address-family {
-        key "address-family-id";
+        key "id";
         description
           "Address family, as defined in the BGP model.";
-        leaf address-family-id {
+        leaf id {
           type identityref {
             base bt:afi-safi-type;
           }
@@ -371,10 +371,10 @@ module ietf-bmp {
             description
               "Configuration for individual peers.";
             list peer {
-              key "peer-id";
+              key "id";
               description
                 "Peer identifier.";
-              leaf peer-id {
+              leaf id {
                 type string;
                 description
                   "Identifier of the peer.";
@@ -385,17 +385,17 @@ module ietf-bmp {
                 description
                   "Enables route monitoring messages for this peer.";
               }
-              uses bmp-route-monitoring-peer-grouping;
+              uses route-monitoring-peer-grouping;
             }
           }
           container peer-groups {
             description
               "Configuration for peer groups.";
             list peer-group {
-              key "peer-group-id";
+              key "id";
               description
                 "Peer group identifier.";
-              leaf peer-group-id {
+              leaf id {
                 type string;
                 description
                   "Identifier of the peer group.";
@@ -407,7 +407,7 @@ module ietf-bmp {
                   "Enables route monitoring messages for
                    this peer group.";
               }
-              uses bmp-route-monitoring-peer-grouping;
+              uses route-monitoring-peer-grouping;
             }
           }
           container bmp-peer-selectors {
@@ -415,14 +415,14 @@ module ietf-bmp {
               "Configuration for peers selected by BMP peer
                selectors.";
             list bmp-peer-selector {
-              key "bmp-selector-id";
+              key "id";
               description
                 "Identification of peers
                  for which we send BMP data to the collector
                  using a peer type defined using a peer-types-bmp.
                  For instance, to create a default for all
-                 peers use bmp-peer-selectors-all-peers";
-              leaf bmp-selector-id {
+                 peers use all-peers";
+              leaf id {
                 type identityref {
                   base bmp-peer-selectors;
                 }
@@ -436,20 +436,20 @@ module ietf-bmp {
                   "Enables routing monitoring messages
                    for the peer(s).";
               }
-              uses bmp-route-monitoring-peer-grouping;
+              uses route-monitoring-peer-grouping;
             }
           }
           container bgp-peer-types {
             description
               "Generic identification of peers to configure.";
             list bgp-peer-type {
-              key "bgp-peer-type-id";
+              key "id";
               description
                 "Identification of peers
                  for which we send BMP data to the collector
                  using BGP peer-type (e.g. internal, external)
                 ";
-              leaf bgp-peer-type-id {
+              leaf id {
                 type bt:peer-type;
                 description
                   "BGP peer type.";
@@ -462,7 +462,7 @@ module ietf-bmp {
                 "Enables routing monitoring messages
                  for the peer(s).";
             }
-            uses bmp-route-monitoring-peer-grouping;
+            uses route-monitoring-peer-grouping;
           }
         }
       }
@@ -503,17 +503,17 @@ module ietf-bmp {
         description
           "List of address families to enable for local-rib.";
         list address-family {
-          key "address-family-id";
+          key "id";
           description
             "Address family to enable for local-rib";
-          leaf address-family-id {
+          leaf id {
             type identityref {
               base bt:afi-safi-type;
             }
             description
               "Address family id to enable for local-rib";
           }
-          uses bmp-route-monitoring-peer-grouping;
+          uses route-monitoring-peer-grouping;
         }
       }
     }
@@ -535,7 +535,7 @@ module ietf-bmp {
     }
   }
 
-  grouping bmp-route-monitoring-sources {
+  grouping route-monitoring-sources {
     description
       "Configuration of route monitoring sources.";
     reference
@@ -549,7 +549,7 @@ module ietf-bmp {
 
          Network-instance-selectors are instances of bmp-ni-types
          that select one or more network instances for configuration.
-         For instance, bmp-ni-types-all-ni to configure all network
+         For instance, all-ni to configure all network
          instances (serving as a default).
 
          Network-instance can be at most configured by one of the
@@ -566,10 +566,10 @@ module ietf-bmp {
             under the element listed with its name under the
             network-instance container.
          3. The configuration under network-instance-groups of type
-            bmp-ni-types-non-global-ni if existing and not the global
+            non-global-ni if existing and not the global
             network instance.
          4. the configuration under network-instance-groups under the
-            element bmp-ni-types-all-ni.
+            element all-ni.
 
          If the implementation has a name for the global network
          instance (e.g. 'main') it can be configure directly under
@@ -583,10 +583,10 @@ module ietf-bmp {
         description
           "Configuration for specific network instances";
         list network-instance {
-          key "network-instance-id";
+          key "id";
           description
             "Network instance to monitor using BMP.";
-          leaf network-instance-id {
+          leaf id {
             type leafref {
               path "/ni:network-instances/ni:network-instance/"
                  + "ni:name";
@@ -603,17 +603,17 @@ module ietf-bmp {
            bmp-ni-types to identify one or a group of
            network instances to configure.";
         list network-instance-selector {
-          key "network-instance-selector-id";
+          key "id";
           description
             "Network instance(s) to monitor using BMP.";
-          leaf network-instance-selector-id {
+          leaf id {
             type identityref {
               base bmp-ni-types;
             }
             description
               "Configures one or multiple network instances selected
                based on a bmp-ni-types identity (e.g.
-               bmp-ni-types-all-ni for all of them).";
+               all-ni for all of them).";
           }
           uses generic-network-instance-grouping;
         }
@@ -730,7 +730,7 @@ module ietf-bmp {
               "RFC7854:  BGP Monitoring Protocol,
                Section 4.3 and 4.4";
           }
-          container bmp-statistics-report {
+          container statistics-report {
             presence "Enable BMP statistics report.";
             description
               "Configuration for periodic statistics reports.";
@@ -745,13 +745,13 @@ module ietf-bmp {
                 "Interval between statistics report messages.";
             }
           }
-          container bmp-route-monitoring {
+          container route-monitoring {
             description
               "Configuration of the data sources for
                route-monitoring messages";
-            uses bmp-route-monitoring-sources;
+            uses route-monitoring-sources;
           }
-          container bmp-route-mirroring {
+          container route-mirroring {
             presence "Enable BMP route mirroring to the monitoring
                       station.";
             description
@@ -773,10 +773,10 @@ module ietf-bmp {
               description
                 "Peer stats";
               list peer {
-                key "peer-id";
+                key "id";
                 description
                   "List of peers";
-                leaf peer-id {
+                leaf id {
                   type string;
                   description
                     "Peer id";
@@ -833,10 +833,10 @@ module ietf-bmp {
               description
                 "List of address families to list stats.";
               list address-family {
-                key "address-family-id";
+                key "id";
                 description
                   "Address family to enable for local-rib";
-                leaf address-family-id {
+                leaf id {
                   type identityref {
                     base bt:afi-safi-type;
                   }
@@ -973,10 +973,10 @@ module ietf-bmp {
                       description
                         "List of address families to for stats.";
                       list address-family {
-                        key "address-family-id";
+                        key "id";
                         description
                           "Address family to enable for local-rib";
-                        leaf address-family-id {
+                        leaf id {
                           type identityref {
                             base bt:afi-safi-type;
                           }

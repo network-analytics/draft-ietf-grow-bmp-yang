@@ -12,9 +12,9 @@
       </connection>
       <bmp-data>
         <initiation-message>BMP device supporting the BMP yang module</initiation-message>
-        <bmp-statistics-report>
+        <statistics-report>
           <statistics-interval>600</statistics-interval>
-        </bmp-statistics-report>
+        </statistics-report>
       </bmp-data>
     </bmp-monitoring-station>
   </bmp-monitoring-stations>
