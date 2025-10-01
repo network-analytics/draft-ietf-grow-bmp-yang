@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-  <bmp-monitoring-stations>
-    <bmp-monitoring-station>
+  <monitoring-stations>
+    <monitoring-station>
       <id>1</id>
       <connection>
         <active>
@@ -17,6 +17,6 @@
           </simple-exponential>
         </backoff>
       </connection>
-    </bmp-monitoring-station>
-  </bmp-monitoring-stations>
+    </monitoring-station>
+  </monitoring-stations>
 </bmp>

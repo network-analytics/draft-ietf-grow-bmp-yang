@@ -68,8 +68,8 @@ module ietf-bmp-tcp-dependencies {
        RFC-EDITOR: please update YYYY with this RFC ID";
   }
 
-  augment "/bmp:bmp/bmp:bmp-monitoring-stations/"
-        + "bmp:bmp-monitoring-station/"
+  augment "/bmp:bmp/bmp:monitoring-stations/"
+        + "bmp:monitoring-station/"
         + "bmp:connection/bmp:tcp-options" {
     description
       "Augment the tcp options of the BMP model";

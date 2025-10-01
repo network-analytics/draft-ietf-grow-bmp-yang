@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-  <bmp-monitoring-stations>
-    <bmp-monitoring-station>
+  <monitoring-stations>
+    <monitoring-station>
       <id>1</id>
       <connection>
         <active>
@@ -19,6 +19,6 @@
           <mtu-discovery>true</mtu-discovery>
         </tcp-options>
       </connection>
-    </bmp-monitoring-station>
-  </bmp-monitoring-stations>
+    </monitoring-station>
+  </monitoring-stations>
 </bmp>

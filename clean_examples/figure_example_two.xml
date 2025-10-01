@@ -18,8 +18,8 @@
         </neighbors>
         <!-- Additional BGP configuration elements -->
         <bmp-data xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp-bgp-dependencies">
-            <bmp-monitoring-stations>
-            <bmp-monitoring-station>
+            <monitoring-stations>
+            <monitoring-station>
                 <id>2</id>
                 <route-monitoring>
                 <adj-rib-in-pre>
@@ -59,16 +59,16 @@
                   </address-families>
                 </adj-rib-in-pre>
                 </route-monitoring>
-            </bmp-monitoring-station>
-            </bmp-monitoring-stations>
+            </monitoring-station>
+            </monitoring-stations>
         </bmp-data>
       </bgp>
     </control-plane-protocol>
   </control-plane-protocols>
 </routing>
 <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-    <bmp-monitoring-stations>
-      <bmp-monitoring-station>
+    <monitoring-stations>
+      <monitoring-station>
         <id>2</id>
         <connection>
           <passive>
@@ -89,21 +89,21 @@
                     <address-family>
                         <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv6-unicast</id>
                       <peers-configurations>
-                      <bmp-peer-selectors>
-                        <bmp-peer-selector>
+                      <peer-selectors>
+                        <peer-selector>
                             <id>all-peers</id>
-                        </bmp-peer-selector>
-                      </bmp-peer-selectors>
+                        </peer-selector>
+                      </peer-selectors>
                   </peers-configurations>
                     </address-family>
                     <address-family>
                         <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv4-unicast</id>
                       <peers-configurations>
-                    <bmp-peer-selectors>
-                        <bmp-peer-selector>
+                    <peer-selectors>
+                        <peer-selector>
                           <id>all-peers</id>
-                      </bmp-peer-selector>
-                    </bmp-peer-selectors>
+                      </peer-selector>
+                    </peer-selectors>
                       </peers-configurations>
                     </address-family>
                   </address-families>
@@ -119,6 +119,6 @@
           </network-instance-configuration>
           </route-monitoring>
         </bmp-data>
-      </bmp-monitoring-station>
-    </bmp-monitoring-stations>
+      </monitoring-station>
+    </monitoring-stations>
   </bmp>

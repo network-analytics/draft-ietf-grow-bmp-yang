@@ -248,13 +248,13 @@ module ietf-bmp-bgp-dependencies {
       description
         "Container for the configuration of BMP data
          related to this BGP instance";
-      container bmp-monitoring-stations {
+      container monitoring-stations {
         presence "If this container exists, the network
                   instance must be configured using this";
         description
           "Container for the configuration of BMP data
            related to this BGP instance";
-        list bmp-monitoring-station {
+        list monitoring-station {
           key "id";
           description
             "Container for the configuration of BMP data for this
@@ -264,8 +264,8 @@ module ietf-bmp-bgp-dependencies {
             // the schema mount to recognize this yet. 
             // Until we solve it, we will keep it as it is.
             //type leafref {
-            //  path "/bmp:bmp/bmp:bmp-monitoring-stations/"
-            //        + "bmp:bmp-monitoring-station/bmp:id";
+            //  path "/bmp:bmp/bmp:monitoring-stations/"
+            //        + "bmp:monitoring-station/bmp:id";
             //}
             type string;
             description

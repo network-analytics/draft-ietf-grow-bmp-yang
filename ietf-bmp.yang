@@ -145,7 +145,7 @@ module ietf-bmp {
        to select all network instances except the global one.";
   }
 
-  grouping bmp-ip-connection {
+  grouping bmp-ip-connection-grouping {
     description
       "Common parameters for establishing connectivity
        to a BMP monitoring station.";
@@ -318,7 +318,7 @@ module ietf-bmp {
     }
   }
 
-  grouping bmp-peer-ribs-filter {
+  grouping bmp-peer-ribs-filter-grouping {
     description
       "Configuration containers for RIBs under the main
        BMP container.";
@@ -355,7 +355,7 @@ module ietf-bmp {
              1. peer
              2. peer-groups
              3. peer-type
-             4. bmp-peer-selectors
+             4. peer-selectors
 
              New child containers or new bmp-peer-selectors
              instances SHOULD provide a way of unambiguously
@@ -410,16 +410,17 @@ module ietf-bmp {
               uses route-monitoring-peer-grouping;
             }
           }
-          container bmp-peer-selectors {
+          container peer-selectors {
             description
               "Configuration for peers selected by BMP peer
                selectors.";
-            list bmp-peer-selector {
+            list peer-selector {
               key "id";
               description
                 "Identification of peers
                  for which we send BMP data to the collector
-                 using a peer type defined using a peer-types-bmp.
+                 using a peer type defined using a 
+                 bmp-peer-selectors identity.
                  For instance, to create a default for all
                  peers use all-peers";
               leaf id {
@@ -439,10 +440,10 @@ module ietf-bmp {
               uses route-monitoring-peer-grouping;
             }
           }
-          container bgp-peer-types {
+          container peer-types {
             description
               "Generic identification of peers to configure.";
-            list bgp-peer-type {
+            list peer-type {
               key "id";
               description
                 "Identification of peers
@@ -484,14 +485,14 @@ module ietf-bmp {
         "Configuration for the adj-rib-in pre-policy.";
       reference
         "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
-      uses bmp-peer-ribs-filter;
+      uses bmp-peer-ribs-filter-grouping;
     }
     container adj-rib-in-post {
       description
         "Configuration for the adj-rib-in post-policy";
       reference
         "RFC7854: BGP Monitoring Protocol (BMP), Section 2.";
-      uses bmp-peer-ribs-filter;
+      uses bmp-peer-ribs-filter-grouping;
     }
     container local-rib {
       description
@@ -523,7 +524,7 @@ module ietf-bmp {
       reference
         "RFC8671: Support for Adj-RIB-Out in the BGP Monitoring
          Protocol (BMP) , Section 3.";
-      uses bmp-peer-ribs-filter;
+      uses bmp-peer-ribs-filter-grouping;
     }
     container adj-rib-out-post {
       description
@@ -531,7 +532,7 @@ module ietf-bmp {
       reference
         "RFC8671: Support for Adj-RIB-Out in the BGP Monitoring
          Protocol (BMP) , Section 3.";
-      uses bmp-peer-ribs-filter;
+      uses bmp-peer-ribs-filter-grouping;
     }
   }
 
@@ -624,10 +625,10 @@ module ietf-bmp {
   container bmp {
     description
       "Top-level container for BMP configuration.";
-    container bmp-monitoring-stations {
+    container monitoring-stations {
       description
         "List of BMP monitoring stations.";
-      list bmp-monitoring-station {
+      list monitoring-station {
         key "id";
         description
           "Configuration for a BMP monitoring station.";
@@ -644,7 +645,7 @@ module ietf-bmp {
         container connection {
           description
             "Connection parameters for the monitoring station.";
-          uses bmp-ip-connection;
+          uses bmp-ip-connection-grouping;
           container tcp-options {
             description
               "TCP options for the connection to the monitoring
@@ -765,7 +766,7 @@ module ietf-bmp {
             "Operational statistics for the monitoring station.
              Counters are reset after each successful
              connection or reset.";
-          grouping bmp-af-stats-with-peers {
+          grouping bmp-af-stats-with-peers-grouping {
             description
               "Generic statistics for an address family that can be
                disaggregated by peers";
@@ -802,7 +803,7 @@ module ietf-bmp {
             }
           }
 
-          grouping bmp-af-stats {
+          grouping bmp-af-stats-grouping {
             description
               "Group for statistics for an address family.";
             leaf enabled {
@@ -826,7 +827,7 @@ module ietf-bmp {
             }
           }
 
-          grouping bmp-rib-with-peers-stats {
+          grouping bmp-rib-with-peers-stats-grouping {
             description
               "Generic statistics for a RIB with peers.";
             container address-families {
@@ -843,13 +844,13 @@ module ietf-bmp {
                   description
                     "Address family ID for local-rib.";
                 }
-                uses bmp-af-stats;
-                uses bmp-af-stats-with-peers;
+                uses bmp-af-stats-grouping;
+                uses bmp-af-stats-with-peers-grouping;
               }
             }
           }
 
-          grouping bmp-rib-stats {
+          grouping bmp-rib-stats-grouping {
             description
               "Generic statistics per RIB.";
             leaf enabled {
@@ -956,19 +957,19 @@ module ietf-bmp {
                   container adj-rib-in-pre {
                     description
                       "Statistics for adj-rib-in-pre.";
-                    uses bmp-rib-stats;
-                    uses bmp-rib-with-peers-stats;
+                    uses bmp-rib-stats-grouping;
+                    uses bmp-rib-with-peers-stats-grouping;
                   }
                   container adj-rib-in-post {
                     description
                       "Statistics for adj-rib-in-post";
-                    uses bmp-rib-stats;
-                    uses bmp-rib-with-peers-stats;
+                    uses bmp-rib-stats-grouping;
+                    uses bmp-rib-with-peers-stats-grouping;
                   }
                   container local-rib {
                     description
                       "Statistics for local-rib";
-                    uses bmp-rib-stats;
+                    uses bmp-rib-stats-grouping;
                     container address-families {
                       description
                         "List of address families to for stats.";
@@ -983,21 +984,21 @@ module ietf-bmp {
                           description
                             "Address family ID for local-rib";
                         }
-                        uses bmp-af-stats;
+                        uses bmp-af-stats-grouping;
                       }
                     }
                   }
                   container adj-rib-out-pre {
                     description
                       "Statistics for adj-rib-out-pre";
-                    uses bmp-rib-stats;
-                    uses bmp-rib-with-peers-stats;
+                    uses bmp-rib-stats-grouping;
+                    uses bmp-rib-with-peers-stats-grouping;
                   }
                   container adj-rib-out-post {
                     description
                       "Statistics for adj-rib-out-post";
-                    uses bmp-rib-stats;
-                    uses bmp-rib-with-peers-stats;
+                    uses bmp-rib-stats-grouping;
+                    uses bmp-rib-with-peers-stats-grouping;
                   }
                 }
               }

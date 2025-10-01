@@ -50,8 +50,8 @@
     </key-chain>
   </key-chains>
   <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-    <bmp-monitoring-stations>
-      <bmp-monitoring-station>
+    <monitoring-stations>
+      <monitoring-station>
         <id>monitoring_station_one</id>
         <connection>
           <active>
@@ -65,6 +65,6 @@
             </secure-session>
           </tcp-options>
         </connection>
-      </bmp-monitoring-station>
-    </bmp-monitoring-stations>
+      </monitoring-station>
+    </monitoring-stations>
   </bmp>
