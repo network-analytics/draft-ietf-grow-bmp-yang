@@ -419,7 +419,7 @@ module ietf-bmp {
               description
                 "Identification of peers
                  for which we send BMP data to the collector
-                 using a peer type defined using a 
+                 using a peer type defined using a
                  bmp-peer-selectors identity.
                  For instance, to create a default for all
                  peers use all-peers";
