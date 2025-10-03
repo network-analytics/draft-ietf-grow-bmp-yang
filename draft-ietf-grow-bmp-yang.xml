@@ -287,13 +287,12 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
           <section title="Network instances">
             <t>The route monitoring configuration starts with the configuration of network instances. A network instance can be configured individually, or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. We explain each next.</t>
             <t>The model currently defines two bmp-ni-types identities: "all-ni" which selects all network instances, and "non-global-ni" which selects all network instances except the global one. The former can be used as a "default" configuration for simple cases.</t>
-            <t>The model offers two ways of configuring a network-instance individually. The main one is under container "bmp-data/monitoring-stations/" under the "routing/control-plane-protocols/control-plane-protocol/bgp". The second one is specifying the name under the "bmp/route-monitoring/network-instance". The former one requires the support of schema-mount and the ietf-bmp-bgp-dependencies.yang module (which is optional). The latter does not require support for schema-mount by the device.</t>
+            <t>Network-instances are configured under the container "bmp/route-monitoring/network-instance".</t>
             <t>An empty configuration disables routing monitoring messages for the selected network-instances. Operators can also use the "enable" leaf to disable explicitly the routing messages for the network instance. </t>
             <t>The route-monitoring data for a network instance can be configured by at most one element under the network-instance-configuration container.  There SHOULD  be clear rules for which element to apply to a network instance in case multiple elements can select it. We provide rules and examples in the next part of the section.</t>
             <t>The rules for selecting which element configures a network instance are presented next. Each point is evaluated only if the previous points do not hold.</t>
             <t>
               <ul spacing="compact">
-                <li>If the BGP container under the network-instance includes a BMP/Route monitoring container, it SHOULD be configured by it. Note that if the monitoring-station is not present in the container, the route monitoring will be disabled for this network instance.</li>
                 <li>If the name of the network instance is referenced in "network-instance-configuration/network-instances/network-instance", the network instance SHOULD be configured using this element.</li>
                 <li>If the selector 'global-ni' under the "network-instance-configuration/network-instance-selectors" exist, the global network instance SHOULD be configured using this element. Note that if a vendor has a name for the global network instance, the previous step (i.e, network instance name) will take priority over using the global-ni selector.</li>
                 <li>If the selector 'non-global-ni' under the "network-instance-configuration/network-instance-selectors" exist, any non-global network instance should be configured using its content.</li>
@@ -301,7 +300,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
               </ul>
             </t>
             <t>Any extension of the bmp-ni-types SHOULD provide explanations of how to deal with case in which multiple elements select the same network instance. </t>
-            <t>We provide examples of configuring the network instance level next. For now, we will focus on the configuration using the BMP container (not the configuration under the BGP container).  To focus on the network instance configuration, we mask the configuration under each instance using "Configuration X". </t>
+            <t>We provide examples of configuring the network instance level next. For now, we will focus on the configuration using the BMP container.  To focus on the network instance configuration, we mask the configuration under each instance using "Configuration X". </t>
             <t>
               <figure anchor="example_netins_one">
                 <name>Examples of configuring the network instance level for Route Monitoring.</name>
@@ -329,7 +328,6 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_simple_ni_configuration.xml)
            ]]></sourcecode>
               </figure>
             </t>
-            <t>Alternatively to the configuration of <xref target="simple_gni_configuration"/>, if the device supports the ietf-bgp and ietf-bmp-bgp-dependencies.yang models,   one could configure directly the global instance, but using the BMP configuration under the BGP container</t>
           </section>
           <section title="RIB Type">
             <t>Each RIB type is configured explicitly in the model through a container. The model currently provides containers for adj-rib-out-pre, adj-rib-out-post, adj-rib-in-post, adj-rib-in-pre and local-rib. </t>
@@ -435,7 +433,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_three.xml)
               </t>
             </section>
             <section title="Example four - Enabling just a few peers in global">
-              <t>In the example from <xref target="full_example_four"/>, we configure the device  to only send to the monitoring_station_one monitoring station the Route monitoring messages for ipv4 and ipv6 from peers "198.51.100.1" and "198.51.100.2" in the adj-rib-pre-policy.</t>
+              <t>In the example from <xref target="full_example_four"/>, we configure the device to only send to the monitoring_station_one monitoring station the Route monitoring messages for ipv4 and ipv6 from peers "198.51.100.1" and "198.51.100.2" in the adj-rib-pre-policy.</t>
               <t>
                 <figure anchor="full_example_four">
                   <name>Sending just BGP messages from adj-rib-in-pre from 2 peers</name>
@@ -463,22 +461,13 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_four.xml)
             distinct parts. The core model (ietf-bmp) is designed to configure
             BMP without deep dependencies to other modules. This
             is an attempt to facilitate the implementation by vendors.</t>
-      <t>Additionally, two supplementary modules,
-            ietf-bmp-bgp-dependencies.yang and ietf-bmp-tcp-dependencies.yang,
-            enhance the model's functionality but rely on the IETF BGP and TCP
-            models. These modules can be adopted by implementations that
-            support these dependencies.</t>
+      <t>Additionally, a supplementary module,
+            ietf-bmp-tcp-dependencies.yang,
+            enhances the model's functionality but rely on the IETF TCP
+            models. This modules can be adopted by implementations that
+            support the dependency.</t>
     </section>
     <section title="BMP YANG module" anchor="model-content">
-      <section title="BGP dependencies for BMP YANG Module" anchor="ietf-bmp-bgp-dependencies.yang">
-        <figure>
-          <sourcecode><![CDATA[
-<CODE BEGINS> file "ietf-bmp-bgp-dependencies.yang@2022-01-27.yang"
-INSERT_TEXT_FROM_FILE(ietf-bmp-bgp-dependencies.yang)
-<CODE ENDS>
-            ]]></sourcecode>
-        </figure>
-      </section>
       <section title="TCP dependencies for BMP YANG Module" anchor="ietf-bmp-tcp-dependencies.yang">
         <figure>
           <sourcecode><![CDATA[
@@ -594,11 +583,6 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
    Registrant Contact:  The IESG.
    XML: N/A; the requested URI is an XML namespace.
         ]]></sourcecode>
-      <sourcecode type="text"><![CDATA[
-   URI: urn:ietf:params:xml:ns:yang:ietf-bmp-bgp-dependencies
-   Registrant Contact:  The IESG.
-   XML: N/A; the requested URI is an XML namespace.
-        ]]></sourcecode>
 
       <t>IANA is requested to register the following YANG module in the "YANG
             Module Names" registry <xref target="RFC6020"/> within the "YANG Parameters"
@@ -615,13 +599,6 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
    Maintained by IANA?  N
    Namespace: urn:ietf:params:xml:ns:yang:ietf-bmp-tcp-dependencies
    Prefix: bmp-tcp
-   Reference: RFC-XXXX
-        ]]></sourcecode>
-      <sourcecode type="text"><![CDATA[
-   Name: ietf-bmp-bgp-dependencies
-   Maintained by IANA?  N
-   Namespace: urn:ietf:params:xml:ns:yang:ietf-bmp-bgp-dependencies
-   Prefix: bmp-bgp
    Reference: RFC-XXXX
         ]]></sourcecode>
     </section>
@@ -656,12 +633,12 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
       <?rfc include='reference.RFC.9000.xml'?>
       <?rfc include="reference.RFC.9293.xml"?>
       <?rfc include='reference.RFC.9643.xml'?>
-      <?rfc include='reference.I-D.ietf-idr-bgp-model.xml'?>
       <?rfc include='reference.I-D.ietf-netmod-rfc8407bis.xml'?>
     </references>
-    <!--
     <references title="Informative References">
+    <?rfc include='reference.I-D.ietf-idr-bgp-model.xml'?>
     </references>
+    <!--
         -->
     <?rfc needLines="100"?>
     <!--   
@@ -678,8 +655,8 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
     <section title="BMP YANG model tree" anchor="ietf-bmp-tree-view">
       <t>
         The following tree diagram provides an overview of the base ietf-bmp.yang
-            data model. It also includes the trees for the modules ietf-bmp-bgp-dependencies.yang and ietf-bmp-tcp-dependencies.yang
-            that adds some options to the models in case the implementation supports these models (and their requisites)
+            data model. It also includes the trees for the module ietf-bmp-tcp-dependencies.yang
+            that adds some options to the models in case the implementation supports this model (and their requisites)
         </t>
       <t>
         <figure>

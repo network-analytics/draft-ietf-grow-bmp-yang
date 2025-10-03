@@ -11,16 +11,6 @@ module ietf-bmp {
     reference
       "RFC 6991: Common YANG Data Types";
   }
-  import iana-bgp-types {
-    prefix bt;
-    description
-      "The bgp types is a model that contains just types.
-       Vendors can include it without implications.";
-    reference
-      "RFC AAAA: BGP YANG module for Service Provider Network.
-       RFC-EDITOR: please update XXX with the RFC ID assigned
-       to I-D.ietf-idr-bgp-model";
-  }
   import ietf-netconf-acm {
     prefix nacm;
     reference
@@ -106,6 +96,64 @@ module ietf-bmp {
       "This feature means that the device
        is capable of filtering prefixes in BMP monitoring sessions";
   }
+
+  /* The next types and enums are temporary here until we resolve how to deal
+   * with them. Taken from draft-ietf-idr-bgp-model */
+  /* BGP AFI-SAFI Type Identities. */
+
+  identity afi-safi-type {
+    description
+      "Base identity type for AFI,SAFI tuples for BGP-4";
+    reference
+      "RFC4760: Multiprotocol Extentions for BGP-4.";
+  }
+
+  identity ipv4-unicast {
+    base afi-safi-type;
+    description
+      "IPv4 unicast (AFI,SAFI = 1,1)";
+    reference
+      "RFC4760: Multiprotocol Extentions for BGP-4.";
+  }
+
+  identity ipv6-unicast {
+    base afi-safi-type;
+    description
+      "IPv6 unicast (AFI,SAFI = 2,1)";
+    reference
+      "RFC4760: Multiprotocol Extentions for BGP-4.";
+  }
+
+  /* BGP Peer-Types */
+
+  typedef peer-type {
+    type enumeration {
+      enum internal {
+        description
+          "Internal (IBGP) peer";
+      }
+      enum external {
+        description
+          "External (EBGP) peer";
+      }
+      enum confederation-internal {
+        description
+          "Confederation Internal (IBGP) peer.";
+      }
+      enum confederation-external {
+        description
+          "Confederation External (EBGP) peer.";
+      }
+    }
+    description
+      "Labels a peer or peer group as explicitly internal,
+       external, or the related confederation type.";
+    reference
+      "RFC 4271: A Border Gateway Protocol 4 (BGP-4), Sec 1.1.
+       RFC 5065: Autonomous System Configuration for BGP.";
+  }
+
+  /* End of temporal objects */
 
   identity bmp-peer-selectors {
     description
@@ -331,7 +379,7 @@ module ietf-bmp {
           "Address family, as defined in the BGP model.";
         leaf id {
           type identityref {
-            base bt:afi-safi-type;
+            base afi-safi-type;
           }
           description
             "Address family identifier.";
@@ -451,7 +499,7 @@ module ietf-bmp {
                  using BGP peer-type (e.g. internal, external)
                 ";
               leaf id {
-                type bt:peer-type;
+                type peer-type;
                 description
                   "BGP peer type.";
               }
@@ -509,7 +557,7 @@ module ietf-bmp {
             "Address family to enable for local-rib";
           leaf id {
             type identityref {
-              base bt:afi-safi-type;
+              base afi-safi-type;
             }
             description
               "Address family id to enable for local-rib";
@@ -839,7 +887,7 @@ module ietf-bmp {
                   "Address family to enable for local-rib";
                 leaf id {
                   type identityref {
-                    base bt:afi-safi-type;
+                    base afi-safi-type;
                   }
                   description
                     "Address family ID for local-rib.";
@@ -979,7 +1027,7 @@ module ietf-bmp {
                           "Address family to enable for local-rib";
                         leaf id {
                           type identityref {
-                            base bt:afi-safi-type;
+                            base afi-safi-type;
                           }
                           description
                             "Address family ID for local-rib";
