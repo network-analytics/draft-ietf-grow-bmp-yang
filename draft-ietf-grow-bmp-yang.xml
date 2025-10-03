@@ -490,26 +490,96 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
       </section>
     </section>
     <section title="Security Considerations" anchor="security-considerations">
-      <t> 
-         The YANG module specified in this document defines a schema for data
-          that is designed to be accessed via network management protocols such
-          as NETCONF <xref target="RFC6241"/> or RESTCONF <xref target="RFC8040"/>. The lowest NETCONF layer is the secure transport
-          layer, and the mandatory-to-implement secure transport is Secure
-          Shell (SSH) <xref target="RFC6242"/>. The lowest RESTCONF layer is
-          HTTPS, and the mandatory-to-implement secure transport is TLS <xref target="RFC8446"/>. The NETCONF Access Control Model (NACM) <xref target="RFC8341"/> provides the means to restrict access for
-          NETCONF or RESTCONF users to a preconfigured subset of all
-          available NETCONF or RESTCONF protocol operations and content. 
-      </t>
-      <t>
-         BGP data is sensitive for security considerations. The model described
-          in this document could be used to send BGP information to malicious
-          BMP stations. Write access to this model SHOULD therefore be
-          properly protected. 
-      </t>
-      <t>
-          The session-reset action can demand a considerable amount of resources
-          from network elements. It SHOULD thus be protected from unauthorized access.
-      </t>
+    <section title="Security Considerations for ietf-bmp module" anchor="security-considerations-main">
+        <t>This section is modeled after the template described in Section
+            3.7.1 of <xref target="I-D.ietf-netmod-rfc8407bis"/>.</t>
+
+        <t> The ietf-bmp YANG module defines a data model that is designed to be
+            accessed via YANG-based management protocols, such as NETCONF
+        <xref target="RFC6241"/> and RESTCONF <xref target="RFC8040"/>. These
+            protocols have to use a secure transport layer (e.g., SSH <xref
+                target="RFC6242"/>, TLS <xref target="RFC8446"/>, and QUIC
+                <xref target="RFC9000"/>) and have to use mutual
+                    authentication.
+        </t>
+
+        <t> The Network Configuration Access Control Model (NACM) <xref target="RFC8341"/>
+            provides the means to restrict access for particular NETCONF or
+            RESTCONF users to a preconfigured subset of all available NETCONF
+            or RESTCONF protocol operations and content.
+        </t>
+
+        <t>
+            There are a number of data nodes defined in this YANG module that
+            are writable/creatable/deletable (i.e., "config true", which is the
+            default). All writable data nodes are likely to be reasonably
+            sensitive or vulnerable in some network environments. Write
+            operations (e.g., edit-config) and delete operations to these data
+            nodes without proper protection or authentication can have a
+            negative effect on network operations. 
+            There are no particularly sensitive writable data nodes.
+        </t>
+        <t>
+            Some of the readable data nodes in this YANG module may be
+            considered sensitive or vulnerable in some network environments. It
+            is thus important to control read access (e.g., via get,
+                get-config, or notification) to these data nodes. 
+            There are no particularly sensitive readable data nodes.
+        </t>
+        <t>
+            Some of the RPC or action operations in this YANG module may be
+            considered sensitive or vulnerable in some network environments. It
+            is thus important to control access to these operations.
+            Specifically, the following operations have particular
+            sensitivities/ vulnerabilities:
+            The session-reset action can demand a considerable amount of resources
+            from network elements. It SHOULD thus be protected from unauthorized access.
+         </t>
+    </section>
+    <section title="Security Considerations for ietf-bmp-tcp-dependencies module" anchor="security-considerations-tcp">
+        <t>This section is modeled after the template described in Section
+            3.7.1 of <xref target="I-D.ietf-netmod-rfc8407bis"/>.</t>
+
+        <t> The ietf-bmp-tcp-dependencies  YANG module defines a data model that is designed to be
+            accessed via YANG-based management protocols, such as NETCONF
+        <xref target="RFC6241"/> and RESTCONF <xref target="RFC8040"/>. These
+            protocols have to use a secure transport layer (e.g., SSH <xref
+                target="RFC6242"/>, TLS <xref target="RFC8446"/>, and QUIC
+                <xref target="RFC9000"/>) and have to use mutual
+                    authentication.
+        </t>
+
+        <t> The Network Configuration Access Control Model (NACM) <xref target="RFC8341"/>
+            provides the means to restrict access for particular NETCONF or
+            RESTCONF users to a preconfigured subset of all available NETCONF
+            or RESTCONF protocol operations and content.
+        </t>
+
+        <t>
+            There are a number of data nodes defined in this YANG module that
+            are writable/creatable/deletable (i.e., "config true", which is the
+            default). All writable data nodes are likely to be reasonably
+            sensitive or vulnerable in some network environments. Write
+            operations (e.g., edit-config) and delete operations to these data
+            nodes without proper protection or authentication can have a
+            negative effect on network operations. 
+            There are no particularly sensitive writable data nodes.
+        </t>
+        <t>
+            Some of the readable data nodes in this YANG module may be
+            considered sensitive or vulnerable in some network environments. It
+            is thus important to control read access (e.g., via get,
+                get-config, or notification) to these data nodes. 
+            There are no particularly sensitive readable data nodes.
+        </t>
+         <t>
+             This YANG module uses groupings from other YANG modules that
+             define nodes that may be considered sensitive or vulnerable in
+             network environments. Refer to the Security Considerations of
+             <xref target="RFC9643"/> for information as to which nodes may be
+             considered sensitive or vulnerable in network environments.
+         </t>
+    </section>
     </section>
     <section title="IANA Considerations" anchor="iana-considerations">
       <t>IANA is requested to register the following URI in the "ns"
@@ -583,9 +653,11 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
       <?rfc include="reference.RFC.8529.xml"?>
       <?rfc include="reference.RFC.1191.xml"?>
       <?rfc include="reference.RFC.8177.xml"?>
+      <?rfc include='reference.RFC.9000.xml'?>
       <?rfc include="reference.RFC.9293.xml"?>
       <?rfc include='reference.RFC.9643.xml'?>
       <?rfc include='reference.I-D.ietf-idr-bgp-model.xml'?>
+      <?rfc include='reference.I-D.ietf-netmod-rfc8407bis.xml'?>
     </references>
     <!--
     <references title="Informative References">
