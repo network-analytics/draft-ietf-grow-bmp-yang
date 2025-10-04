@@ -97,7 +97,7 @@ module ietf-bmp {
        is capable of filtering prefixes in BMP monitoring sessions";
   }
 
-  /* The next types and enums are temporary here until we resolve how to deal
+  /* The next enums are temporary here until we resolve how to deal
    * with them. Taken from draft-ietf-idr-bgp-model */
   /* BGP AFI-SAFI Type Identities. */
 
@@ -122,35 +122,6 @@ module ietf-bmp {
       "IPv6 unicast (AFI,SAFI = 2,1)";
     reference
       "RFC4760: Multiprotocol Extentions for BGP-4.";
-  }
-
-  /* BGP Peer-Types */
-
-  typedef peer-type {
-    type enumeration {
-      enum internal {
-        description
-          "Internal (IBGP) peer";
-      }
-      enum external {
-        description
-          "External (EBGP) peer";
-      }
-      enum confederation-internal {
-        description
-          "Confederation Internal (IBGP) peer.";
-      }
-      enum confederation-external {
-        description
-          "Confederation External (EBGP) peer.";
-      }
-    }
-    description
-      "Labels a peer or peer group as explicitly internal,
-       external, or the related confederation type.";
-    reference
-      "RFC 4271: A Border Gateway Protocol 4 (BGP-4), Sec 1.1.
-       RFC 5065: Autonomous System Configuration for BGP.";
   }
 
   /* End of temporal objects */
@@ -192,6 +163,39 @@ module ietf-bmp {
       "This identity is an explicit way
        to select all network instances except the global one.";
   }
+
+  /* The next types are temporary here until we resolve how to deal
+   * with them. Taken from draft-ietf-idr-bgp-model */
+  /* BGP Peer-Types */
+
+  typedef peer-type {
+    type enumeration {
+      enum internal {
+        description
+          "Internal (IBGP) peer";
+      }
+      enum external {
+        description
+          "External (EBGP) peer";
+      }
+      enum confederation-internal {
+        description
+          "Confederation Internal (IBGP) peer.";
+      }
+      enum confederation-external {
+        description
+          "Confederation External (EBGP) peer.";
+      }
+    }
+    description
+      "Labels a peer or peer group as explicitly internal,
+       external, or the related confederation type.";
+    reference
+      "RFC 4271: A Border Gateway Protocol 4 (BGP-4), Sec 1.1.
+       RFC 5065: Autonomous System Configuration for BGP.";
+  }
+
+  /* End of temporal objects */
 
   grouping bmp-ip-connection-grouping {
     description
@@ -608,16 +612,13 @@ module ietf-bmp {
          the network instance, the priority for selecting the
          container to use for configuration is:
 
-         1. The configuration under the BGP container, if supported
-            by the implementation (see
-            ietf-bmp-bgp-dependencies.yang)
-         2. For any other named network instance, the configuration
+         1. For any other named network instance, the configuration
             under the element listed with its name under the
             network-instance container.
-         3. The configuration under network-instance-groups of type
+         2. The configuration under network-instance-groups of type
             non-global-ni if existing and not the global
             network instance.
-         4. the configuration under network-instance-groups under the
+         3. the configuration under network-instance-groups under the
             element all-ni.
 
          If the implementation has a name for the global network
