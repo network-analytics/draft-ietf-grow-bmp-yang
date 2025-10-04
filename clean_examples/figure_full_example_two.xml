@@ -27,7 +27,7 @@
             <adj-rib-in-pre>
               <address-families>
                 <address-family>
-                  <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv6-unicast</id>
+                  <id>ipv6-unicast</id>
                   <peers-configurations>
                     <peer-selectors>
                       <peer-selector>
@@ -37,7 +37,7 @@
                   </peers-configurations>
                 </address-family>
                 <address-family>
-                  <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv4-unicast</id>
+                  <id>ipv4-unicast</id>
                   <peers-configurations>
                     <peer-types>
                         <peer-type>

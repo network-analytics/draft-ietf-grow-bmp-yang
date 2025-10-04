@@ -1,6 +1,6 @@
 echo "Validating yang modes"
 
-PYANG_INPUT='ietf-bmp.yang ietf-bmp-bgp-dependencies.yang ietf-bmp-tcp-dependencies.yang'
+PYANG_INPUT='ietf-bmp.yang  ietf-bmp-tcp-dependencies.yang'
 
 pyang --ietf --max-line-length 69 $PYANG_INPUT
 
@@ -13,5 +13,5 @@ for orig in $PYANG_INPUT; do
   fi
 done
 
-yanglint -p . -p /Users/camilo/Documents/Projects/drafts/bmp_yang_model/other_examples/yang/experimental  ietf-bmp.yang ietf-bmp-bgp-dependencies.yang ietf-bmp-tcp-dependencies.yang -f yang > /dev/null
+yanglint -p . -p /Users/camilo/Documents/Projects/drafts/bmp_yang_model/other_examples/yang/experimental  ietf-bmp.yang  ietf-bmp-tcp-dependencies.yang -f yang > /dev/null
 

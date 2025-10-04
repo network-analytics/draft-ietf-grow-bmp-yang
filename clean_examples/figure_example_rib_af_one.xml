@@ -19,11 +19,11 @@
                 <adj-rib-in-pre>
                   <address-families>
                     <address-family>
-                      <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv6-unicast</id>
+                      <id>ipv6-unicast</id>
                       <!-- Configuration F -->
                     </address-family>
                     <address-family>
-                      <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv4-unicast</id>
+                      <id>ipv4-unicast</id>
                       <!-- Configuration G -->
                     </address-family>
                   </address-families>
@@ -34,11 +34,11 @@
                 <adj-rib-in-pre>
                   <address-families>
                     <address-family>
-                      <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv6-unicast</id>
+                      <id>ipv6-unicast</id>
                       <!-- Configuration H -->
                     </address-family>
                     <address-family>
-                      <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv4-unicast</id>
+                      <id>ipv4-unicast</id>
                       <!-- Configuration I -->
                     </address-family>
                   </address-families>
@@ -46,11 +46,11 @@
                 <adj-rib-in-post>
                   <address-families>
                     <address-family>
-                      <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv6-unicast</id>
+                      <id>ipv6-unicast</id>
                       <!-- Configuration H -->
                     </address-family>
                     <address-family>
-                      <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv4-unicast</id>
+                      <id>ipv4-unicast</id>
                       <!-- Configuration I -->
                     </address-family>
                   </address-families>
@@ -67,7 +67,7 @@
                 <adj-rib-in-post>
                   <address-families>
                     <address-family>
-                      <id xmlns:bt="urn:ietf:params:xml:ns:yang:iana-bgp-types">bt:ipv4-unicast</id>
+                      <id>ipv4-unicast</id>
                       <!-- Configuration L -->
                     </address-family>
                   </address-families>
