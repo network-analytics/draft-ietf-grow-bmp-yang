@@ -153,7 +153,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_active_connection_option.xml)
                 using the global network instance.</t>
         </section>
         <section title="Passive connection">
-          <t>In a passive connection, the IP of the monitoring station, the local endpoint and local port
+          <t>In a passive connection, the IP of the monitoring station, the local endpoint, and the local port
             for the incoming connection must be specified. If the port of the
             monitoring station is provided, it must match the incoming
             connection. If the monitoring station is connected through a
@@ -226,7 +226,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_indelay.xml)
           <ul spacing="compact">
             <li>Initiation-message: Content for an information TLV type-0 for identification of the device. See <xref target="RFC7854" section="4.3" sectionFormat="bare"/> and <xref target="RFC7854" section="4.4" sectionFormat="of"/></li>
             <li>Statistics-interval: The statistics report is enabled by the presence of the statistics-report container. The statistics-interval is mandatory if the statistics-report container exists and defines the interval of the statistics report. See <xref target="RFC7854" section="4.8" sectionFormat="of"/>.</li>
-            <li>Route-mirroring: Route Mirroring messages serve as an exact replica of the messages received by the device. See <xref target="RFC7854" section="6" sectionFormat="of"/>. Enabling route mirroring messages towards a particular BMP monitoring station only requires the presence of the container "bmp-route-mirroing" within the monitoring station container.</li>
+            <li>Route-mirroring: Route Mirroring messages serve as an exact replica of the messages received by the device. See <xref target="RFC7854" section="6" sectionFormat="of"/>. Enabling route mirroring messages towards a particular BMP monitoring station only requires the presence of the container "route-mirroing" within the monitoring station container.</li>
           </ul>
         </t>
         <t>An example of configuring the previous options is included in <xref target="example_init_msg"/></t>
@@ -245,11 +245,11 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
             <ul spacing="compact">
               <li>Operators might not want to receive all routes from all RIBs in a network device. For instance, some devices contain a considerable amount of data that might overwhelm the monitoring station. In these cases, operators might want to only collect information from an arbitrary subset of RIBs, address families, peers.</li>
               <li>Operators might want to configure the route monitoring messages for different network instances differently. For example, they might want to receive different address families from the global network instance than in L3 VPN network instances. </li>
-              <li>In contrast to the previous points. some operators might want a simple configuration that covers multiple cases (e.g. same config for all peers, or same config for all network instances).  This would not only make configurations look smaller and concise, but will reduce the need for reconfiguring devices when you add a new peer or add a new network instance (which happens frequently on some type of networks). </li>
+              <li>In contrast to the previous points, some operators might want a simple configuration that covers multiple cases (e.g. same config for all peers, or same config for all network instances).  This would not only make configurations look smaller and concise, but will reduce the need for reconfiguring devices when you add a new peer or add a new network instance (which happens frequently on some type of networks). </li>
             </ul>
           </t>
           <t>Based on the previous points, the BMP yang model is designed to flexibly control the data sent through the BMP route monitoring packets, yet it provides options to facilitate configurations for simple cases, such as when the operator wants to receive all routes from a RIB.</t>
-          <t>The Routing monitoring configuration is divided in a 4 part hierarchy:</t>
+          <t>The Routing monitoring configuration is divided in a four-part hierarchy:</t>
           <t>
             <ul spacing="compact">
               <li>Network Instance </li>
@@ -286,7 +286,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
           <t>We'll describe each of the 4 hierarchies, and provide examples for each, in the next sections.</t>
           <section title="Network instances">
             <t>The route monitoring configuration starts with the configuration of network instances. A network instance can be configured individually, or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. We explain each next.</t>
-            <t>The model currently defines two bmp-ni-types identities: "all-ni" which selects all network instances, and "non-global-ni" which selects all network instances except the global one. The former can be used as a "default" configuration for simple cases.</t>
+            <t>The model currently defines three bmp-ni-types identities: "all-ni" which selects all network instances, "non-global-ni" which selects all network instances except the global one, and "global-ni", which configures the global network instance when the device does not offer an exlicit name for it. The former can be used as a "default" configuration for simple cases.</t>
             <t>Network-instances are configured under the container "bmp/route-monitoring/network-instance".</t>
             <t>An empty configuration disables routing monitoring messages for the selected network-instances. Operators can also use the "enable" leaf to disable explicitly the routing messages for the network instance. </t>
             <t>The route-monitoring data for a network instance can be configured by at most one element under the network-instance-configuration container.  There SHOULD  be clear rules for which element to apply to a network instance in case multiple elements can select it. We provide rules and examples in the next part of the section.</t>
@@ -324,7 +324,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_simple_ni_configuration.xml)
               <figure anchor="simple_gni_configuration">
                 <name>Example of configuring only the global network instance.</name>
                 <sourcecode><![CDATA[
-INSERT_TEXT_FROM_FILE(clean_examples/figure_simple_ni_configuration.xml)
+INSERT_TEXT_FROM_FILE(clean_examples/figure_simple_gni_configuration.xml)
            ]]></sourcecode>
               </figure>
             </t>
@@ -373,7 +373,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
                 <li>An individual peer, using a remote address. For the configuration under the "/bmp" tree, the model currently does not check if the remote address exists, that would be a responsibility of the device.</li>
                 <li>Peergroups.</li>
                 <li>A group of peers matching a BGP type. i.e. eBGP peers. </li>
-                <li>One or more peers defined by an `bmp-peer-types` identity. The BMP model currently provides the `bmp-peer-types-all-peers` identity which select all peers. For simple cases, this is the value that would normally be considered.</li>
+                <li>One or more peers defined by an `bmp-peer-types` identity. The BMP model currently provides the `all-peers` identity which select all peers. For simple cases, this is the value that would normally be considered.</li>
               </ul>
             </t>
             <t>Peers MUST be selected (configured) by at most a single instance of the peers list. For the included keys in the BMP model, the process to select which instance to use is as follows:</t>
@@ -382,7 +382,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
                 <li>If there is a peer address matching the peer, it should be configured using that instance.</li>
                 <li>If the peer matches a peergroup, it should be configured using the peer-group configuration.</li>
                 <li>If the peer is of any BGP type listed in the peer list, it should be configured using this instance.</li>
-                <li>If there is a peer instance identified with the `bmp-peer-types-all-peers`, it would be configured using this instance.</li>
+                <li>If there is a peer instance identified with the `all-peers`, it would be configured using this instance.</li>
                 <li>Finally, if no instance covers the peer, the data from this peer should not be transmitted to the monitoring station.</li>
               </ul>
             </t>
@@ -395,7 +395,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
             <t>The local rib, and the peer containers within the rest of rib types, include a filter container. This container includes mechanisms to filter route-monitoring messages for the specific RIB.</t>
             <t>The policy-filter can include a routing policy that, if existing, should be applied to the outgoing updates to the monitoring station, and would serve as a granular way of filtering the messages that the monitoring station receives. </t>
             <t>Note that the policy-filter contains an `accept-route` default export policy. An operator can change it to a reject-route, if required.</t>
-            <t>The policies created with the routing-policy can perform a large variety of actions routes, and can filter them based on multiple characteristics. For the consistency of the data in the monitoring station, the route policies actions SHOULD be restricted to accepting or rejecting routes. Furthermore, the conditions SHOULD only match prefix sets.</t>
+            <t>The policies created with the routing-policy can perform a large variety of actions on routes, and can filter them based on multiple characteristics. For the consistency of the data in the monitoring station, the route policies actions MUST be restricted to accepting or rejecting routes. Furthermore, the conditions SHOULD only match prefix sets.</t>
             <t>We present examples of full configurations next.</t>
           </section>
           <section title="Full examples of Route monitoring configurations">
@@ -457,14 +457,14 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_four.xml)
     </section>
     <!-- End of Model description -->
     <section title="Implementation guidelines" anchor="implementation_guidelines">
-      <t>To facilitate implementation, the model is divided into three
+      <t>To facilitate implementation, the model is divided into two
             distinct parts. The core model (ietf-bmp) is designed to configure
             BMP without deep dependencies to other modules. This
             is an attempt to facilitate the implementation by vendors.</t>
       <t>Additionally, a supplementary module,
             ietf-bmp-tcp-dependencies.yang,
             enhances the model's functionality but rely on the IETF TCP
-            models. This modules can be adopted by implementations that
+            models. This module can be adopted by implementations that
             support the dependency.</t>
     </section>
     <section title="BMP YANG module" anchor="model-content">

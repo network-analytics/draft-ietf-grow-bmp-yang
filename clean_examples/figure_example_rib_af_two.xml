@@ -20,7 +20,7 @@
                   <address-families>
                     <address-family>
                       <id>ipv6-unicast</id>
-                      <!-- Configuration for ipv6-uniceast -->
+                      <!-- Configuration for ipv6-unicast -->
                     </address-family>
                     <address-family>
                       <id>ipv4-unicast</id>

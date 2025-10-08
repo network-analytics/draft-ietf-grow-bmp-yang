@@ -612,13 +612,19 @@ module ietf-bmp {
          the network instance, the priority for selecting the
          container to use for configuration is:
 
-         1. For any other named network instance, the configuration
+         1. For any named network instance, the configuration
             under the element listed with its name under the
             network-instance container.
-         2. The configuration under network-instance-groups of type
+         2. If the globa-ni network-instance type exists,
+            it SHOULD  be used for the global-ni.
+            However, if the global-ni
+            has an explicit name, and it is configured, then
+            from the previous rule, the explicit network
+            instance name configuration SHOULD be used.
+         3. The configuration under network-instance-groups of type
             non-global-ni if existing and not the global
             network instance.
-         3. the configuration under network-instance-groups under the
+         4. the configuration under network-instance-groups under the
             element all-ni.
 
          If the implementation has a name for the global network
