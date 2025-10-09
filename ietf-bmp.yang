@@ -105,7 +105,7 @@ module ietf-bmp {
     description
       "Base identity type for AFI,SAFI tuples for BGP-4";
     reference
-      "RFC4760: Multiprotocol Extentions for BGP-4.";
+      "RFC4760: Multiprotocol Extensions for BGP-4.";
   }
 
   identity ipv4-unicast {
@@ -113,7 +113,7 @@ module ietf-bmp {
     description
       "IPv4 unicast (AFI,SAFI = 1,1)";
     reference
-      "RFC4760: Multiprotocol Extentions for BGP-4.";
+      "RFC4760: Multiprotocol Extensions for BGP-4.";
   }
 
   identity ipv6-unicast {
@@ -121,7 +121,7 @@ module ietf-bmp {
     description
       "IPv6 unicast (AFI,SAFI = 2,1)";
     reference
-      "RFC4760: Multiprotocol Extentions for BGP-4.";
+      "RFC4760: Multiprotocol Extensions for BGP-4.";
   }
 
   /* End of temporal objects */
@@ -486,7 +486,7 @@ module ietf-bmp {
                 type boolean;
                 default "true";
                 description
-                  "Enables routing monitoring messages
+                  "Enables route monitoring messages
                    for the peer(s).";
               }
               uses route-monitoring-peer-grouping;
@@ -507,15 +507,15 @@ module ietf-bmp {
                 description
                   "BGP peer type.";
               }
+              leaf enabled {
+                type boolean;
+                default "true";
+                description
+                  "Enables route monitoring messages
+                   for the peer(s).";
+              }
+              uses route-monitoring-peer-grouping;
             }
-            leaf enabled {
-              type boolean;
-              default "true";
-              description
-                "Enables routing monitoring messages
-                 for the peer(s).";
-            }
-            uses route-monitoring-peer-grouping;
           }
         }
       }
@@ -615,7 +615,7 @@ module ietf-bmp {
          1. For any named network instance, the configuration
             under the element listed with its name under the
             network-instance container.
-         2. If the globa-ni network-instance type exists,
+         2. If the global-ni network-instance type exists,
             it SHOULD  be used for the global-ni.
             However, if the global-ni
             has an explicit name, and it is configured, then

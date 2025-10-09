@@ -226,7 +226,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_indelay.xml)
           <ul spacing="compact">
             <li>Initiation-message: Content for an information TLV type-0 for identification of the device. See <xref target="RFC7854" section="4.3" sectionFormat="bare"/> and <xref target="RFC7854" section="4.4" sectionFormat="of"/></li>
             <li>Statistics-interval: The statistics report is enabled by the presence of the statistics-report container. The statistics-interval is mandatory if the statistics-report container exists and defines the interval of the statistics report. See <xref target="RFC7854" section="4.8" sectionFormat="of"/>.</li>
-            <li>Route-mirroring: Route Mirroring messages serve as an exact replica of the messages received by the device. See <xref target="RFC7854" section="6" sectionFormat="of"/>. Enabling route mirroring messages towards a particular BMP monitoring station only requires the presence of the container "route-mirroing" within the monitoring station container.</li>
+            <li>Route-mirroring: Route Mirroring messages serve as an exact replica of the messages received by the device. See <xref target="RFC7854" section="6" sectionFormat="of"/>. Enabling route mirroring messages towards a particular BMP monitoring station only requires the presence of the container "route-mirroring" within the monitoring station container.</li>
           </ul>
         </t>
         <t>An example of configuring the previous options is included in <xref target="example_init_msg"/></t>
@@ -249,7 +249,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
             </ul>
           </t>
           <t>Based on the previous points, the BMP yang model is designed to flexibly control the data sent through the BMP route monitoring packets, yet it provides options to facilitate configurations for simple cases, such as when the operator wants to receive all routes from a RIB.</t>
-          <t>The Routing monitoring configuration is divided in a four-part hierarchy:</t>
+          <t>The route monitoring configuration is divided in a four-part hierarchy:</t>
           <t>
             <ul spacing="compact">
               <li>Network Instance </li>
@@ -258,7 +258,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
               <li>Peers</li>
             </ul>
           </t>
-          <t>Absence of the routing monitoring container will disable the routing monitoring messages to the monitoring station.</t>
+          <t>Absence of the route monitoring container will disable the route monitoring messages to the monitoring station.</t>
           <t>We'll offer an introduction to these hierarchies before going over them with detail.</t>
           <t>The number of RIB types (e.g. Adj-RIB-IN/OUT, local RIB, etc) and Address families is low, and their configuration should not change frequently. Therefore, they are configured explicitly in the model. That is, the model does not provide a way of providing a default configuration for these or configuring them in groups.</t>
           <t>On the other hand, Network instances and peers require greater flexibility.</t>
@@ -279,16 +279,16 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
               <li>The model should provide ways of configuring all peers, kind of a default. This would be the most common case.</li>
               <li>The model should provide ways of configuring peergroups.</li>
               <li>The model should provide ways of configuring type of peers. For instance, only send routes from eBGP peers.</li>
-              <li>The model should provide ways of configuring individual peers. For instance, turn a route-policy filtering prefix for a specific peer, or turning off a peer that is noisy yet not important.</li>
+              <li>The model should provide ways of configuring individual peers. For instance, an operator might apply a route-policy to filter certain prefixes for a specific peer, or disable route monitoring messages for a peer that is noisy yet not important.</li>
             </ul>
           </t>
           <t>To further control the route monitoring data, the peer container includes a route-policy option in which the operator can further filter the data send to the BMP monitoring station.</t>
           <t>We'll describe each of the 4 hierarchies, and provide examples for each, in the next sections.</t>
           <section title="Network instances">
             <t>The route monitoring configuration starts with the configuration of network instances. A network instance can be configured individually, or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. We explain each next.</t>
-            <t>The model currently defines three bmp-ni-types identities: "all-ni" which selects all network instances, "non-global-ni" which selects all network instances except the global one, and "global-ni", which configures the global network instance when the device does not offer an exlicit name for it. The former can be used as a "default" configuration for simple cases.</t>
+            <t>The model currently defines three bmp-ni-types identities: "all-ni" which selects all network instances, "non-global-ni" which selects all network instances except the global one, and "global-ni", which configures the global network instance when the device does not offer an explicit name for it. The former can be used as a "default" configuration for simple cases.</t>
             <t>Network-instances are configured under the container "bmp/route-monitoring/network-instance".</t>
-            <t>An empty configuration disables routing monitoring messages for the selected network-instances. Operators can also use the "enable" leaf to disable explicitly the routing messages for the network instance. </t>
+            <t>An empty configuration disables route monitoring messages for the selected network-instances. Operators can also use the "enable" leaf to disable explicitly the routing messages for the network instance. </t>
             <t>The route-monitoring data for a network instance can be configured by at most one element under the network-instance-configuration container.  There SHOULD  be clear rules for which element to apply to a network instance in case multiple elements can select it. We provide rules and examples in the next part of the section.</t>
             <t>The rules for selecting which element configures a network instance are presented next. Each point is evaluated only if the previous points do not hold.</t>
             <t>
@@ -309,7 +309,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_netins_one.xml)
            ]]></sourcecode>
               </figure>
             </t>
-            <t>In example from <xref target="example_netins_one"/>, we have a "default" configuration (Configuration A) applied to any network instance without any explicit configuration. The global network instance and network-instance-two get Configuration B and Configuration C, respectively. The network-instance-one instance container disables the routing monitoring messages for that network instance.</t>
+            <t>In example from <xref target="example_netins_one"/>, we have a "default" configuration (Configuration A) applied to any network instance without any explicit configuration. The global network instance and network-instance-two get Configuration B and Configuration C, respectively. The network-instance-one instance container disables the route monitoring messages for that network instance.</t>
             <t>
               <figure anchor="simple_ni_configuration">
                 <name>Example of configuring all network instances.</name>
@@ -350,7 +350,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_one.xml)
             <t>
               <ul spacing="compact">
                 <li>For the global network instance, adj-rib-in-pre and adj-rib-in-post RIBs are enabled. In each of them IPv4 and IPv6 address families are configured. The configuration can be the same or not, depending on the requirements of the operators. Any other RIB and address families are disabled.</li>
-                <li>Network instance "network-instance-one"  is disabled, meaning that routing monitoring messages are disabled for that network instance.</li>
+                <li>Network instance "network-instance-one"  is disabled, meaning that route monitoring messages are disabled for that network instance.</li>
                 <li>Network instance "network-instance-two" has adj-rib-out-post enabled, but only address family ipv4-unicast is configured. The ipv6-unicast will not be configured for this instance.</li>
                 <li>For all other network instances, adj-rib-in-pre with IPv4 and IPv6 address families are configured, thanks to the configuration of all-ni</li>
               </ul>
@@ -383,7 +383,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
                 <li>If the peer matches a peergroup, it should be configured using the peer-group configuration.</li>
                 <li>If the peer is of any BGP type listed in the peer list, it should be configured using this instance.</li>
                 <li>If there is a peer instance identified with the `all-peers`, it would be configured using this instance.</li>
-                <li>Finally, if no instance covers the peer, the data from this peer should not be transmitted to the monitoring station.</li>
+                <li>Finally, if no instance covers the peer, route monitoring messages from this peer should not be transmitted to the monitoring station.</li>
               </ul>
             </t>
             <t>An empty configuration of a peer type disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
@@ -400,10 +400,10 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
           </section>
           <section title="Full examples of Route monitoring configurations">
             <section title="Example one - simple configuration">
-              <t>In the example configuration from  <xref target="full_example_one"/>, address families IPv6 and IPv4 are configured to send all peers. This is an example of a simple configuration</t>
+              <t>In the example configuration from  <xref target="full_example_one"/>, address families IPv6 and IPv4 are configured to send all peers from the global network instance. This is an example of a simple configuration</t>
               <t>
                 <figure anchor="full_example_one">
-                  <name>Enabling Route monitoring for all peers; all network instances; IPv4/IPv6 Address families,  in the adj-rib-in-pre RIB.</name>
+                  <name>Enabling Route monitoring for all peers in the global network instance; IPv4/IPv6 Address families,  in the adj-rib-in-pre RIB.</name>
                   <sourcecode><![CDATA[
 INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_one.xml)
            ]]></sourcecode>
@@ -433,7 +433,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_three.xml)
               </t>
             </section>
             <section title="Example four - Enabling just a few peers in global">
-              <t>In the example from <xref target="full_example_four"/>, we configure the device to only send to the monitoring_station_one monitoring station the Route monitoring messages for ipv4 and ipv6 from peers "198.51.100.1" and "198.51.100.2" in the adj-rib-pre-policy.</t>
+              <t>In the example from <xref target="full_example_four"/>, we configure the device to only send to the monitoring_station_one monitoring station the Route monitoring messages for ipv4 and ipv6 from peers "198.51.100.1" and "198.51.100.2" in the adj-rib-in-pre policy.</t>
               <t>
                 <figure anchor="full_example_four">
                   <name>Sending just BGP messages from adj-rib-in-pre from 2 peers</name>
