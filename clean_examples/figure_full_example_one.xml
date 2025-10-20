@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-  <bmp-monitoring-stations>
-    <bmp-monitoring-station>
+  <monitoring-stations>
+    <monitoring-station>
       <id>monitoring_station_one</id>
       <connection>
         <active>
@@ -11,31 +11,31 @@
         </active>
       </connection>
       <bmp-data>
-        <bmp-route-monitoring>
+        <route-monitoring>
           <network-instance-configuration>
             <network-instance-selectors>
               <network-instance-selector>
-                <network-instance-selector-id>bmp-ni-types-global-ni</network-instance-selector-id>
+                <id>global-ni</id>
                 <adj-rib-in-pre>
                   <address-families>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                      <id>ipv6-unicast</id>
                       <peers-configurations>
-                        <bmp-peer-selectors>
-                          <bmp-peer-selector>
-                            <bmp-selector-id>bmp-peer-selectors-all-peers</bmp-selector-id>
-                          </bmp-peer-selector>
-                        </bmp-peer-selectors>
+                        <peer-selectors>
+                          <peer-selector>
+                            <id>all-peers</id>
+                          </peer-selector>
+                        </peer-selectors>
                       </peers-configurations>
                     </address-family>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                      <id>ipv4-unicast</id>
                       <peers-configurations>
-                        <bmp-peer-selectors>
-                          <bmp-peer-selector>
-                            <bmp-selector-id>bmp-peer-selectors-all-peers</bmp-selector-id>
-                          </bmp-peer-selector>
-                        </bmp-peer-selectors>
+                        <peer-selectors>
+                          <peer-selector>
+                            <id>all-peers</id>
+                          </peer-selector>
+                        </peer-selectors>
                       </peers-configurations>
                     </address-family>
                   </address-families>
@@ -43,8 +43,8 @@
               </network-instance-selector>
             </network-instance-selectors>
           </network-instance-configuration>
-        </bmp-route-monitoring>
+        </route-monitoring>
       </bmp-data>
-    </bmp-monitoring-station>
-  </bmp-monitoring-stations>
+    </monitoring-station>
+  </monitoring-stations>
 </bmp>

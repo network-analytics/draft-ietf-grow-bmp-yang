@@ -1,74 +1,6 @@
-<routing xmlns="urn:ietf:params:xml:ns:yang:ietf-routing">
-  <control-plane-protocols>
-    <control-plane-protocol>
-      <type xmlns:bgp="urn:ietf:params:xml:ns:yang:ietf-bgp">bgp:bgp</type>
-      <name>BGP</name>
-      <bgp xmlns="urn:ietf:params:xml:ns:yang:ietf-bgp">
-        <global>
-          <as>64496</as>
-          <identifier>192.0.2.1</identifier>
-        </global>
-        <neighbors>
-          <neighbor>
-            <!-- Neighbor-specific configuration parameters -->
-            <remote-address>198.51.100.11</remote-address>
-            <peer-as>64497</peer-as>
-          </neighbor>
-          <!-- Additional neighbors if needed -->
-        </neighbors>
-        <!-- Additional BGP configuration elements -->
-        <bmp-data xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp-bgp-dependencies">
-            <bmp-monitoring-stations>
-            <bmp-monitoring-station>
-                <id>2</id>
-                <bmp-route-monitoring>
-                <adj-rib-in-pre>
-                  <address-families>
-                    <address-family>
-                        <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
-                  <peers-configurations>
-                      <peers>
-                        <peer>
-                          <peer-id>198.51.100.11</peer-id>
-                          <enabled>false</enabled>
-                        </peer>
-                      </peers>
-                        <peer-types>
-                        <peer-type>
-                          <peer-type-id>external</peer-type-id>
-                        </peer-type>
-                        </peer-types>
-                  </peers-configurations>
-                    </address-family>
-                    <address-family>
-                        <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
-                  <peers-configurations>
-                      <peers>
-                        <peer>
-                          <peer-id>198.51.100.11</peer-id>
-                          <enabled>false</enabled>
-                        </peer>
-                      </peers>
-                        <peer-types>
-                        <peer-type>
-                          <peer-type-id>external</peer-type-id>
-                        </peer-type>
-                        </peer-types>
-                  </peers-configurations>
-                    </address-family>
-                  </address-families>
-                </adj-rib-in-pre>
-                </bmp-route-monitoring>
-            </bmp-monitoring-station>
-            </bmp-monitoring-stations>
-        </bmp-data>
-      </bgp>
-    </control-plane-protocol>
-  </control-plane-protocols>
-</routing>
 <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-    <bmp-monitoring-stations>
-      <bmp-monitoring-station>
+    <monitoring-stations>
+      <monitoring-station>
         <id>2</id>
         <connection>
           <passive>
@@ -79,32 +11,71 @@
           </passive>
         </connection>
         <bmp-data>
-          <bmp-route-monitoring>
+          <route-monitoring>
           <network-instance-configuration>
             <network-instance-selectors>
               <network-instance-selector>
-                  <network-instance-selector-id>bmp-ni-types-all-ni</network-instance-selector-id>
+                  <id>all-ni</id>
                 <adj-rib-in-pre>
                   <address-families>
                     <address-family>
-                        <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                        <id>ipv6-unicast</id>
                       <peers-configurations>
-                      <bmp-peer-selectors>
-                        <bmp-peer-selector>
-                            <bmp-selector-id>bmp-peer-selectors-all-peers</bmp-selector-id>
-                        </bmp-peer-selector>
-                      </bmp-peer-selectors>
+                      <peer-selectors>
+                        <peer-selector>
+                            <id>all-peers</id>
+                        </peer-selector>
+                      </peer-selectors>
                   </peers-configurations>
                     </address-family>
                     <address-family>
-                        <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                        <id>ipv4-unicast</id>
                       <peers-configurations>
-                    <bmp-peer-selectors>
-                        <bmp-peer-selector>
-                          <bmp-selector-id>bmp-peer-selectors-all-peers</bmp-selector-id>
-                      </bmp-peer-selector>
-                    </bmp-peer-selectors>
+                    <peer-selectors>
+                        <peer-selector>
+                          <id>all-peers</id>
+                      </peer-selector>
+                    </peer-selectors>
                       </peers-configurations>
+                    </address-family>
+                  </address-families>
+                </adj-rib-in-pre>
+              </network-instance-selector>
+              <network-instance-selector>
+                  <id>global-ni</id>
+                <adj-rib-in-pre>
+                  <address-families>
+                    <address-family>
+                        <id>ipv6-unicast</id>
+                  <peers-configurations>
+                      <peers>
+                        <peer>
+                          <id>198.51.100.11</id>
+                          <enabled>false</enabled>
+                        </peer>
+                      </peers>
+                        <peer-types>
+                        <peer-type>
+                          <id>external</id>
+                        </peer-type>
+                        </peer-types>
+                  </peers-configurations>
+                    </address-family>
+                    <address-family>
+                        <id>ipv4-unicast</id>
+                  <peers-configurations>
+                      <peers>
+                        <peer>
+                          <id>198.51.100.11</id>
+                          <enabled>false</enabled>
+                        </peer>
+                      </peers>
+                        <peer-types>
+                        <peer-type>
+                          <id>external</id>
+                        </peer-type>
+                        </peer-types>
+                  </peers-configurations>
                     </address-family>
                   </address-families>
                 </adj-rib-in-pre>
@@ -112,13 +83,13 @@
           </network-instance-selectors>
               <network-instances>
               <network-instance>
-                <network-instance-id>monitoring</network-instance-id>
+                <id>monitoring</id>
                 <enabled>false</enabled>
               </network-instance>
           </network-instances>
           </network-instance-configuration>
-          </bmp-route-monitoring>
+          </route-monitoring>
         </bmp-data>
-      </bmp-monitoring-station>
-    </bmp-monitoring-stations>
+      </monitoring-station>
+    </monitoring-stations>
   </bmp>

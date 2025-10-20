@@ -4,5 +4,5 @@
 
 echo "Generating tree diagrams..."
 
-pyang  --ietf -f tree --tree-line-length 65 ietf-bmp.yang ietf-bmp-bgp-dependencies.yang ietf-bmp-tcp-dependencies.yang > ietf-bmp-trees.txt
+pyang  --ietf -f tree --tree-line-length 65 ietf-bmp.yang ietf-bmp-tcp-dependencies.yang > ietf-bmp-trees.txt
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <bmp xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp">
-  <bmp-monitoring-stations>
-    <bmp-monitoring-station>
+  <monitoring-stations>
+    <monitoring-station>
       <id>monitoring_station_one</id>
       <connection>
         <active>
@@ -11,34 +11,34 @@
         </active>
       </connection>
       <bmp-data>
-        <bmp-route-monitoring>
+        <route-monitoring>
           <network-instance-configuration>
             <network-instance-selectors>
               <network-instance-selector>
-                <network-instance-selector-id>bmp-ni-types-all-ni</network-instance-selector-id>
+                <id>all-ni</id>
                 <adj-rib-in-pre>
                   <address-families>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                      <id>ipv6-unicast</id>
                       <!-- Configuration F -->
                     </address-family>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                      <id>ipv4-unicast</id>
                       <!-- Configuration G -->
                     </address-family>
                   </address-families>
                 </adj-rib-in-pre>
               </network-instance-selector>
               <network-instance-selector>
-                <network-instance-selector-id>bmp-ni-types-global-ni</network-instance-selector-id>
+                <id>global-ni</id>
                 <adj-rib-in-pre>
                   <address-families>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                      <id>ipv6-unicast</id>
                       <!-- Configuration H -->
                     </address-family>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                      <id>ipv4-unicast</id>
                       <!-- Configuration I -->
                     </address-family>
                   </address-families>
@@ -46,11 +46,11 @@
                 <adj-rib-in-post>
                   <address-families>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv6-unicast</address-family-id>
+                      <id>ipv6-unicast</id>
                       <!-- Configuration H -->
                     </address-family>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                      <id>ipv4-unicast</id>
                       <!-- Configuration I -->
                     </address-family>
                   </address-families>
@@ -59,15 +59,15 @@
             </network-instance-selectors>
             <network-instances>
               <network-instance>
-                <network-instance-id>network-instance-one</network-instance-id>
+                <id>network-instance-one</id>
                 <enabled>false</enabled>
               </network-instance>
               <network-instance>
-                <network-instance-id>network-instance-two</network-instance-id>
+                <id>network-instance-two</id>
                 <adj-rib-in-post>
                   <address-families>
                     <address-family>
-                      <address-family-id xmlns:bt="urn:ietf:params:xml:ns:yang:ietf-bgp-types">bt:ipv4-unicast</address-family-id>
+                      <id>ipv4-unicast</id>
                       <!-- Configuration L -->
                     </address-family>
                   </address-families>
@@ -75,8 +75,8 @@
               </network-instance>
             </network-instances>
           </network-instance-configuration>
-        </bmp-route-monitoring>
+        </route-monitoring>
       </bmp-data>
-    </bmp-monitoring-station>
-  </bmp-monitoring-stations>
+    </monitoring-station>
+  </monitoring-stations>
 </bmp>

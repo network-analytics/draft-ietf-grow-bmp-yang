@@ -39,14 +39,14 @@ module ietf-bmp-ni-deviations {
 
   revision 2025-06-09 {
     description
-      "Change network-instance-id type from string to leafref.";
+      "Change id type from string to leafref.";
     reference
       "RFC YYYY: BMP YANG Module
        RFC-EDITOR: please update YYYY with this RFC ID";
   }
 
   // Deviation: network-instance in bmp-ip-connection/active
-  deviation "/bmp:bmp/bmp:bmp-monitoring-stations/bmp:bmp-monitoring-station/bmp:connection/bmp:passive-or-active/bmp:active/bmp:active/bmp:network-instance" {
+  deviation "/bmp:bmp/bmp:monitoring-stations/bmp:monitoring-station/bmp:connection/bmp:passive-or-active/bmp:active/bmp:active/bmp:network-instance" {
     description
       "Change type to string instead of leafref to network-instance name.";
     deviate replace {
@@ -55,7 +55,7 @@ module ietf-bmp-ni-deviations {
   }
 
   // Deviation: network-instance in bmp-ip-connection/passive
-  deviation "/bmp:bmp/bmp:bmp-monitoring-stations/bmp:bmp-monitoring-station/bmp:connection/bmp:passive-or-active/bmp:passive/bmp:passive/bmp:network-instance" {
+  deviation "/bmp:bmp/bmp:monitoring-stations/bmp:monitoring-station/bmp:connection/bmp:passive-or-active/bmp:passive/bmp:passive/bmp:network-instance" {
     description
       "Change type to string instead of leafref to network-instance name.";
     deviate replace {
@@ -63,8 +63,8 @@ module ietf-bmp-ni-deviations {
     }
   }
 
-  // Deviation: network-instance-id in route-monitoring
-  deviation "/bmp:bmp/bmp:bmp-monitoring-stations/bmp:bmp-monitoring-station/bmp:bmp-data/bmp:bmp-route-monitoring/bmp:network-instance-configuration/bmp:network-instances/bmp:network-instance/bmp:network-instance-id" {
+  // Deviation: id in route-monitoring
+  deviation "/bmp:bmp/bmp:monitoring-stations/bmp:monitoring-station/bmp:bmp-data/bmp:route-monitoring/bmp:network-instance-configuration/bmp:network-instances/bmp:network-instance/bmp:id" {
     description
       "Change type to string instead of leafref to network-instance name.";
     deviate replace {
@@ -74,7 +74,7 @@ module ietf-bmp-ni-deviations {
 
 
   // Deviation: network-instance-name in route-monitoring-stats (state data)
-  deviation "/bmp:bmp/bmp:bmp-monitoring-stations/bmp:bmp-monitoring-station/bmp:session-stats/bmp:route-monitoring-stats/bmp:network-instances-stats/bmp:network-instance/bmp:network-instance-name" {
+  deviation "/bmp:bmp/bmp:monitoring-stations/bmp:monitoring-station/bmp:session-stats/bmp:route-monitoring-stats/bmp:network-instances-stats/bmp:network-instance/bmp:network-instance-name" {
     description
       "Change type to string instead of leafref to network-instance name (state data).";
     deviate replace {
