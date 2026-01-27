@@ -5,6 +5,14 @@ module ietf-bmp-tcp-dependencies {
 
   import ietf-bmp {
     prefix bmp;
+    reference
+      "RFC YYYY: BMP YANG Module.";
+  }
+  import ietf-tcp {
+    prefix tcp;
+    reference
+      "RFC 9648: YANG Data
+       Model for TCP.";
   }
   import ietf-tcp-common {
     prefix tcpcmn;
@@ -65,8 +73,7 @@ module ietf-bmp-tcp-dependencies {
     description
       "initial version";
     reference
-      "RFC YYYY: BMP YANG Module
-       RFC-EDITOR: please update YYYY with this RFC ID";
+      "RFC YYYY: BMP YANG Module.";
   }
 
   augment "/bmp:bmp/bmp:monitoring-stations/"
@@ -74,23 +81,48 @@ module ietf-bmp-tcp-dependencies {
         + "bmp:connection/bmp:tcp-options" {
     description
       "Augment the tcp options of the BMP model";
+    leaf mss {
+      type tcp:mss;
+      description
+        "Maximum segment size (MSS) for the TCP connections.
+         In the absence of this container, the system
+         will select the maximum segment size for this
+         connection.";
+      reference
+        "RFC 9293: Transmission Control
+         Protocol (TCP) Specification.
+         RFC 9648: YANG Data Model for TCP.";
+    }
     uses tcpcmn:tcp-common-grouping;
+    leaf maximum-segment-size {
+      type uint16;
+      description
+        "Maximum segment size for the TCP connections.
+         In the absence of this container, the system
+         will select the maximum segment size for this
+         connection.";
+    }
     container secure-session {
-      presence "Means the session should be secure. ";
+      if-feature "tcp:authentication";
+      presence "The presence of this container means the
+                session should be secured. ";
       description
         "Container for describing how a particular BMP session
-         is to be secured.";
+         is to be secured. Based on RFC 9293 implementation.";
+      reference
+        "RFC 9293: Transmission Control
+         Protocol (TCP) Specification";
       choice authentication {
         mandatory true;
         description
           "Choice of TCP authentication.";
         case ao {
           description
-            "Uses TCP-AO to secure the session. Parameters for
-             those are defined as a grouping in the TCP YANG
-             model.";
+            "Uses TCP-AO to secure the session.";
           reference
-            "RFC 5925 - The TCP Authentication Option.";
+            "RFC 5925 - The TCP Authentication Option.
+             RFC 9648: YANG Data Model for TCP (grouping ao).";
+          uses tcp:ao;
           leaf ao-keychain {
             type key-chain:key-chain-ref;
             description
@@ -103,9 +135,7 @@ module ietf-bmp-tcp-dependencies {
         }
         case md5 {
           description
-            "Uses TCP-MD5 to secure the session. Parameters for
-             those are defined as a grouping in the TCP YANG
-             model.";
+            "Uses TCP-MD5 to secure the session. .";
           reference
             "RFC 5925: The TCP Authentication Option.";
           leaf md5-keychain {

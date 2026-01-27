@@ -111,28 +111,51 @@
            initiation messages are defined in <xref target="RFC7854"/>.
       </t>
     </section>
-    <section title="Model description" anchor="model_description">
+    <section title="Models description" anchor="model_description">
       <t>
-              This document specifies a YANG module for configuring and
-          monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/> on the monitored router.  The model provides
-              parameters for configuring the session to BMP monitoring
+              This document specifies two YANG models. One main YANG module for configuring and
+          monitoring the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/> on the monitored router.  
+          A second auxiliary model provides extensions for configuring the TCP configuration
+          to BMP monitoring stations if the BMP server supports the groupings from <xref target="RFC9643"/>.
+          The main model provides parameters for configuring the session to BMP monitoring
               stations; configuration of BMP messages; provides operational
               metrics and enables resetting of BMP monitoring sessions.
        </t>
-      <t>The model is included in <xref target="model-content"/>. In this
-           section, we provide details and examples of each of its parts.</t>
-      <t>The BMP yang model is placed at the root of the YANG tree.  At its
-           upper level, the BMP model lists each monitoring station. Every
+      <t>The main model is included in <xref target="ietf-bmp"/>. The full tree diagram
+           is available in <xref target="ietf-bmp-tree-view"/>. This
+               section provides details and examples of each part of the main model.
+          The secondary TCP extension module augments the definition of TCP configuration
+          for a monitoring station, and it is explained in section <xref target="tcp_options"/>.</t>
+      <t>The ietf-bmp YANG module is placed at the root of the YANG tree.  At its
+           upper level, the model lists each monitoring station. Every
            monitoring station is identified by an ID, which is a string
-           provided by the operator.</t>
-      <section title="IP Connectivity" anchor="ip_connectivitu">
+           provided by the operator. <xref target="tree_overview"/> shows 
+           the high-level structure of the models.</t>
+      <figure anchor="tree_overview">
+        <name>High-level structure of the ietf-bmp module</name>
+        <sourcecode><![CDATA[
+INSERT_TEXT_FROM_FILE(trees/tree-overview.txt)
+]]></sourcecode>
+      </figure>
+      <section title="Connection" anchor="connection_section">
+        <t>The connection container configures how the monitored router connects to a BMP monitoring station.
+            This includes IP connectivity options, TCP parameters, and session timing. 
+            <xref target="tree_connection"/> shows the structure of the connection container.</t>
+        <figure anchor="tree_connection">
+          <name>Structure of the connection container</name>
+          <sourcecode><![CDATA[
+INSERT_TEXT_FROM_FILE(trees/tree-connection.txt)
+]]></sourcecode>
+        </figure>
+        <t>The rest of the subsections describe  each of the containers use to configure each monitoring-station.</t>
+        <section title="IP Connectivity" anchor="ip_connectivity">
         <t> BMP allows for active and passive
             connections between the router and the BMP monitoring station as described in  <xref target="RFC7854" section="3.2" sectionFormat="of"/>. In
             an active connection, the router establishes the TCP connection to
             the monitoring station, while in a passive one, it is the monitoring
             station which initiates the connection. The BMP YANG module
             provides options for both types of connection using a choice.</t>
-        <t>We describe each type of connection option next, and provide
+        <t>The following subsections describe each type of connection option, with 
             examples of their configuration.</t>
         <section title="Active connection">
           <t>For an active connection, the IP address and port of the monitoring
@@ -172,15 +195,15 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_passive_connection_option.xml)
           </figure>
         </section>
       </section>
-      <section title="TCP Options" anchor="tcp_options">
+        <section title="TCP Options" anchor="tcp_options">
         <t>The BMP module allows tuning various parameters of the TCP
             connection supporting the BMP session:</t>
         <t>
           <ul spacing="compact">
             <li>The maximum segment size of the TCP connection. See  <xref target="RFC9293" section="3.7.1" sectionFormat="of"/>.</li>
             <li>Enabling MTU discovery for the path. See <xref target="RFC9293" section="3.7.2" sectionFormat="of"/>.</li>
-            <li>For configuring TCP keepalives, the connection container uses the tcp-common-grouping from <xref target="RFC9643"/>. Note that the implementation must support module ietf-bmp-tcp-dependencies in addition to the main module to support these elements.  Please see <xref target="RFC9643" section="2.1.3.1" sectionFormat="of"/> for the explanation of each of its parameters. The device must have the feature "tcp-client-keepalives" enabled. See also <xref target="RFC9293" section="3.8.4" sectionFormat="of"/></li>
-            <li>Session security. Provides options for authentication using AO and MD5. This part of the model was taken from the BGP YANG model <xref target="I-D.ietf-idr-bgp-model"/>. This feature also requires support of the ietf-bmp-tcp-dependencies module.</li>
+            <li>For configuring TCP keepalives, the connection container uses the tcp-common-grouping from <xref target="RFC9643"/>. Note that the implementation must support module ietf-bmp-tcp-dependencies in addition to the main module to support these elements.  Please see <xref target="RFC9643" section="2.1.3.1" sectionFormat="of"/> for the explanation of each of its parameters. The device MUST have the feature "tcp-client-keepalives" enabled. See also <xref target="RFC9293" section="3.8.4" sectionFormat="of"/></li>
+            <li>Session security. Provides options for authentication using TCP Authentication Option (TCP-AO) and MD5. This feature also requires support of the ietf-bmp-tcp-dependencies module.</li>
           </ul>
         </t>
         <t>Figures <xref target="tcp_example1" format="counter"/> and <xref target="tcp_example2" format="counter"/> include examples configuring the previous TCP parameters in the model.</t>
@@ -201,7 +224,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_tcp_example2.xml)
           </figure>
         </t>
       </section>
-      <section title="Other BMP connectivity options">
+        <section title="Other BMP connectivity options">
         <t>The model also includes the following options to configure the connection to the BMP monitoring station:</t>
         <t>
           <ul spacing="compact">
@@ -209,7 +232,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_tcp_example2.xml)
             <li>Backoff time: Configuration of the backoff time strategy after failing to connect to the monitoring station. The model includes a basic exponential backoff with a default initial backoff of 30 seconds and a maximum of 720 seconds, as suggested in <xref target="RFC7854" section="3.2" sectionFormat="of"/>.</li>
           </ul>
         </t>
-        <t>In the example in <xref target="example_indelay"/>, we configure an initial-delay of 10, an initial-backoff of 50 seconds and 600 of maximum-backoff.</t>
+        <t>The example in <xref target="example_indelay"/> configures an initial-delay of 10, an initial-backoff of 50 seconds and 600 of maximum-backoff.</t>
         <t>
           <figure anchor="example_indelay">
             <name>Example of the initial-delay and simple exponential backoff.</name>
@@ -218,10 +241,18 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_indelay.xml)
            ]]></sourcecode>
           </figure>
         </t>
+        </section>
       </section>
-      <section title="BMP data">
-        <t>The bmp-data container defines the configuration parameters for the data that the device sends to the monitoring station using BMP messages. See <xref target="RFC7854" section="4" sectionFormat="of"/>.</t>
-        <t>The BMP model defines options for the initiation message, the statistics report, the route mirroring, and the route monitoring. The first three have simple configuration options and are described next. Route monitoring is the most complex and is detailed in <xref target="route_monitoring"/>.</t>
+      <section title="BMP data" anchor="bmp_data_section">
+        <t>The bmp-data container defines the configuration parameters for the data that the device sends to the monitoring station using BMP messages. See <xref target="RFC7854" section="4" sectionFormat="of"/>.
+            <xref target="tree_bmp_data"/> shows the structure of the bmp-data container.</t>
+        <figure anchor="tree_bmp_data">
+          <name>Structure of the bmp-data container</name>
+          <sourcecode><![CDATA[
+INSERT_TEXT_FROM_FILE(trees/tree-bmp-data.txt)
+]]></sourcecode>
+        </figure>
+        <t>The model defines options for the initiation message, the statistics report, the route mirroring, and the route monitoring. The first three have simple configuration options and are described next. Route monitoring is the most complex and is detailed in <xref target="route_monitoring"/>.</t>
         <t>
           <ul spacing="compact">
             <li>Initiation-message: Content for an information TLV type-0 for identification of the device. See <xref target="RFC7854" section="4.3" sectionFormat="bare"/> and <xref target="RFC7854" section="4.4" sectionFormat="of"/></li>
@@ -239,8 +270,15 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
           </figure>
         </t>
         <section title="BMP route monitoring" anchor="route_monitoring">
-          <t>Route monitoring messages are used for synchronization of RIBs to the monitoring station. See <xref target="RFC7854" section="5" sectionFormat="of"/>.</t>
-          <t>The next 3 requirements were defined before designing this part of the model.</t>
+          <t>Route monitoring messages are used for synchronization of RIBs to the monitoring station. See <xref target="RFC7854" section="5" sectionFormat="of"/>.
+              <xref target="tree_route_monitoring"/> shows the detailed structure of the route-monitoring container.</t>
+          <figure anchor="tree_route_monitoring">
+            <name>Structure of the route-monitoring container</name>
+            <sourcecode><![CDATA[
+INSERT_TEXT_FROM_FILE(trees/tree-route-monitoring.txt)
+]]></sourcecode>
+          </figure>
+          <t>The following requirements guided the design of this part of the model:</t>
           <t>
             <ul spacing="compact">
               <li>Operators might not want to receive all routes from all RIBs in a network device. For instance, some devices contain a considerable amount of data that might overwhelm the monitoring station. In these cases, operators might want to only collect information from an arbitrary subset of RIBs, address families, peers.</li>
@@ -248,7 +286,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
               <li>In contrast to the previous points, some operators might want a simple configuration that covers multiple cases (e.g. same config for all peers, or same config for all network instances).  This would not only make configurations look smaller and concise, but will reduce the need for reconfiguring devices when you add a new peer or add a new network instance (which happens frequently on some type of networks). </li>
             </ul>
           </t>
-          <t>Based on the previous points, the BMP yang model is designed to flexibly control the data sent through the BMP route monitoring packets, yet it provides options to facilitate configurations for simple cases, such as when the operator wants to receive all routes from a RIB.</t>
+          <t>Based on the previous points, the BMP YANG model is designed to flexibly control the data sent through the BMP route monitoring packets, yet it provides options to facilitate configurations for simple cases, such as when the operator wants to receive all routes from a RIB.</t>
           <t>The route monitoring configuration is divided in a four-part hierarchy:</t>
           <t>
             <ul spacing="compact">
@@ -259,12 +297,12 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
             </ul>
           </t>
           <t>Absence of the route monitoring container will disable the route monitoring messages to the monitoring station.</t>
-          <t>We'll offer an introduction to these hierarchies before going over them with detail.</t>
+          <t>This section introduces these hierarchies before describing them in detail.</t>
           <t>The number of RIB types (e.g. Adj-RIB-IN/OUT, local RIB, etc) and Address families is low, and their configuration should not change frequently. Therefore, they are configured explicitly in the model. That is, the model does not provide a way of providing a default configuration for these or configuring them in groups.</t>
           <t>On the other hand, Network instances and peers require greater flexibility.</t>
           <t>For network instances, the model should configure not only the "global" network instance, but also other network instances. Also, network instances can change frequently in networks with customer connecting to Virtual Private Networks. To not force operators to change configuration at every change, the model provides methods for  defining a "default" configuration for network instances. However, to provide control over the configuration, each network instance can be configured independently, if needed.</t>
           <t>A situation is similar with peers for the Adj-RIB-IN and Adj-RIB-OUT RIBs. The model includes a way of configuring a default for all peers for simple cases, but one can provide configuration for type of peers, peergroups,  or each peer individually. </t>
-          <t>We summarize the requirements stated on the previous two paragraphs next:</t>
+          <t>The next list summarizes the requirements stated in the previous two paragraphs:</t>
           <t>For network instances:</t>
           <t>
             <ul spacing="compact">
@@ -283,9 +321,9 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
             </ul>
           </t>
           <t>To further control the route monitoring data, the peer container includes a route-policy option in which the operator can further filter the data send to the BMP monitoring station.</t>
-          <t>We'll describe each of the 4 hierarchies, and provide examples for each, in the next sections.</t>
+          <t>Each of the four hierarchies is described in the following sections.</t>
           <section title="Network instances">
-            <t>The route monitoring configuration starts with the configuration of network instances. A network instance can be configured individually, or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. We explain each next.</t>
+            <t>The route monitoring configuration starts with the configuration of network instances. A network instance can be configured individually, or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. We explain each option next.</t>
             <t>The model currently defines three bmp-ni-types identities: "all-ni" which selects all network instances, "non-global-ni" which selects all network instances except the global one, and "global-ni", which configures the global network instance when the device does not offer an explicit name for it. The former can be used as a "default" configuration for simple cases.</t>
             <t>Network-instances are configured under the container "bmp/route-monitoring/network-instance".</t>
             <t>An empty configuration disables route monitoring messages for the selected network-instances. Operators can also use the "enable" leaf to disable explicitly the routing messages for the network instance. </t>
@@ -300,7 +338,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
               </ul>
             </t>
             <t>Any extension of the bmp-ni-types SHOULD provide explanations of how to deal with case in which multiple elements select the same network instance. </t>
-            <t>We provide examples of configuring the network instance level next. For now, we will focus on the configuration using the BMP container.  To focus on the network instance configuration, we mask the configuration under each instance using "Configuration X". </t>
+            <t>The following section provides examples of configuring the network instance level. For now, the discussion focuses on configuration using the BMP container. To focus on the network instance configuration, the configuration under each instance is masked using "Configuration X".</t>
             <t>
               <figure anchor="example_netins_one">
                 <name>Examples of configuring the network instance level for Route Monitoring.</name>
@@ -309,7 +347,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_netins_one.xml)
            ]]></sourcecode>
               </figure>
             </t>
-            <t>In example from <xref target="example_netins_one"/>, we have a "default" configuration (Configuration A) applied to any network instance without any explicit configuration. The global network instance and network-instance-two get Configuration B and Configuration C, respectively. The network-instance-one instance container disables the route monitoring messages for that network instance.</t>
+            <t>In the example from <xref target="example_netins_one"/>, a "default" configuration (Configuration A) s applied to any network instance without any explicit configuration. The global network instance and network-instance-two get Configuration B and Configuration C, respectively. The network-instance-one instance container disables the route monitoring messages for that network instance.</t>
             <t>
               <figure anchor="simple_ni_configuration">
                 <name>Example of configuring all network instances.</name>
@@ -331,13 +369,12 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_simple_gni_configuration.xml)
           </section>
           <section title="RIB Type">
             <t>Each RIB type is configured explicitly in the model through a container. The model currently provides containers for adj-rib-out-pre, adj-rib-out-post, adj-rib-in-post, adj-rib-in-pre and local-rib. </t>
-            <t>An empty configuration or absence of a RIB-type container disables route-messages for it. Operators can also disable the route monitoring messages for each RIB explicitly by marking the "enabled" leaf as False.</t>
-            <t>We provide an example of this, together with address families, in the next section</t>
+            <t>An empty configuration or absence of a RIB-type container disables route-messages for it. Operators can also disable the route monitoring messages for each RIB explicitly by marking the "enabled" leaf as False. The next section provides an example of this, together with the configuration of address families.</t>
           </section>
           <section title="Address families">
-            <t>Address families are configured explicitly within each RIB type using a list. The key is of type `ietf-bgp-types:afi-safi-type` without any further constraint.</t>
+            <t>Address families are configured explicitly within each RIB type using a list. The key is of type `afi-safi-type` without any further constraint.</t>
             <t>An empty configuration or absence of an address family disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
-            <t>We show a few examples of configuring RIB-Types and Address families next. We will mask further configurations of address families with "Configuration X" to focus on the covered parts.</t>
+            <t>The next examples show different ways of configuring RIB-Types and Address families. As in the previous sections, the example masks further configurations of address families with "Configuration X" to focus on the covered parts.</t>
             <t>
               <figure anchor="example_rib_af_one">
                 <name>Example of configuring RIBs and address families.</name>
@@ -346,7 +383,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_one.xml)
            ]]></sourcecode>
               </figure>
             </t>
-            <t>In <xref target="example_rib_af_one"/>,  we expand previous sections examples with RIB-Type and address families configurations. The expected result of the previous configuration would be:</t>
+            <t>Example <xref target="example_rib_af_one"/> expands the examples of previous sections with RIB-Type and address families configurations. The expected result of the previous configuration would be:</t>
             <t>
               <ul spacing="compact">
                 <li>For the global network instance, adj-rib-in-pre and adj-rib-in-post RIBs are enabled. In each of them IPv4 and IPv6 address families are configured. The configuration can be the same or not, depending on the requirements of the operators. Any other RIB and address families are disabled.</li>
@@ -355,7 +392,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_one.xml)
                 <li>For all other network instances, adj-rib-in-pre with IPv4 and IPv6 address families are configured, thanks to the configuration of all-ni</li>
               </ul>
             </t>
-            <t>If an operator only wants to configure the IPv4/IPv6 of adj-rib-pre-in for the global instance,  the configuration in <xref target="example_rib_af_two"/> plus the peer configuration (coming in next section) will be enough. We note again that even if the configuration of both address families is the same, they must be explicitly configured for each of them.</t>
+            <t>If an operator only wants to configure the IPv4/IPv6 of adj-rib-pre-in for the global instance, the configuration in <xref target="example_rib_af_two"/> plus the peer configuration (coming in next section) will be enough. We note again that even if the configuration of both address families is the same, they must be explicitly configured for each of them.</t>
             <t>
               <figure anchor="example_rib_af_two">
                 <name>Example of configuring RIBs and address families.</name>
@@ -373,10 +410,10 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
                 <li>An individual peer, using a remote address. For the configuration under the "/bmp" tree, the model currently does not check if the remote address exists, that would be a responsibility of the device.</li>
                 <li>Peergroups.</li>
                 <li>A group of peers matching a BGP type. i.e. eBGP peers. </li>
-                <li>One or more peers defined by an `bmp-peer-types` identity. The BMP model currently provides the `all-peers` identity which select all peers. For simple cases, this is the value that would normally be considered.</li>
+                <li>One or more peers defined by an `bmp-peer-types` identity. The "ietf-bmp" model currently provides the `all-peers` identity which select all peers. For simple cases, this is the value that would normally be considered.</li>
               </ul>
             </t>
-            <t>Peers MUST be selected (configured) by at most a single instance of the peers list. For the included keys in the BMP model, the process to select which instance to use is as follows:</t>
+            <t>Peers MUST be selected (configured) by at most a single instance of the peers list. For the included keys in the "ietf-bmp" model, the process to select which instance to use is as follows:</t>
             <t>
               <ul spacing="compact">
                 <li>If there is a peer address matching the peer, it should be configured using that instance.</li>
@@ -389,16 +426,15 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
             <t>An empty configuration of a peer type disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
             <t>Note that if an operator only wants the information of a few peers, it can enable them individually  using their id. If no other configuration exists, only the messages from those enabled peers will be transmitted to the monitoring station.</t>
             <t>Any additional bmp-peer-types identity created SHOULD describe how to unambiguously select a peer when there are conflicting options (multiple options covering the peer).</t>
-            <t>We'll provide examples of the peers configuration after describing the filter containers.</t>
+            <t>Section <xref target="full_examples_sec"/> provides examples of the peers configuration.</t>
           </section>
           <section title="Filtering route-monitoring messages">
             <t>The local rib, and the peer containers within the rest of rib types, include a filter container. This container includes mechanisms to filter route-monitoring messages for the specific RIB.</t>
             <t>The policy-filter can include a routing policy that, if existing, should be applied to the outgoing updates to the monitoring station, and would serve as a granular way of filtering the messages that the monitoring station receives. </t>
             <t>Note that the policy-filter contains an `accept-route` default export policy. An operator can change it to a reject-route, if required.</t>
             <t>The policies created with the routing-policy can perform a large variety of actions on routes, and can filter them based on multiple characteristics. For the consistency of the data in the monitoring station, the route policies actions MUST be restricted to accepting or rejecting routes. Furthermore, the conditions SHOULD only match prefix sets.</t>
-            <t>We present examples of full configurations next.</t>
           </section>
-          <section title="Full examples of Route monitoring configurations">
+          <section title="Full examples of Route monitoring configurations" anchor="full_examples_sec">
             <section title="Example one - simple configuration">
               <t>In the example configuration from  <xref target="full_example_one"/>, address families IPv6 and IPv4 are configured to send all peers from the global network instance. This is an example of a simple configuration</t>
               <t>
@@ -448,11 +484,27 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_four.xml)
         <!-- End of BMP route monitoring-->
       </section>
       <!-- End of BMP data-->
-      <section title="Session stats">
-        <t>The non-configurable container "session-stats" includes various metrics for the session with the monitoring station.</t>
+      <section title="Session stats" anchor="session_stats_section">
+        <t>The non-configurable container "session-stats" includes various metrics for the session with the monitoring station.
+            <xref target="tree_session_stats"/> shows the structure of the session-stats container.</t>
+        <figure anchor="tree_session_stats">
+          <name>Structure of the session-stats container</name>
+          <sourcecode><![CDATA[
+INSERT_TEXT_FROM_FILE(trees/tree-session-stats.txt)
+]]></sourcecode>
+        </figure>
       </section>
-      <section title="Session reset action">
-        <t>The "session-reset" action resets a session with a monitoring station.</t>
+      <section title="Actions" anchor="actions_section">
+        <t>The model provides actions to reset BMP sessions and counters.
+            <xref target="tree_actions"/> shows the structure of the actions container.</t>
+        <figure anchor="tree_actions">
+          <name>Structure of the actions container</name>
+          <sourcecode><![CDATA[
+INSERT_TEXT_FROM_FILE(trees/tree-actions.txt)
+]]></sourcecode>
+        </figure>
+        <t>The "session-reset" action resets a session with a monitoring station.
+            The "counter-reset" action resets the counters in the session-stats container.</t>
       </section>
     </section>
     <!-- End of Model description -->
@@ -471,7 +523,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_four.xml)
       <section title="TCP dependencies for BMP YANG Module" anchor="ietf-bmp-tcp-dependencies.yang">
         <figure>
           <sourcecode><![CDATA[
-<CODE BEGINS> file "ietf-bmp-tcp-dependencies.yang@2022-01-27.yang"
+<CODE BEGINS> file "ietf-bmp-tcp-dependencies@2025-01-02.yang"
 INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
 <CODE ENDS>
             ]]></sourcecode>
@@ -602,14 +654,6 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
    Reference: RFC-XXXX
         ]]></sourcecode>
     </section>
-    <section title="Open Issues">
-      <t>
-        <list counter="a">
-          <t>The security considerations section will have to be aligned with 
-              https://trac.ietf.org/trac/ops/wiki/yang-security-guidelines</t>
-        </list>
-      </t>
-    </section>
   </middle>
   <back>
     <references title="Normative References">
@@ -655,8 +699,8 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
     <section title="BMP YANG model tree" anchor="ietf-bmp-tree-view">
       <t>
         The following tree diagram provides an overview of the base ietf-bmp.yang
-            data model. It also includes the trees for the module ietf-bmp-tcp-dependencies.yang
-            that adds some options to the models in case the implementation supports this model (and their requisites)
+            data model. It also includes the tree for the module ietf-bmp-tcp-dependencies.yang
+            that adds some options to the models in case the implementation supports it (and their requisites).
         </t>
       <t>
         <figure>
@@ -669,7 +713,7 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-trees.txt)
     <section title="Base BMP YANG Module" anchor="ietf-bmp">
       <figure>
         <sourcecode><![CDATA[
-<CODE BEGINS> file "ietf-bmp@2022-01-27.yang"
+<CODE BEGINS> file "ietf-bmp@2025-01-02.yang"
 INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
 <CODE ENDS>
             ]]></sourcecode>

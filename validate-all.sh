@@ -2,7 +2,7 @@ echo "Validating yang modes"
 
 PYANG_INPUT='ietf-bmp.yang  ietf-bmp-tcp-dependencies.yang'
 
-pyang --ietf --max-line-length 69 $PYANG_INPUT
+pyang --ietf --max-line-length 69 --yang-line-length=69 $PYANG_INPUT
 
 # Compare
 for orig in $PYANG_INPUT; do
