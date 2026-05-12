@@ -5,6 +5,8 @@ module ietf-bmp {
 
   import ietf-yang-types {
     prefix yang;
+    reference
+      "RFC 6991: Common YANG Data Types";
   }
   import ietf-inet-types {
     prefix inet;
@@ -45,13 +47,13 @@ module ietf-bmp {
         <mailto:camilo@ntt.net>
 
      Author:  Paolo Lucente
-        <mailto:cpaolo@ntt.net>
+        <mailto:paolo@ntt.net>
 
      Author:  Thomas Graf
         <mailto:thomas.graf@swisscom.com>
 
      Author:  Benoit Claise
-        <mailto:benoit.claise@huawei.com>
+        <mailto:benoit@everything-ops.net>
 
      Author:  Dhananjay Patki
         <mailto:dhpatki@cisco.com>
@@ -87,7 +89,7 @@ module ietf-bmp {
     description
       "initial version";
     reference
-      "RFC YYYY: BMP YANG Module.";
+      "RFC XXXX: BMP YANG Data Model.";
   }
 
   feature bmp-filter-based-on-route-policy {
@@ -96,8 +98,9 @@ module ietf-bmp {
        is capable of filtering prefixes in BMP monitoring sessions";
   }
 
-  /* The next enums are temporary here until we resolve how to deal
-   * with them. Taken from draft-ietf-idr-bgp-model */
+  /* The next identities are temporary here until we resolve 
+   * how to deal with them. Taken from 
+   * draft-ietf-idr-bgp-model. */
   /* BGP AFI-SAFI Type Identities. */
 
   identity afi-safi-type {
@@ -163,7 +166,7 @@ module ietf-bmp {
        to select all network instances except the global one.";
   }
 
-  /* The next types are temporary here until we resolve how to deal
+  /* The next type are temporary here until we resolve how to deal
    * with them. Taken from draft-ietf-idr-bgp-model */
   /* BGP Peer-Types */
 
@@ -464,11 +467,12 @@ module ietf-bmp {
               key "id";
               description
                 "Identification of peers
-                 for which we send BMP data to the collector
-                 using a peer type defined using a
-                 bmp-peer-selectors identity.
+                 for which BMP data is sent to
+                 the collector using a peer type
+                 defined by a bmp-peer-selectors
+                 identity.
                  For instance, to create a default for all
-                 peers use all-peers";
+                 peers use the all-peers identity";
               leaf id {
                 type identityref {
                   base bmp-peer-selectors;
@@ -493,7 +497,7 @@ module ietf-bmp {
               key "id";
               description
                 "Identification of peers
-                 for which we send BMP data to the collector
+                 for which BMP data is sent to the collector
                  using BGP peer-type (e.g. internal, external)
                 ";
               leaf id {

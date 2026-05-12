@@ -1,0 +1,14 @@
+module: ietf-bmp
+  +--rw bmp
+     +--rw monitoring-stations
+        +--rw monitoring-station* [id]
+           +--rw id               string
+           +--rw description?     string
+           +--rw connection
+           |     ...
+           +--rw bmp-data
+           |     ...
+           +--ro session-stats
+           |     ...
+           +--rw actions
+                 ...

@@ -1,0 +1,90 @@
+module: ietf-bmp
+  +--rw bmp
+     +--rw monitoring-stations
+        +--rw monitoring-station* [id]
+           +--ro session-stats
+              +--ro discontinuity-time                 yang:date-and-time
+              +--ro established-session?               boolean
+              +--ro total-route-monitoring-messages?   uint64
+              +--ro total-statistics-messages?         uint64
+              +--ro total-peer-down-messages?          uint64
+              +--ro total-peer-up-messages?            uint64
+              +--ro total-initiation-messages?         uint64
+              +--ro total-route-mirroring-messages?    uint64
+              +--ro total-termination-messages?        uint64
+              +--ro route-monitoring-stats
+                 +--ro network-instances-stats
+                    +--ro network-instance* [network-instance-name]
+                       +--ro network-instance-name                    -> /ni:network-instances/network-instance/name
+                       +--ro enabled?                                 boolean
+                       +--ro total-route-mirroring-messages-per-ni?   uint64
+                       +--ro ribs-stats
+                          +--ro adj-rib-in-pre
+                          |  +--ro enabled?                                  boolean
+                          |  +--ro total-route-mirroring-messages-per-rib?   uint64
+                          |  +--ro address-families
+                          |     +--ro address-family* [id]
+                          |        +--ro id                                                 identityref
+                          |        +--ro enabled?                                           boolean
+                          |        +--ro total-route-monitoring-updated-prefixes-per-af?    uint64
+                          |        +--ro total-route-monitoring-withdraw-prefixes-per-af?   uint64
+                          |        +--ro peers-stats
+                          |           +--ro peer* [id]
+                          |              +--ro id                                            string
+                          |              +--ro enabled?                                      boolean
+                          |              +--ro total-route-mnt-updated-prefixes-per-peer?    uint64
+                          |              +--ro total-route-mnt-withdraw-prefixes-per-peer?   uint64
+                          +--ro adj-rib-in-post
+                          |  +--ro enabled?                                  boolean
+                          |  +--ro total-route-mirroring-messages-per-rib?   uint64
+                          |  +--ro address-families
+                          |     +--ro address-family* [id]
+                          |        +--ro id                                                 identityref
+                          |        +--ro enabled?                                           boolean
+                          |        +--ro total-route-monitoring-updated-prefixes-per-af?    uint64
+                          |        +--ro total-route-monitoring-withdraw-prefixes-per-af?   uint64
+                          |        +--ro peers-stats
+                          |           +--ro peer* [id]
+                          |              +--ro id                                            string
+                          |              +--ro enabled?                                      boolean
+                          |              +--ro total-route-mnt-updated-prefixes-per-peer?    uint64
+                          |              +--ro total-route-mnt-withdraw-prefixes-per-peer?   uint64
+                          +--ro local-rib
+                          |  +--ro enabled?                                  boolean
+                          |  +--ro total-route-mirroring-messages-per-rib?   uint64
+                          |  +--ro address-families
+                          |     +--ro address-family* [id]
+                          |        +--ro id                                                 identityref
+                          |        +--ro enabled?                                           boolean
+                          |        +--ro total-route-monitoring-updated-prefixes-per-af?    uint64
+                          |        +--ro total-route-monitoring-withdraw-prefixes-per-af?   uint64
+                          +--ro adj-rib-out-pre
+                          |  +--ro enabled?                                  boolean
+                          |  +--ro total-route-mirroring-messages-per-rib?   uint64
+                          |  +--ro address-families
+                          |     +--ro address-family* [id]
+                          |        +--ro id                                                 identityref
+                          |        +--ro enabled?                                           boolean
+                          |        +--ro total-route-monitoring-updated-prefixes-per-af?    uint64
+                          |        +--ro total-route-monitoring-withdraw-prefixes-per-af?   uint64
+                          |        +--ro peers-stats
+                          |           +--ro peer* [id]
+                          |              +--ro id                                            string
+                          |              +--ro enabled?                                      boolean
+                          |              +--ro total-route-mnt-updated-prefixes-per-peer?    uint64
+                          |              +--ro total-route-mnt-withdraw-prefixes-per-peer?   uint64
+                          +--ro adj-rib-out-post
+                             +--ro enabled?                                  boolean
+                             +--ro total-route-mirroring-messages-per-rib?   uint64
+                             +--ro address-families
+                                +--ro address-family* [id]
+                                   +--ro id                                                 identityref
+                                   +--ro enabled?                                           boolean
+                                   +--ro total-route-monitoring-updated-prefixes-per-af?    uint64
+                                   +--ro total-route-monitoring-withdraw-prefixes-per-af?   uint64
+                                   +--ro peers-stats
+                                      +--ro peer* [id]
+                                         +--ro id                                            string
+                                         +--ro enabled?                                      boolean
+                                         +--ro total-route-mnt-updated-prefixes-per-peer?    uint64
+                                         +--ro total-route-mnt-withdraw-prefixes-per-peer?   uint64

@@ -1,0 +1,7 @@
+module: ietf-bmp
+  +--rw bmp
+     +--rw monitoring-stations
+        +--rw monitoring-station* [id]
+           +--rw actions
+              +---x session-reset
+              +---x session-counter-reset

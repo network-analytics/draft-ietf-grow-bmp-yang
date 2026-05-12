@@ -6,7 +6,7 @@ module ietf-bmp-tcp-dependencies {
   import ietf-bmp {
     prefix bmp;
     reference
-      "RFC YYYY: BMP YANG Module.";
+      "RFC XXXX: BMP YANG Module.";
   }
   import ietf-tcp {
     prefix tcp;
@@ -36,13 +36,19 @@ module ietf-bmp-tcp-dependencies {
         <mailto:camilo@ntt.net>
 
      Author:  Paolo Lucente
-        <mailto:cpaolo@ntt.net>
+        <mailto:paolo@ntt.net>
 
      Author:  Thomas Graf
         <mailto:thomas.graf@swisscom.com>
 
      Author:  Benoit Claise
-        <mailto:benoit.claise@huawei.com>";
+        <mailto:benoit@everything-ops.net>
+
+     Author:  Dhananjay Patki
+        <mailto:dhpatki@cisco.com>
+
+     Author:  Prasad S. Narasimha
+        <mailto:snprasad@cisco.com>";
   description
     "This module specifies a structure for BMP
      (BGP Monitoring Protocol) configuration and monitoring.
@@ -73,14 +79,14 @@ module ietf-bmp-tcp-dependencies {
     description
       "initial version";
     reference
-      "RFC YYYY: BMP YANG Module.";
+      "RFC XXXX: BMP YANG Data Model";
   }
 
   augment "/bmp:bmp/bmp:monitoring-stations/"
         + "bmp:monitoring-station/"
         + "bmp:connection/bmp:tcp-options" {
     description
-      "Augment the tcp options of the BMP model";
+      "Augment the tcp options of the ietf-bmp module";
     leaf mss {
       type tcp:mss;
       description
@@ -137,7 +143,8 @@ module ietf-bmp-tcp-dependencies {
           description
             "Uses TCP-MD5 to secure the session. .";
           reference
-            "RFC 5925: The TCP Authentication Option.";
+            "RFC 2385: Protection of BGP Sessions
+             via the TCP MD5 Signature Option.";
           leaf md5-keychain {
             type key-chain:key-chain-ref;
             description

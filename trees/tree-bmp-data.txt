@@ -1,0 +1,15 @@
+module: ietf-bmp
+  +--rw bmp
+     +--rw monitoring-stations
+        +--rw monitoring-station* [id]
+           +--rw bmp-data
+              +--rw initiation-message?   string
+              +--rw statistics-report!
+              |  +--rw statistics-interval    uint32
+              +--rw route-monitoring
+              |  +--rw network-instance-configuration
+              |     +--rw network-instances
+              |     |     ...
+              |     +--rw network-instance-selectors
+              |           ...
+              +--rw route-mirroring!
