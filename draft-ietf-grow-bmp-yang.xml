@@ -81,6 +81,9 @@
     <abstract>
       <t> 
         This document defines a YANG data model for the configuration and monitoring of the BGP Monitoring Protocol (BMP).
+        The data model covers the base BMP protocol defined in <xref
+        target="RFC7854"/> and includes support for the Loc-RIB extension
+        defined in <xref target="RFC9069"/>.
       </t>
     </abstract>
   </front>
@@ -88,14 +91,22 @@
     <section title="Introduction">
       <t>
             The BGP Monitoring Protocol (BMP) provides a mechanism for
-            monitoring BGP sessions.  This document defines a YANG data model
-            for BMP, specified in two YANG modules, enabling operators to configure and manage BMP sessions;
-            control the data exported to monitoring stations; and 
-            collect statistics for each BMP session.
-            The data model is designed to
-            accommodate both simple and advanced deployment scenarios,
-            supporting granular control over network instances, RIBs, address
-            families, and peers.
+          monitoring BGP sessions.  This document defines a YANG data
+          model for BMP, specified in two YANG modules, enabling
+          operators to configure and manage BMP sessions; control the
+          data exported to monitoring stations; and collect statistics
+          for each BMP session.  The data model is designed to
+          accommodate both simple and advanced deployment scenarios,
+          supporting granular control over network instances, RIBs,
+          address families, and peers.
+        </t>
+        <t>
+            The data model defined in this document supports the base
+            BMP protocol defined in <xref target="RFC7854"/>.  It also
+            supports the Loc-RIB extension defined in <xref
+                target="RFC9069"/>, allowing configuration and
+            monitoring of BMP reporting for routes selected into the
+            local BGP speaker's Loc-RIB.
         </t>
     </section>
     <section title="Terminology" anchor="terminology">
@@ -270,7 +281,8 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
           </figure>
         </t>
         <section title="BMP route monitoring" anchor="route_monitoring">
-          <t>Route monitoring messages are used for synchronization of RIBs to the monitoring station. See <xref target="RFC7854" section="5" sectionFormat="of"/>.
+            <t>Route monitoring messages are used for synchronization of RIBs to the monitoring station. See <xref target="RFC7854" section="5" sectionFormat="of"/>. 
+              The Loc-RIB route monitoring support in this data model follows the Loc-RIB extension defined in <xref target="RFC9069"/>.
               <xref target="tree_route_monitoring"/> shows the detailed structure of the route-monitoring container.</t>
           <figure anchor="tree_route_monitoring">
             <name>Structure of the route-monitoring container</name>
