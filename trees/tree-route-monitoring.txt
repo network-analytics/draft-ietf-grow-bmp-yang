@@ -1,0 +1,55 @@
+module: ietf-bmp
+  +--rw bmp
+     +--rw monitoring-stations
+        +--rw monitoring-station* [id]
+           +--rw bmp-data
+              +--rw route-monitoring
+                 +--rw network-instance-configuration
+                    +--rw network-instances
+                    |  +--rw network-instance* [id]
+                    |     +--rw id                  -> /ni:network-instances/network-instance/name
+                    |     +--rw enabled?            boolean
+                    |     +--rw adj-rib-in-pre
+                    |     |  +--rw address-families
+                    |     |     +--rw address-family* [id]
+                    |     |           ...
+                    |     +--rw adj-rib-in-post
+                    |     |  +--rw address-families
+                    |     |     +--rw address-family* [id]
+                    |     |           ...
+                    |     +--rw local-rib
+                    |     |  +--rw address-families
+                    |     |     +--rw address-family* [id]
+                    |     |           ...
+                    |     +--rw adj-rib-out-pre
+                    |     |  +--rw address-families
+                    |     |     +--rw address-family* [id]
+                    |     |           ...
+                    |     +--rw adj-rib-out-post
+                    |        +--rw address-families
+                    |           +--rw address-family* [id]
+                    |                 ...
+                    +--rw network-instance-selectors
+                       +--rw network-instance-selector* [id]
+                          +--rw id                  identityref
+                          +--rw enabled?            boolean
+                          +--rw adj-rib-in-pre
+                          |  +--rw address-families
+                          |     +--rw address-family* [id]
+                          |           ...
+                          +--rw adj-rib-in-post
+                          |  +--rw address-families
+                          |     +--rw address-family* [id]
+                          |           ...
+                          +--rw local-rib
+                          |  +--rw address-families
+                          |     +--rw address-family* [id]
+                          |           ...
+                          +--rw adj-rib-out-pre
+                          |  +--rw address-families
+                          |     +--rw address-family* [id]
+                          |           ...
+                          +--rw adj-rib-out-post
+                             +--rw address-families
+                                +--rw address-family* [id]
+                                      ...

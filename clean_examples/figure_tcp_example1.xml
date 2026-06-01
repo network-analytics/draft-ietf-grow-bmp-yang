@@ -15,7 +15,7 @@
             <max-probes>3</max-probes>
             <probe-interval>30</probe-interval>
           </keepalives>
-          <maximum-segment-size>1500</maximum-segment-size>
+          <mss xmlns="urn:ietf:params:xml:ns:yang:ietf-bmp-tcp-dependencies">1500</mss>
           <mtu-discovery>true</mtu-discovery>
         </tcp-options>
       </connection>

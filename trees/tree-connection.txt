@@ -1,0 +1,56 @@
+module: ietf-bmp
+  +--rw bmp
+     +--rw monitoring-stations
+        +--rw monitoring-station* [id]
+           +--rw connection
+              +--rw (passive-or-active)
+              |  +--:(active)
+              |  |  +--rw active
+              |  |     +--rw network-instance?                   -> /ni:network-instances/network-instance/name
+              |  |     +--rw station-address                     inet:ip-address
+              |  |     +--rw station-port                        inet:port-number
+              |  |     +--rw (local-endpoint)
+              |  |     |  +--:(monitored-router-address)
+              |  |     |  |  +--rw monitored-router-address?     inet:ip-address
+              |  |     |  +--:(monitored-router-interface)
+              |  |     |     +--rw monitored-router-interface?   if:interface-ref
+              |  |     +--rw monitored-router-port?              inet:port-number
+              |  +--:(passive)
+              |     +--rw passive
+              |        +--rw network-instance?                   -> /ni:network-instances/network-instance/name
+              |        +--rw station-address                     inet:ip-address
+              |        +--rw station-port?                       inet:port-number
+              |        +--rw (local-endpoint)
+              |        |  +--:(monitored-router-address)
+              |        |  |  +--rw monitored-router-address?     inet:ip-address
+              |        |  +--:(monitored-router-interface)
+              |        |     +--rw monitored-router-interface?   if:interface-ref
+              |        +--rw monitored-router-port               inet:port-number
+              +--rw dscp?            inet:dscp
+              +--rw tcp-options
+              |  +--rw mtu-discovery?                  boolean
+              |  +--rw bmp-tcp:mss?                    tcp:mss
+              |  +--rw bmp-tcp:keepalives! {keepalives-supported}?
+              |  |  +--rw bmp-tcp:idle-time?        uint16
+              |  |  +--rw bmp-tcp:max-probes?       uint16
+              |  |  +--rw bmp-tcp:probe-interval?   uint16
+              |  +--rw bmp-tcp:maximum-segment-size?   uint16
+              |  +--rw bmp-tcp:secure-session! {tcp:authentication}?
+              |     +--rw (bmp-tcp:authentication)
+              |        +--:(bmp-tcp:ao)
+              |        |  +--rw bmp-tcp:send-id?               uint8
+              |        |  +--rw bmp-tcp:recv-id?               uint8
+              |        |  +--rw bmp-tcp:include-tcp-options?   boolean
+              |        |  +--rw bmp-tcp:accept-key-mismatch?   boolean
+              |        |  +--ro bmp-tcp:r-next-key-id?         uint8
+              |        |  +--rw bmp-tcp:ao-keychain?           key-chain:key-chain-ref
+              |        +--:(bmp-tcp:md5)
+              |           +--rw bmp-tcp:md5-keychain?          key-chain:key-chain-ref
+              +--rw initial-delay?   uint32
+              +--rw backoff
+                 +--rw (backoff-options)?
+                    +--:(simple-exponential)
+                       +--rw simple-exponential
+                          +--rw initial-backoff?   uint32
+                          +--rw maximum-backoff?   uint32
+
