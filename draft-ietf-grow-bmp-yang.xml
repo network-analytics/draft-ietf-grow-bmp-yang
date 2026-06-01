@@ -432,7 +432,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
                 <li>If the peer matches a peergroup, it SHOULD be configured using the peer-group configuration.</li>
                 <li>If the peer is of any BGP type listed in the peer list, it SHOULD be configured using this instance.</li>
                 <li>If there is a peer instance identified with the `all-peers`, it SHOULD be configured using this instance.</li>
-                <li>Finally, if no instance covers the peer, route monitoring messages from this peer SHOULD not be transmitted to the monitoring station.</li>
+                <li>Finally, if no instance covers the peer, route monitoring messages from this peer SHOULD NOT be transmitted to the monitoring station.</li>
               </ul>
             </t>
             <t>An empty configuration of a peer type disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
