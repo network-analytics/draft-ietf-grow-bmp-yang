@@ -545,6 +545,13 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
         </figure>
       </section>
     </section>
+    <section title="Implementation Status" anchor="implementation-status">
+       <t>Note to the RFC-Editor: Please remove this section before publishing.</t>
+       <section title="Arrcus ArcOS" anchor="arrcus-arcos">
+           <t>Arrcus implemented the entire YANG module, except the optional tcp: statements (from RFC9648 and draft-ietf-grow-bmp-tcp-ao),
+        which appear in version 8.</t>
+        </section>
+    </section>
     <section title="Security Considerations" anchor="security-considerations">
     <section title="Security Considerations for ietf-bmp module" anchor="security-considerations-main">
         <t>This section is modeled after the template described in Section
@@ -802,7 +809,8 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_two.xml)
     <section title="Acknowledgements" numbered="no">
       <t>
           The authors would like to thank Yimin Shen, Jeff Haas, Pierre Vander
-            Vorst, and Tom Petch for their review and feedback.
+            Vorst, Tom Petch for their review and feedback, and Ijsbrand Wijnands
+            for the first implementation.
         </t>
     </section>
   </back>
