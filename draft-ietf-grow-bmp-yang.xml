@@ -132,11 +132,16 @@
               stations; configuration of BMP messages; provides operational
               metrics and enables resetting of BMP monitoring sessions.
        </t>
+      <t>The ietf-bmp module imports common IETF YANG definitions for Internet
+          types, access control, interfaces, network instances, and routing
+          policy.  The ietf-bmp-tcp-dependencies module imports TCP and
+          key-chain definitions used for TCP transport and authentication
+          configuration.</t>
       <t>The main module is included in <xref target="ietf-bmp"/>. The full tree diagram
            is available in <xref target="ietf-bmp-tree-view"/>. This
                section provides details and examples of each part of the main module.
           The secondary TCP extension module augments the definition of TCP configuration
-          for a monitoring station, and it is explained in section <xref target="tcp_options"/>.</t>
+          for a monitoring station, and it is explained in <xref target="tcp_options"/>.</t>
       <t>The ietf-bmp YANG module is placed at the root of the YANG tree.  At its
            upper level, the module lists each monitoring station. Every
            monitoring station is identified by an ID, which is a string
@@ -213,7 +218,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_passive_connection_option.xml)
           <ul spacing="compact">
             <li>The maximum segment size of the TCP connection. See  <xref target="RFC9293" section="3.7.1" sectionFormat="of"/>.</li>
             <li>Enabling MTU discovery for the path. See <xref target="RFC9293" section="3.7.2" sectionFormat="of"/>.</li>
-            <li>For configuring TCP keepalives, the connection container uses the tcp-common-grouping from <xref target="RFC9643"/>. Note that the implementation must support module ietf-bmp-tcp-dependencies in addition to the main module to support these elements.  Please see <xref target="RFC9643" section="2.1.3.1" sectionFormat="of"/> for the explanation of each of its parameters. The device MUST have the feature "tcp-client-keepalives" enabled. See also <xref target="RFC9293" section="3.8.4" sectionFormat="of"/></li>
+            <li>For configuring TCP keepalives, the connection container uses the tcp-common-grouping from <xref target="RFC9643"/>. Note that the implementation must support module ietf-bmp-tcp-dependencies in addition to the main module to support these elements.  Please see <xref target="RFC9643" section="2.1.3.1" sectionFormat="of"/> for the explanation of each of its parameters. The device MUST have the feature "keepalives-supported" enabled. See also <xref target="RFC9293" section="3.8.4" sectionFormat="of"/></li>
             <li>Session security. Provides options for authentication using the TCP Authentication Option (TCP-AO) <xref target="RFC5925"/> and MD5. This feature also requires support of the ietf-bmp-tcp-dependencies module.</li>
           </ul>
         </t>
@@ -283,6 +288,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
         <section title="BMP route monitoring" anchor="route_monitoring">
             <t>Route monitoring messages are used for synchronization of RIBs to the monitoring station. See <xref target="RFC7854" section="5" sectionFormat="of"/>. 
               The Loc-RIB route monitoring support in this data model follows the Loc-RIB extension defined in <xref target="RFC9069"/>.
+              The Adj-RIB-Out route monitoring support in this data model follows <xref target="RFC8671"/>.
               <xref target="tree_route_monitoring"/> shows the detailed structure of the route-monitoring container.</t>
           <figure anchor="tree_route_monitoring">
             <name>Structure of the route-monitoring container</name>
@@ -422,7 +428,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
                 <li>An individual peer, using a remote address. For the configuration under the "/bmp" tree, the module  does not check if the remote address exists, that would be a responsibility of the device.</li>
                 <li>Peergroups.</li>
                 <li>A group of peers matching a BGP type. i.e. eBGP peers. </li>
-                <li>One or more peers defined by a `peer-types` identity. The ietf-bmp module currently provides the `all-peers` identity, which selects all peers. For simple cases, this is the value that would normally be considered.</li>
+                <li>One or more peers defined by a `bmp-peer-selectors` identity. The ietf-bmp module currently provides the `all-peers` identity, which selects all peers. For simple cases, this is the value that would normally be considered.</li>
               </ul>
             </t>
             <t>Peers MUST be selected (configured) by at most a single instance of the peers list. For the included keys in the "ietf-bmp" model, the process to select which instance to use is as follows:</t>
@@ -438,7 +444,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
             <t>An empty configuration of a peer type disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
             <t>Note that if an operator only wants the information of a few peers, it can enable them individually  using their id. If no other configuration exists, only the messages from those enabled peers will be transmitted to the monitoring station.</t>
             <t>Any additional peer-types identity created SHOULD describe how to unambiguously select a peer when there are conflicting options (multiple options covering the peer).</t>
-            <t>Section <xref target="full_examples_sec"/> provides examples of the peers configuration.</t>
+            <t><xref target="full_examples_sec"/> provides examples of the peers configuration.</t>
           </section>
           <section title="Filtering route-monitoring messages">
             <t>The local RIB, and the peer containers within the rest of rib types, include a filter container. This container includes mechanisms to filter route-monitoring messages for the specific RIB.</t>
@@ -532,6 +538,20 @@ INSERT_TEXT_FROM_FILE(trees/tree-actions.txt)
             support the dependency.</t>
     </section>
     <section title="YANG Modules" anchor="model-content">
+      <section title="BMP YANG Module" anchor="ietf-bmp">
+        <t>The ietf-bmp module imports ietf-yang-types and ietf-inet-types from
+            <xref target="RFC6991"/>, ietf-netconf-acm from <xref target="RFC8341"/>,
+            ietf-interfaces from <xref target="RFC8343"/>, ietf-network-instance from
+            <xref target="RFC8529"/>, and ietf-routing-policy from
+            <xref target="RFC9067"/>.</t>
+        <figure>
+          <sourcecode><![CDATA[
+<CODE BEGINS> file "ietf-bmp@2025-01-02.yang"
+INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
+<CODE ENDS>
+              ]]></sourcecode>
+        </figure>
+      </section>
       <section title="TCP dependencies for BMP YANG Module" anchor="ietf-bmp-tcp-dependencies.yang">
         <t>The ietf-bmp-tcp-dependencies module imports ietf-bmp from this document,
             ietf-tcp from <xref target="RFC9648"/>, ietf-tcp-common from
@@ -743,20 +763,6 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-trees.txt)
            ]]></sourcecode>
         </figure>
       </t>
-    </section>
-    <section title="Base BMP YANG Module" anchor="ietf-bmp">
-      <t>The ietf-bmp module imports ietf-yang-types and ietf-inet-types from
-          <xref target="RFC6991"/>, ietf-netconf-acm from <xref target="RFC8341"/>,
-          ietf-interfaces from <xref target="RFC8343"/>, ietf-network-instance from
-          <xref target="RFC8529"/>, and ietf-routing-policy from
-          <xref target="RFC9067"/>.</t>
-      <figure>
-        <sourcecode><![CDATA[
-<CODE BEGINS> file "ietf-bmp@2025-01-02.yang"
-INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
-<CODE ENDS>
-            ]]></sourcecode>
-      </figure>
     </section>
     <section title="Examples">
       <t>This section shows some examples of BMP configuration using the

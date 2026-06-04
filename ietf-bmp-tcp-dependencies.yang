@@ -86,12 +86,12 @@ module ietf-bmp-tcp-dependencies {
         + "bmp:monitoring-station/"
         + "bmp:connection/bmp:tcp-options" {
     description
-      "Augment the tcp options of the ietf-bmp module";
+      "Augment the TCP options of the ietf-bmp module";
     leaf mss {
       type tcp:mss;
       description
         "Maximum segment size (MSS) for the TCP connections.
-         In the absence of this container, the system
+         In the absence of this leaf, the system
          will select the maximum segment size for this
          connection.";
       reference
@@ -100,14 +100,6 @@ module ietf-bmp-tcp-dependencies {
          RFC 9648: YANG Data Model for TCP.";
     }
     uses tcpcmn:tcp-common-grouping;
-    leaf maximum-segment-size {
-      type uint16;
-      description
-        "Maximum segment size for the TCP connections.
-         In the absence of this container, the system
-         will select the maximum segment size for this
-         connection.";
-    }
     container secure-session {
       if-feature "tcp:authentication";
       presence "The presence of this container means the
@@ -141,7 +133,7 @@ module ietf-bmp-tcp-dependencies {
         }
         case md5 {
           description
-            "Uses TCP-MD5 to secure the session. .";
+            "Uses TCP-MD5 to secure the session.";
           reference
             "RFC 2385: Protection of BGP Sessions
              via the TCP MD5 Signature Option.";

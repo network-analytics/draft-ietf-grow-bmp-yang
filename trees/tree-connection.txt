@@ -28,13 +28,12 @@ module: ietf-bmp
               |        +--rw monitored-router-port               inet:port-number
               +--rw dscp?            inet:dscp
               +--rw tcp-options
-              |  +--rw mtu-discovery?                  boolean
-              |  +--rw bmp-tcp:mss?                    tcp:mss
+              |  +--rw mtu-discovery?            boolean
+              |  +--rw bmp-tcp:mss?              tcp:mss
               |  +--rw bmp-tcp:keepalives! {keepalives-supported}?
               |  |  +--rw bmp-tcp:idle-time?        uint16
               |  |  +--rw bmp-tcp:max-probes?       uint16
               |  |  +--rw bmp-tcp:probe-interval?   uint16
-              |  +--rw bmp-tcp:maximum-segment-size?   uint16
               |  +--rw bmp-tcp:secure-session! {tcp:authentication}?
               |     +--rw (bmp-tcp:authentication)
               |        +--:(bmp-tcp:ao)
