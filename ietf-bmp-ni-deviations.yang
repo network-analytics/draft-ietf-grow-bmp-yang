@@ -10,7 +10,26 @@ module ietf-bmp-ni-deviations {
   organization
     "IETF GROW Working Group";
   contact
-    "WG Web:   <https://datatracker.ietf.org/wg/grow/>";
+    "WG Web:   <https://datatracker.ietf.org/wg/grow/>
+     WG List:  <mailto:grow@ietf.org>
+
+     Author:  Camilo Cardona
+        <mailto:camilo@ntt.net>
+
+     Author:  Paolo Lucente
+        <mailto:paolo@ntt.net>
+
+     Author:  Thomas Graf
+        <mailto:thomas.graf@swisscom.com>
+
+     Author:  Benoit Claise
+        <mailto:benoit@everything-ops.net>
+
+     Author:  Dhananjay Patki
+        <mailto:dhpatki@cisco.com>
+
+     Author:  Prasad S. Narasimha
+        <mailto:snprasad@cisco.com>";
 
   description
     "This module specifies a structure for BMP
