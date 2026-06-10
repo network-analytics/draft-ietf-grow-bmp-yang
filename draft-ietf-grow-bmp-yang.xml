@@ -127,7 +127,7 @@
               This document specifies two YANG modules. The main module, ietf-bmp, configures and
           monitors the BGP Monitoring Protocol (BMP)  <xref target="RFC7854"/> on the monitored router.  
           A second auxiliary module, ietf-bmp-tcp-dependencies, provides extensions for configuring the TCP configuration
-          to BMP monitoring stations if the BMP server supports the groupings from <xref target="RFC9643"/>.
+          to BMP monitoring stations if the monitored router YANG server supports the groupings from <xref target="RFC9643"/>.
           The main module provides parameters for configuring the session to BMP monitoring
               stations; configuration of BMP messages; provides operational
               metrics and enables resetting of BMP monitoring sessions.
@@ -239,7 +239,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_tcp_example2.xml)
         <t>The ietf-bmp module also includes the following options to configure the connection to the BMP monitoring station:</t>
         <t>
           <ul spacing="compact">
-            <li>Initial-delay: a value in seconds that the device must wait before starting the connection to the station. An operator can use this delay to let BGP converge before starting the BMP session.</li>
+            <li>Initial-delay: a value in seconds that the monitored router must wait before starting the connection to the station. An operator can use this delay to let BGP converge before starting the BMP session.</li>
             <li>Backoff time: Configuration of the backoff time strategy after failing to connect to the monitoring station. The module includes a basic exponential backoff with a default initial backoff of 30 seconds and a maximum of 720 seconds, as suggested in <xref target="RFC7854" section="3.2" sectionFormat="of"/>.</li>
           </ul>
         </t>
@@ -255,7 +255,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_indelay.xml)
         </section>
       </section>
       <section title="BMP data" anchor="bmp_data_section">
-        <t>The bmp-data container defines the configuration parameters for the data that the device sends to the monitoring station using BMP messages. See <xref target="RFC7854" section="4" sectionFormat="of"/>.
+        <t>The bmp-data container defines the configuration parameters for the data that the monitored router sends to the monitoring station using BMP messages. See <xref target="RFC7854" section="4" sectionFormat="of"/>.
             <xref target="tree_bmp_data"/> shows the structure of the bmp-data container.</t>
         <figure anchor="tree_bmp_data">
           <name>Structure of the bmp-data container</name>
