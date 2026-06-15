@@ -816,7 +816,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_two.xml)
     <section title="Acknowledgements" numbered="no">
       <t>
           The authors would like to thank Yimin Shen, Jeff Haas, Pierre Vander
-            Vorst, Tom Petch for their review and feedback, and Ijsbrand Wijnands
+            Vorst, Tom Petch for their review and feedback, and IJsbrand Wijnands
             for the first implementation.
         </t>
     </section>
