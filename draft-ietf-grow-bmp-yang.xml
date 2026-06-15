@@ -81,9 +81,6 @@
     <abstract>
       <t> 
         This document defines a YANG data model for the configuration and monitoring of the BGP Monitoring Protocol (BMP).
-        The data model covers the base BMP protocol defined in <xref
-        target="RFC7854"/> and includes support for the Loc-RIB extension
-        defined in <xref target="RFC9069"/>.
       </t>
     </abstract>
   </front>
