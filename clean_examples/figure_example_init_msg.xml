@@ -11,7 +11,7 @@
         </active>
       </connection>
       <bmp-data>
-        <initiation-message>BMP device supporting the BMP yang module</initiation-message>
+        <initiation-message>BMP device supporting the BMP YANG module</initiation-message>
         <statistics-report>
           <statistics-interval>600</statistics-interval>
         </statistics-report>
