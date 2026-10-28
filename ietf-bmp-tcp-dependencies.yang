@@ -70,12 +70,22 @@ module ietf-bmp-tcp-dependencies {
      Relating to IETF Documents
      (https://trustee.ietf.org/license-info).
 
+     All revisions of IETF and IANA published modules can be found at the
+     'YANG Parameters' registry group
+     (https://www.iana.org/assignments/yang-parameters).
+
      This version of this YANG module is part of RFC XXXX
      (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
      for full legal notices.
     ";
 
-  revision 2025-01-02 {
+  reference
+    "RFC 5925: The TCP Authentication Option.
+     RFC 2385: Protection of BGP Sessions via the TCP MD5
+     Signature Option.
+     RFC 9293: Transmission Control Protocol (TCP) Specification.";
+
+  revision 2026-10-28 {
     description
       "initial version";
     reference
@@ -107,7 +117,7 @@ module ietf-bmp-tcp-dependencies {
       description
         "Container for describing how a particular BMP session
          is to be secured, based on RFC 9293 implementation,
-         in the context of BMP [draft-ietf-grow-bmp-tcp-ao/]";
+         in the context of BMP.";
       reference
         "RFC 9293: Transmission Control
          Protocol (TCP) Specification";
@@ -120,9 +130,7 @@ module ietf-bmp-tcp-dependencies {
             "Uses TCP-AO to secure the session.";
           reference
             "RFC 5925: The TCP Authentication Option.
-             RFC 9648: YANG Data Model for TCP (grouping ao)
-             draft-ietf-grow-bmp-tcp-ao: BMP TCP Authentication
-             Option";
+             RFC 9648: YANG Data Model for TCP (grouping ao).";
           uses tcp:ao;
           leaf ao-keychain {
             type key-chain:key-chain-ref;
