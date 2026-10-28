@@ -535,6 +535,15 @@ INSERT_TEXT_FROM_FILE(trees/tree-actions.txt)
             enhances the data model's functionality but relies on the IETF TCP
             YANG modules. This module can be adopted by implementations that
             support the dependency.</t>
+        <t>The ietf-bmp module explicitly configures the network instances used
+        for Route Monitoring under the "network-instance-configuration"
+        container.  An implementation could also place the BMP configuration
+        under a network-instance context.  In this case, the enclosing network
+        instance would identify the network instance to which the Route
+        Monitoring configuration applies. The implementation could then
+        restrict an explicit network-instance selection to the enclosing
+        network instance, or map the configuration so that selecting the
+            network instance again is not required.</t>
     </section>
     <section title="YANG Modules" anchor="model-content">
       <section title="BMP YANG Module" anchor="ietf-bmp">
