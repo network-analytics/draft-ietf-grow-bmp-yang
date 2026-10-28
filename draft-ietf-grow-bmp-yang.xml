@@ -539,7 +539,7 @@ INSERT_TEXT_FROM_FILE(trees/tree-actions.txt)
     <section title="YANG Modules" anchor="model-content">
       <section title="BMP YANG Module" anchor="ietf-bmp">
         <t>The ietf-bmp module imports ietf-yang-types and ietf-inet-types from
-            <xref target="RFC6991"/>, ietf-netconf-acm from <xref target="RFC8341"/>,
+            <xref target="RFC9911"/>, ietf-netconf-acm from <xref target="RFC8341"/>,
             ietf-interfaces from <xref target="RFC8343"/>, ietf-network-instance from
             <xref target="RFC8529"/>, and ietf-routing-policy from
             <xref target="RFC9067"/>. The module semantics rely on the BMP
@@ -721,7 +721,7 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.5065.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.5925.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6020.xml"/>
-      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6991.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9911.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.7854.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8671.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
