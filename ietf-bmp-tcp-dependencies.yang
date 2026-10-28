@@ -78,7 +78,6 @@ module ietf-bmp-tcp-dependencies {
      (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
      for full legal notices.
     ";
-
   reference
     "RFC 5925: The TCP Authentication Option.
      RFC 2385: Protection of BGP Sessions via the TCP MD5

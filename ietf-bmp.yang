@@ -88,7 +88,6 @@ module ietf-bmp {
      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
      they appear in all capitals, as shown here.
     ";
-
   reference
     "RFC 4271: A Border Gateway Protocol 4 (BGP-4).
      RFC 4760: Multiprotocol Extensions for BGP-4.
