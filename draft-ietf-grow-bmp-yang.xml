@@ -342,8 +342,8 @@ INSERT_TEXT_FROM_FILE(trees/tree-route-monitoring.txt)
           <section title="Network instances">
             <t>The route monitoring configuration starts with the configuration of network instances. A network instance can be configured individually, or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. Each option is explained next.</t>
             <t>The ietf-bmp module currently defines three bmp-ni-types identities: "all-ni" which selects all network instances, "non-global-ni" which selects all network instances except the global one, and "global-ni", which configures the global network instance when the device does not offer an explicit name for it. The former can be used as a "default" configuration for simple cases.</t>
-            <t>Network-instances are configured under the container "bmp/route-monitoring/network-instance".</t>
-            <t>An empty configuration disables route monitoring messages for the selected network-instances. Operators can also use the "enable" leaf to disable explicitly the routing messages for the network instance. </t>
+            <t>Network-instances are configured under the container "bmp-data/route-monitoring/network-instance-configuration/network-instances/network-instance".</t>
+            <t>An empty configuration disables route monitoring messages for the selected network-instances. Operators can also use the "enabled" leaf to disable explicitly the routing messages for the network instance. </t>
             <t>The route-monitoring data for a network instance can be configured by at most one element under the network-instance-configuration container.  There SHOULD  be clear rules for which element to apply to a network instance in case multiple elements can select it. The next part of the section provides rules and examples.</t>
             <t>The rules for selecting which element configures a network instance are presented next. Each point is evaluated only if the previous points do not hold.</t>
             <t>
