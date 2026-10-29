@@ -535,15 +535,31 @@ INSERT_TEXT_FROM_FILE(trees/tree-actions.txt)
             enhances the data model's functionality but relies on the IETF TCP
             YANG modules. This module can be adopted by implementations that
             support the dependency.</t>
-        <t>The ietf-bmp module explicitly configures the network instances used
-        for Route Monitoring under the "network-instance-configuration"
-        container.  An implementation could also place the BMP configuration
-        under a network-instance context.  In this case, the enclosing network
-        instance would identify the network instance to which the Route
-        Monitoring configuration applies. The implementation could then
-        restrict an explicit network-instance selection to the enclosing
-        network instance, or map the configuration so that selecting the
-            network instance again is not required.</t>
+      <t>BMP is a monitoring protocol and is not a routing protocol
+            <xref target="RFC7854"/>. A network instance <xref target="RFC8529"/>
+            provides an instance of control-plane and forwarding functions, and
+            <xref target="RFC8529"/> mounts the configuration of routing
+            protocols, such as OSPF, within it. The ietf-bmp module therefore
+            does not place BMP configuration under a network instance. A BMP
+            instance relates to a single BGP instance, and a router with
+            several BGP instances is expected to run one BMP instance per BGP
+            instance <xref target="RFC7854"/>. For that reason, the module
+            selects the network instances to monitor explicitly, under the
+            "network-instance-configuration" container used for Route
+            Monitoring.</t>
+      <t>An implementation could nevertheless place the BMP configuration
+            under a network-instance context. In that case, the enclosing
+            network instance would identify the network instance to which the
+            Route Monitoring configuration applies. The implementation could
+            then restrict an explicit network-instance selection to the
+            enclosing network instance, or map the configuration so that
+            selecting the network instance again is not required. <xref
+            target="RFC8529"/> allows an implementation to restrict
+            parent-referenced information to a specific instance in a similar
+            way. In either case, the Route Monitoring configuration of a
+            network instance SHOULD be defined in a single place, and the
+            implementation SHOULD NOT accept conflicting configurations for the
+            same network instance in both places.</t>
     </section>
     <section title="YANG Modules" anchor="model-content">
       <section title="BMP YANG Module" anchor="ietf-bmp">
@@ -551,9 +567,12 @@ INSERT_TEXT_FROM_FILE(trees/tree-actions.txt)
             <xref target="RFC9911"/>, ietf-netconf-acm from <xref target="RFC8341"/>,
             ietf-interfaces from <xref target="RFC8343"/>, ietf-network-instance from
             <xref target="RFC8529"/>, and ietf-routing-policy from
-            <xref target="RFC9067"/>. The module semantics rely on the BMP
-            specifications in <xref target="RFC7854"/>, <xref target="RFC8671"/>,
-            and <xref target="RFC9069"/>.</t>
+            <xref target="RFC9067"/>. The module semantics rely on the BGP
+            specifications in <xref target="RFC4271"/>, <xref target="RFC4760"/>,
+            and <xref target="RFC5065"/>, on the BMP specifications in
+            <xref target="RFC7854"/>, <xref target="RFC8671"/>, and
+            <xref target="RFC9069"/>, and, for the TCP options, on
+            <xref target="RFC9293"/> and <xref target="RFC9648"/>.</t>
         <figure>
           <sourcecode><![CDATA[
 <CODE BEGINS> file "ietf-bmp@2026-10-28.yang"
