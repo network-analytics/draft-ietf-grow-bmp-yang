@@ -51,8 +51,8 @@ module ietf-bmp-tcp-dependencies {
         <mailto:snprasad@cisco.com>";
   description
     "This module augments the ietf-bmp module with TCP options for
-     connections to BMP monitoring stations, including MSS, keepalives,
-     and TCP session authentication.
+     connections to BMP monitoring stations, including MSS,
+     keepalives, and TCP session authentication.
 
      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
      'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED',
@@ -71,7 +71,8 @@ module ietf-bmp-tcp-dependencies {
      Relating to IETF Documents
      (https://trustee.ietf.org/license-info).
 
-     All revisions of IETF and IANA published modules can be found at the
+     All revisions of IETF and IANA published modules can be
+     found at the
      'YANG Parameters' registry group
      (https://www.iana.org/assignments/yang-parameters).
 
@@ -135,8 +136,8 @@ module ietf-bmp-tcp-dependencies {
           leaf ao-keychain {
             type key-chain:key-chain-ref;
             description
-              "Reference to the key chain used to authenticate this BMP
-               session with TCP-AO.";
+              "Reference to the key chain used to authenticate this
+               BMP session with TCP-AO.";
             reference
               "RFC 8177: YANG Key Chain.";
           }
@@ -150,8 +151,8 @@ module ietf-bmp-tcp-dependencies {
           leaf md5-keychain {
             type key-chain:key-chain-ref;
             description
-              "Reference to the key chain used to authenticate this BMP
-               session with TCP-MD5.";
+              "Reference to the key chain used to authenticate this
+               BMP session with TCP-MD5.";
             reference
               "RFC 8177: YANG Key Chain.";
           }

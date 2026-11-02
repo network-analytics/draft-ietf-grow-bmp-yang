@@ -74,7 +74,8 @@ module ietf-bmp {
      Relating to IETF Documents
      (https://trustee.ietf.org/license-info).
 
-     All revisions of IETF and IANA published modules can be found at the
+     All revisions of IETF and IANA published modules can be
+     found at the
      'YANG Parameters' registry group
      (https://www.iana.org/assignments/yang-parameters).
 
