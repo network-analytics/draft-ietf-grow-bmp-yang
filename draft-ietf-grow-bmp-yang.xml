@@ -75,7 +75,6 @@
         <email>snprasad@cisco.com</email>
       </address>
     </author>
-    <date/>
     <area>OPS</area>
     <workgroup>GROW</workgroup>
     <abstract>
@@ -831,16 +830,17 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_one.xml)
             configurations to support a more complex requirement. This is what
                 the example expects to configure:</t>
         <t>
-          <list style="symbols">
-            <t> For the global network instance,
-            the device sends updates for adj-rib-in-pre, address families IPv4
-            and IPv6. It sends updates for all external peers except peer
-            198.51.100.11, which is disabled.</t>
-            <t>Network instance monitoring is disabled for route monitoring messages. </t>
-            <t>For the rest of network
-            instances, route monitoring messages are enabled from adj-rib-in-pre, address
-                families IPv4/IPv6, and for all peers.</t>
-          </list>
+          <ul>
+            <li>For the global network instance, the device sends updates for
+            adj-rib-in-pre, address families IPv4 and IPv6. It sends updates
+            for all external peers except peer 198.51.100.11, which is
+            disabled.</li>
+            <li>Network instance monitoring is disabled for route monitoring
+            messages.</li>
+            <li>For the rest of network instances, route monitoring messages
+            are enabled from adj-rib-in-pre, address families IPv4/IPv6, and
+            for all peers.</li>
+          </ul>
         </t>
         <t>
           <figure anchor="example_two">
