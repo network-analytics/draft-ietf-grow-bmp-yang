@@ -574,7 +574,7 @@ INSERT_TEXT_FROM_FILE(trees/tree-actions.txt)
             <xref target="RFC9293"/> and <xref target="RFC9648"/>.</t>
         <figure>
           <sourcecode><![CDATA[
-<CODE BEGINS> file "ietf-bmp@2026-10-28.yang"
+<CODE BEGINS> file "ietf-bmp@2026-11-10.yang"
 INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
 <CODE ENDS>
               ]]></sourcecode>

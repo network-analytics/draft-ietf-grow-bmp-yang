@@ -101,7 +101,7 @@ module ietf-bmp {
      Protocol (BMP).
      RFC 9648: YANG Data Model for TCP.";
 
-  revision 2026-10-28 {
+  revision 2026-11-10 {
     description
       "initial version";
     reference
