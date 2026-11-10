@@ -989,10 +989,10 @@ module ietf-bmp {
               description
                 "Stats per network-instance";
               list network-instance {
-                key "name";
+                key "network-instance-name";
                 description
                   "Network instance stats list";
-                leaf name {
+                leaf network-instance-name {
                   type leafref {
                     path "/ni:network-instances/ni:network-instance/"
                        + "ni:name";
