@@ -15,13 +15,13 @@ module: ietf-bmp
               +--ro route-monitoring-stats
                  +--ro network-instances-stats
                     +--ro network-instance* [name]
-                       +--ro name                                     -> /ni:network-instances/network-instance/name
-                       +--ro enabled?                                 boolean
-                       +--ro total-route-mirroring-messages-per-ni?   uint64
+                       +--ro name                                      -> /ni:network-instances/network-instance/name
+                       +--ro enabled?                                  boolean
+                       +--ro total-route-monitoring-messages-per-ni?   uint64
                        +--ro ribs-stats
                           +--ro adj-rib-in-pre
-                          |  +--ro enabled?                                  boolean
-                          |  +--ro total-route-mirroring-messages-per-rib?   uint64
+                          |  +--ro enabled?                                   boolean
+                          |  +--ro total-route-monitoring-messages-per-rib?   uint64
                           |  +--ro address-families
                           |     +--ro address-family* [id]
                           |        +--ro id                                                 identityref
@@ -35,8 +35,8 @@ module: ietf-bmp
                           |              +--ro total-route-mnt-updated-prefixes-per-peer?    uint64
                           |              +--ro total-route-mnt-withdraw-prefixes-per-peer?   uint64
                           +--ro adj-rib-in-post
-                          |  +--ro enabled?                                  boolean
-                          |  +--ro total-route-mirroring-messages-per-rib?   uint64
+                          |  +--ro enabled?                                   boolean
+                          |  +--ro total-route-monitoring-messages-per-rib?   uint64
                           |  +--ro address-families
                           |     +--ro address-family* [id]
                           |        +--ro id                                                 identityref
@@ -50,8 +50,8 @@ module: ietf-bmp
                           |              +--ro total-route-mnt-updated-prefixes-per-peer?    uint64
                           |              +--ro total-route-mnt-withdraw-prefixes-per-peer?   uint64
                           +--ro local-rib
-                          |  +--ro enabled?                                  boolean
-                          |  +--ro total-route-mirroring-messages-per-rib?   uint64
+                          |  +--ro enabled?                                   boolean
+                          |  +--ro total-route-monitoring-messages-per-rib?   uint64
                           |  +--ro address-families
                           |     +--ro address-family* [id]
                           |        +--ro id                                                 identityref
@@ -59,8 +59,8 @@ module: ietf-bmp
                           |        +--ro total-route-monitoring-updated-prefixes-per-af?    uint64
                           |        +--ro total-route-monitoring-withdraw-prefixes-per-af?   uint64
                           +--ro adj-rib-out-pre
-                          |  +--ro enabled?                                  boolean
-                          |  +--ro total-route-mirroring-messages-per-rib?   uint64
+                          |  +--ro enabled?                                   boolean
+                          |  +--ro total-route-monitoring-messages-per-rib?   uint64
                           |  +--ro address-families
                           |     +--ro address-family* [id]
                           |        +--ro id                                                 identityref
@@ -74,8 +74,8 @@ module: ietf-bmp
                           |              +--ro total-route-mnt-updated-prefixes-per-peer?    uint64
                           |              +--ro total-route-mnt-withdraw-prefixes-per-peer?   uint64
                           +--ro adj-rib-out-post
-                             +--ro enabled?                                  boolean
-                             +--ro total-route-mirroring-messages-per-rib?   uint64
+                             +--ro enabled?                                   boolean
+                             +--ro total-route-monitoring-messages-per-rib?   uint64
                              +--ro address-families
                                 +--ro address-family* [id]
                                    +--ro id                                                 identityref

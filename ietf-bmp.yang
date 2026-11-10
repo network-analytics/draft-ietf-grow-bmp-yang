@@ -920,10 +920,10 @@ module ietf-bmp {
                 "Indicates if any Route Monitoring messages are
                  currently enabled for the RIB.";
             }
-            leaf total-route-mirroring-messages-per-rib {
+            leaf total-route-monitoring-messages-per-rib {
               type uint64;
               description
-                "Number of route-mirroring messages sent for
+                "Number of route-monitoring messages sent for
                  this RIB.";
             }
           }
@@ -1006,10 +1006,10 @@ module ietf-bmp {
                     "Indicates if route monitoring messages are
                      currently enabled for the network instance.";
                 }
-                leaf total-route-mirroring-messages-per-ni {
+                leaf total-route-monitoring-messages-per-ni {
                   type uint64;
                   description
-                    "Number of route-mirroring messages sent for
+                    "Number of route-monitoring messages sent for
                      this network instance.";
                 }
                 container ribs-stats {

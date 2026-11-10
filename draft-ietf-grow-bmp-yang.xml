@@ -404,7 +404,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_one.xml)
               <ul spacing="compact">
                 <li>For the global network instance, adj-rib-in-pre and adj-rib-in-post RIBs are enabled. In each of them IPv4 and IPv6 address families are configured. The configuration can be the same or not, depending on the requirements of the operators. Any other RIB and address families are disabled.</li>
                 <li>Network instance "network-instance-one"  is disabled, meaning that route monitoring messages are disabled for that network instance.</li>
-                <li>Network instance "network-instance-two" has adj-rib-out-post enabled, but only address family ipv4-unicast is configured. The ipv6-unicast will not be configured for this instance.</li>
+                <li>Network instance "network-instance-two" has adj-rib-in-post enabled, but only address family ipv4-unicast is configured. The ipv6-unicast will not be configured for this instance.</li>
                 <li>For all other network instances, adj-rib-in-pre with IPv4 and IPv6 address families are configured, thanks to the configuration of all-ni</li>
               </ul>
             </t>
