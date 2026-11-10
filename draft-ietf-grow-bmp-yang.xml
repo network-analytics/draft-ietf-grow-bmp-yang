@@ -75,7 +75,6 @@
         <email>snprasad@cisco.com</email>
       </address>
     </author>
-    <date/>
     <area>OPS</area>
     <workgroup>GROW</workgroup>
     <abstract>
@@ -216,9 +215,11 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_passive_connection_option.xml)
             <li>The maximum segment size of the TCP connection. See  <xref target="RFC9293" section="3.7.1" sectionFormat="of"/>.</li>
             <li>Enabling MTU discovery for the path. See <xref target="RFC9293" section="3.7.2" sectionFormat="of"/>.</li>
             <li>For configuring TCP keepalives, the connection container uses the tcp-common-grouping from <xref target="RFC9643"/>. Note that the implementation must support module ietf-bmp-tcp-dependencies in addition to the main module to support these elements.  Please see <xref target="RFC9643" section="2.1.3.1" sectionFormat="of"/> for the explanation of each of its parameters. The device MUST have the feature "keepalives-supported" enabled. See also <xref target="RFC9293" section="3.8.4" sectionFormat="of"/></li>
-            <li>Session security. Provides options for authentication using the TCP Authentication Option (TCP-AO) <xref target="RFC5925"/> and MD5, in the context of BMP <xref target="I-D.ietf-grow-bmp-tcp-ao"/>. This feature also requires support of the ietf-bmp-tcp-dependencies module.</li>
+            <li>Session security. Provides options for authentication using the TCP Authentication Option (TCP-AO) <xref target="RFC5925"/> and MD5. This feature also requires support of the ietf-bmp-tcp-dependencies module.</li>
           </ul>
         </t>
+        <t>Operational considerations for using TCP-AO with BMP are discussed in
+            <xref target="I-D.ietf-grow-bmp-tcp-ao"/>.</t>
         <t>Figures <xref target="tcp_example1" format="counter"/> and <xref target="tcp_example2" format="counter"/> include examples configuring the previous TCP parameters in the model.</t>
         <t>
           <figure anchor="tcp_example1">
@@ -340,8 +341,8 @@ INSERT_TEXT_FROM_FILE(trees/tree-route-monitoring.txt)
           <section title="Network instances">
             <t>The route monitoring configuration starts with the configuration of network instances. A network instance can be configured individually, or it can be configured if it matches any of the selectors from the "bmp-ni-types" identity. Each option is explained next.</t>
             <t>The ietf-bmp module currently defines three bmp-ni-types identities: "all-ni" which selects all network instances, "non-global-ni" which selects all network instances except the global one, and "global-ni", which configures the global network instance when the device does not offer an explicit name for it. The former can be used as a "default" configuration for simple cases.</t>
-            <t>Network-instances are configured under the container "bmp/route-monitoring/network-instance".</t>
-            <t>An empty configuration disables route monitoring messages for the selected network-instances. Operators can also use the "enable" leaf to disable explicitly the routing messages for the network instance. </t>
+            <t>Network-instances are configured under the container "bmp-data/route-monitoring/network-instance-configuration/network-instances/network-instance".</t>
+            <t>An empty configuration disables route monitoring messages for the selected network-instances. Operators can also use the "enabled" leaf to disable explicitly the routing messages for the network instance. </t>
             <t>The route-monitoring data for a network instance can be configured by at most one element under the network-instance-configuration container.  There SHOULD  be clear rules for which element to apply to a network instance in case multiple elements can select it. The next part of the section provides rules and examples.</t>
             <t>The rules for selecting which element configures a network instance are presented next. Each point is evaluated only if the previous points do not hold.</t>
             <t>
@@ -533,17 +534,47 @@ INSERT_TEXT_FROM_FILE(trees/tree-actions.txt)
             enhances the data model's functionality but relies on the IETF TCP
             YANG modules. This module can be adopted by implementations that
             support the dependency.</t>
+      <t>BMP is a monitoring protocol and is not a routing protocol
+            <xref target="RFC7854"/>. A network instance <xref target="RFC8529"/>
+            provides an instance of control-plane and forwarding functions, and
+            <xref target="RFC8529"/> mounts the configuration of routing
+            protocols, such as OSPF, within it. The ietf-bmp module therefore
+            does not place BMP configuration under a network instance. A BMP
+            instance relates to a single BGP instance, and a router with
+            several BGP instances is expected to run one BMP instance per BGP
+            instance <xref target="RFC7854"/>. For that reason, the module
+            selects the network instances to monitor explicitly, under the
+            "network-instance-configuration" container used for Route
+            Monitoring.</t>
+      <t>An implementation could nevertheless place the BMP configuration
+            under a network-instance context. In that case, the enclosing
+            network instance would identify the network instance to which the
+            Route Monitoring configuration applies. The implementation could
+            then restrict an explicit network-instance selection to the
+            enclosing network instance, or map the configuration so that
+            selecting the network instance again is not required. <xref
+            target="RFC8529"/> allows an implementation to restrict
+            parent-referenced information to a specific instance in a similar
+            way. In either case, the Route Monitoring configuration of a
+            network instance SHOULD be defined in a single place, and the
+            implementation SHOULD NOT accept conflicting configurations for the
+            same network instance in both places.</t>
     </section>
     <section title="YANG Modules" anchor="model-content">
       <section title="BMP YANG Module" anchor="ietf-bmp">
         <t>The ietf-bmp module imports ietf-yang-types and ietf-inet-types from
-            <xref target="RFC6991"/>, ietf-netconf-acm from <xref target="RFC8341"/>,
+            <xref target="RFC9911"/>, ietf-netconf-acm from <xref target="RFC8341"/>,
             ietf-interfaces from <xref target="RFC8343"/>, ietf-network-instance from
             <xref target="RFC8529"/>, and ietf-routing-policy from
-            <xref target="RFC9067"/>.</t>
+            <xref target="RFC9067"/>. The module semantics rely on the BGP
+            specifications in <xref target="RFC4271"/>, <xref target="RFC4760"/>,
+            and <xref target="RFC5065"/>, on the BMP specifications in
+            <xref target="RFC7854"/>, <xref target="RFC8671"/>, and
+            <xref target="RFC9069"/>, and, for the TCP options, on
+            <xref target="RFC9293"/> and <xref target="RFC9648"/>.</t>
         <figure>
           <sourcecode><![CDATA[
-<CODE BEGINS> file "ietf-bmp@2025-01-02.yang"
+<CODE BEGINS> file "ietf-bmp@2026-10-28.yang"
 INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
 <CODE ENDS>
               ]]></sourcecode>
@@ -552,10 +583,13 @@ INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
       <section title="TCP dependencies for BMP YANG Module" anchor="ietf-bmp-tcp-dependencies.yang">
         <t>The ietf-bmp-tcp-dependencies module imports ietf-bmp from this document,
             ietf-tcp from <xref target="RFC9648"/>, ietf-tcp-common from
-            <xref target="RFC9643"/>, and ietf-key-chain from <xref target="RFC8177"/>.</t>
+            <xref target="RFC9643"/>, and ietf-key-chain from <xref target="RFC8177"/>.
+            The module semantics rely on the TCP specifications in
+            <xref target="RFC2385"/>, <xref target="RFC5925"/>, and
+            <xref target="RFC9293"/>.</t>
         <figure>
           <sourcecode><![CDATA[
-<CODE BEGINS> file "ietf-bmp-tcp-dependencies@2025-01-02.yang"
+<CODE BEGINS> file "ietf-bmp-tcp-dependencies@2026-10-28.yang"
 INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
 <CODE ENDS>
             ]]></sourcecode>
@@ -565,7 +599,7 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
     <section title="Implementation Status" anchor="implementation-status">
        <t>Note to the RFC-Editor: Please remove this section before publishing.</t>
        <section title="Arrcus ArcOS" anchor="arrcus-arcos">
-           <t>Arrcus implemented the entire YANG module, except the optional tcp: statements (from RFC9648 and draft-ietf-grow-bmp-tcp-ao),
+           <t>Arrcus implemented the entire YANG module, except the optional tcp: statements from RFC9648,
         which appear in version 8.</t>
         </section>
     </section>
@@ -578,7 +612,7 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
             accessed via YANG-based management protocols, such as NETCONF
         <xref target="RFC6241"/> and RESTCONF <xref target="RFC8040"/>. These YANG-based management
             protocols (1) have to use a secure transport layer (e.g., Secure
-            Shell (SSH) <xref target="RFC4252"/>, TLS <xref target="RFC8446"/>,
+            Shell (SSH) <xref target="RFC4252"/>, TLS <xref target="RFC9846"/>,
             and QUIC <xref target="RFC9000"/>) and (2) have to use mutual
             authentication.
         </t>
@@ -597,7 +631,11 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
             operations (e.g., edit-config) and delete operations to these data
             nodes without proper protection or authentication can have a
             negative effect on network operations. 
-            There are no particularly sensitive writable data nodes.
+            In particular, unauthorized
+            changes to the "connection" subtree of a monitoring station could
+            redirect or disrupt BMP export, while changes to the
+            "route-monitoring" subtree can alter the routing information
+            exposed to collectors.
         </t>
         <t>
             Some of the readable data nodes in this YANG module may be
@@ -627,7 +665,7 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
             accessed via YANG-based management protocols, such as NETCONF
         <xref target="RFC6241"/> and RESTCONF <xref target="RFC8040"/>. These YANG-based management
             protocols (1) have to use a secure transport layer (e.g., Secure
-            Shell (SSH) <xref target="RFC4252"/>, TLS <xref target="RFC8446"/>,
+            Shell (SSH) <xref target="RFC4252"/>, TLS <xref target="RFC9846"/>,
             and QUIC <xref target="RFC9000"/>) and (2) have to use mutual
             authentication.
         </t>
@@ -646,7 +684,9 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
             operations (e.g., edit-config) and delete operations to these data
             nodes without proper protection or authentication can have a
             negative effect on network operations. 
-            There are no particularly sensitive writable data nodes.
+            In particular, the secure-session, ao-keychain, and md5-keychain
+            configuration can disable or alter BMP session authentication if
+            changed without proper authorization.
         </t>
         <t>
             Some of the readable data nodes in this YANG module may be
@@ -703,35 +743,35 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2385.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.3688.xml"/>
-      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.4252.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.4271.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.4760.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.5065.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.5925.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6020.xml"/>
-      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6241.xml"/>
-      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6991.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9911.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.7854.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8671.xml"/>
-      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8040.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8341.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8343.xml"/>
-      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8446.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8529.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8792.xml"/>
-      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9000.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9067.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9069.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9293.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8177.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9643.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9648.xml"/>
-      <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-grow-bmp-tcp-ao.xml"/>
     </references>
     <references title="Informative References">
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.4252.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6241.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8040.xml"/>
     <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8340.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9000.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9846.xml"/>
     <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9907.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-grow-bmp-tcp-ao.xml"/>
     </references>
     <!--
         -->
@@ -790,16 +830,17 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_one.xml)
             configurations to support a more complex requirement. This is what
                 the example expects to configure:</t>
         <t>
-          <list style="symbols">
-            <t> For the global network instance,
-            the device sends updates for adj-rib-in-pre, address families IPv4
-            and IPv6. It sends updates for all external peers except peer
-            198.51.100.11, which is disabled.</t>
-            <t>Network instance monitoring is disabled for route monitoring messages. </t>
-            <t>For the rest of network
-            instances, route monitoring messages are enabled from adj-rib-in-pre, address
-                families IPv4/IPv6, and for all peers.</t>
-          </list>
+          <ul>
+            <li>For the global network instance, the device sends updates for
+            adj-rib-in-pre, address families IPv4 and IPv6. It sends updates
+            for all external peers except peer 198.51.100.11, which is
+            disabled.</li>
+            <li>Network instance monitoring is disabled for route monitoring
+            messages.</li>
+            <li>For the rest of network instances, route monitoring messages
+            are enabled from adj-rib-in-pre, address families IPv4/IPv6, and
+            for all peers.</li>
+          </ul>
         </t>
         <t>
           <figure anchor="example_two">
