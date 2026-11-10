@@ -14,8 +14,8 @@ module: ietf-bmp
               +--ro total-termination-messages?        uint64
               +--ro route-monitoring-stats
                  +--ro network-instances-stats
-                    +--ro network-instance* [network-instance-name]
-                       +--ro network-instance-name                    -> /ni:network-instances/network-instance/name
+                    +--ro network-instance* [name]
+                       +--ro name                                     -> /ni:network-instances/network-instance/name
                        +--ro enabled?                                 boolean
                        +--ro total-route-mirroring-messages-per-ni?   uint64
                        +--ro ribs-stats

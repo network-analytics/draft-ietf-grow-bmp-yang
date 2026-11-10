@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 echo "Validating yang modes"
 
 PYANG_INPUT='ietf-bmp.yang  ietf-bmp-tcp-dependencies.yang'
