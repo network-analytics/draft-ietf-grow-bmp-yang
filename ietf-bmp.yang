@@ -813,9 +813,15 @@ module ietf-bmp {
           container peer-up-information {
             description
               "Configuration of Peer Up Information TLVs sent in
-               Peer Up messages. Type 0 String and Type 4 Admin
-               Label values MAY be repeated and their configured
-               order MUST be preserved.
+               Peer Up messages to this monitoring station.
+               Configured Type 0 String and Type 4 Admin Label
+               values apply to Peer Up messages sent to this
+               monitoring station. Values of each type MAY be
+               repeated and their configured order MUST be
+               preserved. Assignment of Admin Labels to 
+               individual BGP peers is
+               implementation-specific, as described in RFC 8671,
+               and is not modeled by this module.
 
                Type 3 VRF/Table Name is not configured by this
                container. It is populated by the implementation
@@ -824,6 +830,8 @@ module ietf-bmp {
             reference
               "RFC 9736: The BGP Monitoring Protocol (BMP)
                Peer Up Message Namespace, Section 3.3.
+               RFC 8671: Support for Adj-RIB-Out in the BGP
+               Monitoring Protocol (BMP), Section 6.3.1.
                RFC 9069: Support for Local RIB in the BGP Monitoring
                Protocol (BMP).";
             leaf-list string {
@@ -837,8 +845,9 @@ module ietf-bmp {
               type string;
               ordered-by user;
               description
-                "Value of a Peer Up Information TLV Type 4
-                 Admin Label.";
+                "Value of a Peer Up Information TLV Type 4 Admin
+                 Label included in Peer Up messages sent to this
+                 monitoring station.";
             }
           }
           container statistics-report {
