@@ -99,9 +99,11 @@ module ietf-bmp {
      RFC 9293: Transmission Control Protocol (TCP) Specification.
      RFC 9069: Support for Local RIB in the BGP Monitoring
      Protocol (BMP).
-     RFC 9648: YANG Data Model for TCP.";
+     RFC 9648: YANG Data Model for TCP.
+     RFC 9736: The BGP Monitoring Protocol (BMP) Peer Up
+     Message Namespace.";
 
-  revision 2026-11-10 {
+  revision 2026-11-13 {
     description
       "initial version";
     reference
@@ -289,7 +291,15 @@ module ietf-bmp {
         container passive {
           description
             "Parameters for passively accepting
-             a connection from the monitoring station.";
+             a connection from the monitoring station.
+             An omitted network-instance defaults to the
+             global network instance.
+             An omitted station-port matches any port.
+
+             A passive connection MUST match at most one
+             monitoring-station entry. A configuration that could
+             cause an incoming connection to match more than one
+             monitoring-station entry MUST be rejected.";
           leaf network-instance {
             type leafref {
               path "/ni:network-instances/ni:network-instance/"
@@ -311,7 +321,7 @@ module ietf-bmp {
             description
               "Optional value identifying the origin port of the
                connection. If provided, it MUST match the receiving
-               connection.";
+               connection; if omitted, it matches any origin port.";
           }
           choice local-endpoint {
             mandatory true;
@@ -783,14 +793,53 @@ module ietf-bmp {
           description
             "Configuration of BMP data sent to the monitoring
              station.";
-          leaf initiation-message {
-            type string;
+          container initiation-information {
             description
-              "User-defined message to append to the
-               initiation message.";
+              "Configuration of Initiation Information TLVs sent
+               in Initiation messages. Type 0 String values MAY be
+               repeated and their configured order MUST be
+               preserved.";
             reference
-              "RFC7854:  BGP Monitoring Protocol,
-               Section 4.3 and 4.4";
+              "RFC 9736: The BGP Monitoring Protocol (BMP)
+               Peer Up Message Namespace, Section 3.1.";
+            leaf-list string {
+              type string;
+              ordered-by user;
+              description
+                "Value of an Initiation Information TLV Type 0
+                 String.";
+            }
+          }
+          container peer-up-information {
+            description
+              "Configuration of Peer Up Information TLVs sent in
+               Peer Up messages. Type 0 String and Type 4 Admin
+               Label values MAY be repeated and their configured
+               order MUST be preserved.
+
+               Type 3 VRF/Table Name is not configured by this
+               container. It is populated by the implementation
+               from the applicable VRF or table context as specified
+               in RFC 9069.";
+            reference
+              "RFC 9736: The BGP Monitoring Protocol (BMP)
+               Peer Up Message Namespace, Section 3.3.
+               RFC 9069: Support for Local RIB in the BGP Monitoring
+               Protocol (BMP).";
+            leaf-list string {
+              type string;
+              ordered-by user;
+              description
+                "Value of a Peer Up Information TLV Type 0
+                 String.";
+            }
+            leaf-list admin-label {
+              type string;
+              ordered-by user;
+              description
+                "Value of a Peer Up Information TLV Type 4
+                 Admin Label.";
+            }
           }
           container statistics-report {
             presence "Enable BMP statistics report.";

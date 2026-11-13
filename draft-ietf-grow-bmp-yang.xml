@@ -102,7 +102,9 @@
             supports the Loc-RIB extension defined in <xref
                 target="RFC9069"/>, allowing configuration and
             monitoring of BMP reporting for routes selected into the
-            local BGP speaker's Loc-RIB.
+            local BGP speaker's Loc-RIB.  Initiation Information TLVs
+            and Peer Up Information TLVs follow the separate namespaces
+            defined in <xref target="RFC9736"/>.
         </t>
     </section>
     <section title="Terminology" anchor="terminology">
@@ -115,7 +117,10 @@
       </t>
       <t>
            Routing Information Bases, peers, monitoring stations, and
-           initiation messages are defined in <xref target="RFC7854"/>.
+           initiation messages are defined in <xref target="RFC7854"/>
+           and the separate Initiation Information and Peer Up
+           Information TLV namespaces are defined in <xref
+           target="RFC9736"/>.
       </t>
     </section>
     <section title="Data Model Description" anchor="model_description">
@@ -194,6 +199,13 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_active_connection_option.xml)
             connection. If the monitoring station is connected through a
             network-instance instead of the global one, this one must also be
             specified.</t>
+          <t>A passive connection MUST match at most one
+            monitoring-station entry. A configuration that could cause an
+            incoming connection to match more than one monitoring station
+            entry MUST be rejected. 
+            An omitted monitoring station port is a wildcard for the
+            remote source port, so an omitted port overlaps with another
+            omitted port and with any specified port.</t>
           <t>An incoming connection not matching a valid entry MUST be ignored by
             the router.</t>
           <t><xref target="passive_connection_option"/> includes an example of
@@ -258,7 +270,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_indelay.xml)
         </section>
       </section>
       <section title="BMP data" anchor="bmp_data_section">
-        <t>The bmp-data container defines the configuration parameters for the data that the monitored router sends to the monitoring station using BMP messages. See <xref target="RFC7854" section="4" sectionFormat="of"/>.
+        <t>The bmp-data container defines the configuration parameters for the data that the monitored router sends to the monitoring station using BMP messages. See <xref target="RFC7854" section="4" sectionFormat="of"/> and <xref target="RFC9736"/>.
             <xref target="tree_bmp_data"/> shows the structure of the bmp-data container.</t>
         <figure anchor="tree_bmp_data">
           <name>Structure of the bmp-data container</name>
@@ -266,10 +278,11 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_indelay.xml)
 INSERT_TEXT_FROM_FILE(trees/tree-bmp-data.txt)
 ]]></sourcecode>
         </figure>
-        <t>The ietf-bmp module defines options for the initiation message, the statistics report, the route mirroring, and the route monitoring. The first three have simple configuration options and are described next. Route monitoring is the most complex and is detailed in <xref target="route_monitoring"/>.</t>
+        <t>The ietf-bmp module defines options for Initiation Information TLVs, Peer Up Information TLVs, the statistics report, route mirroring, and route monitoring. The first four have simple configuration options and are described next. Route monitoring is the most complex and is detailed in <xref target="route_monitoring"/>.</t>
         <t>
           <ul spacing="compact">
-            <li>Initiation-message: Content for an information TLV type-0 for identification of the device. See <xref target="RFC7854" section="4.3" sectionFormat="bare"/> and <xref target="RFC7854" section="4.4" sectionFormat="of"/></li>
+            <li>Initiation-information: Ordered Type 0 String values for Initiation Information TLVs. Multiple values are allowed and their order is preserved. See <xref target="RFC9736" section="3.1" sectionFormat="of"/>.</li>
+            <li>Peer-up-information: Ordered Type 0 String and Type 4 Admin Label values for Peer Up Information TLVs. Multiple values of each type are allowed and their order is preserved. Type 3 VRF/Table Name is not configured by this container. It is populated by the implementation from the applicable VRF or table context as specified in <xref target="RFC9069"/>. See <xref target="RFC9736" section="3.3" sectionFormat="of"/>.</li>
             <li>Statistics-interval: The statistics report is enabled by the presence of the statistics-report container. The statistics-interval is mandatory if the statistics-report container exists and defines the interval of the statistics report. See <xref target="RFC7854" section="4.8" sectionFormat="of"/>.</li>
             <li>Route-mirroring: Route Mirroring messages serve as an exact replica of the messages received by the device. See <xref target="RFC7854" section="6" sectionFormat="of"/>. Enabling route mirroring messages towards a particular BMP monitoring station only requires the presence of the container "route-mirroring" within the monitoring station container.</li>
           </ul>
@@ -277,7 +290,7 @@ INSERT_TEXT_FROM_FILE(trees/tree-bmp-data.txt)
         <t>An example of configuring the previous options is included in <xref target="example_init_msg"/></t>
         <t>
           <figure anchor="example_init_msg">
-            <name>Example of configuration of initiation-message and statistics report interval.</name>
+            <name>Example of configuration of Initiation and Peer Up Information and statistics report interval.</name>
             <sourcecode><![CDATA[
 INSERT_TEXT_FROM_FILE(clean_examples/figure_example_init_msg.xml)
            ]]></sourcecode>
@@ -570,11 +583,12 @@ INSERT_TEXT_FROM_FILE(trees/tree-actions.txt)
             specifications in <xref target="RFC4271"/>, <xref target="RFC4760"/>,
             and <xref target="RFC5065"/>, on the BMP specifications in
             <xref target="RFC7854"/>, <xref target="RFC8671"/>, and
-            <xref target="RFC9069"/>, and, for the TCP options, on
+            <xref target="RFC9069"/>, as updated by <xref target="RFC9736"/>,
+            and, for the TCP options, on
             <xref target="RFC9293"/> and <xref target="RFC9648"/>.</t>
         <figure>
           <sourcecode><![CDATA[
-<CODE BEGINS> file "ietf-bmp@2026-11-10.yang"
+<CODE BEGINS> file "ietf-bmp@2026-11-13.yang"
 INSERT_TEXT_FROM_FILE(ietf-bmp.yang)
 <CODE ENDS>
               ]]></sourcecode>
@@ -758,6 +772,7 @@ INSERT_TEXT_FROM_FILE(ietf-bmp-tcp-dependencies.yang)
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8792.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9067.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9069.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9736.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9293.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8177.xml"/>
       <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9643.xml"/>

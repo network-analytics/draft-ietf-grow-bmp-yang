@@ -4,7 +4,8 @@ set -e
 echo "Validating yang modes"
 
 PYANG_INPUT='ietf-bmp.yang  ietf-bmp-tcp-dependencies.yang'
-YANG_PATH='/Users/camilo/Documents/Projects/drafts/bmp_yang_model/other_examples/yang/experimental/ietf-extracted-YANG-modules'
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+YANG_PATH="${YANG_PATH:-$SCRIPT_DIR/../other_examples/yang/experimental/ietf-extracted-YANG-modules}"
 
 pyang --ietf --max-line-length 69 --yang-line-length=69 -p . -p "$YANG_PATH" $PYANG_INPUT
 

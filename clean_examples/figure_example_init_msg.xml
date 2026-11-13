@@ -11,7 +11,15 @@
         </active>
       </connection>
       <bmp-data>
-        <initiation-message>BMP device supporting the BMP YANG module</initiation-message>
+        <initiation-information>
+          <string>BMP device supporting the BMP YANG module</string>
+          <string>Additional initiation information</string>
+        </initiation-information>
+        <peer-up-information>
+          <string>BMP peer session</string>
+          <admin-label>production</admin-label>
+          <admin-label>primary</admin-label>
+        </peer-up-information>
         <statistics-report>
           <statistics-interval>600</statistics-interval>
         </statistics-report>
