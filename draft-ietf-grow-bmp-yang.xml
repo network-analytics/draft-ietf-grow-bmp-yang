@@ -254,8 +254,8 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_tcp_example2.xml)
         <t>The ietf-bmp module also includes the following options to configure the connection to the BMP monitoring station:</t>
         <t>
           <ul spacing="compact">
-            <li>Initial-delay: a value in seconds that the monitored router must wait before starting the connection to the station. An operator can use this delay to let BGP converge before starting the BMP session.</li>
-            <li>Backoff time: Configuration of the backoff time strategy after failing to connect to the monitoring station. The module includes a basic exponential backoff with a default initial backoff of 30 seconds and a maximum of 720 seconds, as suggested in <xref target="RFC7854" section="3.2" sectionFormat="of"/>.</li>
+            <li>Initial-delay: a value in seconds that the monitored router must wait before starting an active connection to the station. An operator can use this delay to let BGP converge before starting the BMP session.</li>
+            <li>Backoff time: Configuration of the backoff time strategy after failing to connect to the monitoring station on an active connection. The module includes a basic exponential backoff with a default initial backoff of 30 seconds and a maximum of 720 seconds, as suggested in <xref target="RFC7854" section="3.2" sectionFormat="of"/>.</li>
           </ul>
         </t>
         <t>The example in <xref target="example_indelay"/> configures an initial-delay of 10, an initial-backoff of 50 seconds and 600 of maximum-backoff.</t>
@@ -281,7 +281,7 @@ INSERT_TEXT_FROM_FILE(trees/tree-bmp-data.txt)
         <t>The ietf-bmp module defines options for Initiation Information TLVs, Peer Up Information TLVs, the statistics report, route mirroring, and route monitoring. The first four have simple configuration options and are described next. Route monitoring is the most complex and is detailed in <xref target="route_monitoring"/>.</t>
         <t>
           <ul spacing="compact">
-            <li>Initiation-information: Ordered Type 0 String values for Initiation Information TLVs. Multiple values are allowed and their order is preserved. See <xref target="RFC9736" section="3.1" sectionFormat="of"/>.</li>
+            <li>Initiation-information: Ordered Type 0 String values for Initiation Information TLVs. Multiple values are allowed and their order is preserved. Type 1 sysDescr and Type 2 sysName values are populated by the implementation as required by <xref target="RFC7854"/> and <xref target="RFC9736" section="3.1" sectionFormat="of"/>.</li>
             <li>Peer-up-information: Ordered Type 0 String and Type 4 Admin Label values for Peer Up Information TLVs. Configured values apply to Peer Up messages sent to that monitoring station. Per-peer Admin Label assignment is implementation-specific, as described in <xref target="RFC8671" section="6.3.1" sectionFormat="of"/>, and is not modeled by this module. Type 3 VRF/Table Name is not configured by this container. It is populated by the implementation from the applicable VRF or table context as specified in <xref target="RFC9069"/>. See <xref target="RFC9736" section="3.3" sectionFormat="of"/>.</li>
             <li>Statistics-interval: The statistics report is enabled by the presence of the statistics-report container. The statistics-interval is mandatory if the statistics-report container exists and defines the interval of the statistics report. See <xref target="RFC7854" section="4.8" sectionFormat="of"/>.</li>
             <li>Route-mirroring: Route Mirroring messages serve as an exact replica of the messages received by the device. See <xref target="RFC7854" section="6" sectionFormat="of"/>. Enabling route mirroring messages towards a particular BMP monitoring station only requires the presence of the container "route-mirroring" within the monitoring station container.</li>
@@ -398,11 +398,11 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_simple_gni_configuration.xml)
           </section>
           <section title="RIB Type">
             <t>Each RIB type is configured explicitly in the module through a container. The ietf-bmp module currently provides containers for adj-rib-out-pre, adj-rib-out-post, adj-rib-in-post, adj-rib-in-pre and local-rib. </t>
-            <t>An empty configuration or absence of a RIB-type container disables route-messages for it. Operators can also disable the route monitoring messages for each RIB explicitly by marking the "enabled" leaf as False. The next section provides an example of this, together with the address family configurations.</t>
+            <t>Absence of a RIB-type container disables Route Monitoring for that RIB. When configured, the RIB is enabled by default and can be explicitly disabled by setting its "enabled" leaf to false. Route Monitoring also requires the applicable address-family configuration and, for Adj-RIB-In and Adj-RIB-Out, the applicable peer configuration.</t>
           </section>
           <section title="Address families">
             <t>Address families are configured explicitly within each RIB type using a list. The key is of type `afi-safi-type` without any further constraint.</t>
-            <t>An empty configuration or absence of an address family disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
+            <t>Absence of an address-family entry disables Route Monitoring for that address family. A configured address-family entry is enabled by default; operators can disable it explicitly by setting its "enabled" leaf to false.</t>
             <t>The next examples show different ways of configuring RIB-Types and Address families. As in the previous sections, the example masks further configurations of address families with "Configuration X" to focus on the covered parts.</t>
             <t>
               <figure anchor="example_rib_af_one">
@@ -452,7 +452,8 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_example_rib_af_two.xml)
                 <li>Finally, if no instance covers the peer, route monitoring messages from this peer SHOULD NOT be transmitted to the monitoring station.</li>
               </ul>
             </t>
-            <t>An empty configuration of a peer type disables route-messages for it. Operators can also disable the address-family route monitoring messages by marking the "enabled" leaf as False.</t>
+            <t>A configured individual peer, peer group, peer type, or peer selector is enabled by default. Operators can disable Route Monitoring messages for that peer or peer selection by setting its "enabled" leaf to false.</t>
+            <t>These peer selectors determine the contributors to Route Monitoring messages only. They do not define the peers for which Peer Up or Peer Down messages are generated; that remains governed by <xref target="RFC7854"/> and applicable extensions and implementation-specific behavior.</t>
             <t>Note that if an operator only wants the information of a few peers, it can enable them individually  using their id. If no other configuration exists, only the messages from those enabled peers will be transmitted to the monitoring station.</t>
             <t>Any additional peer-types identity created SHOULD describe how to unambiguously select a peer when there are conflicting options (multiple options covering the peer).</t>
             <t><xref target="full_examples_sec"/> provides examples of the peers configuration.</t>
@@ -514,7 +515,7 @@ INSERT_TEXT_FROM_FILE(clean_examples/figure_full_example_four.xml)
       </section>
       <!-- End of BMP data-->
       <section title="Session stats" anchor="session_stats_section">
-        <t>The non-configurable container "session-stats" includes various metrics for the session with the monitoring station.
+        <t>The non-configurable container "session-stats" includes various metrics for the session with the monitoring station. In "network-instances-stats", an implementation-specific explicit name is used for the global network instance when available; otherwise, "global" is used.
             <xref target="tree_session_stats"/> shows the structure of the session-stats container.</t>
         <figure anchor="tree_session_stats">
           <name>Structure of the session-stats container</name>
