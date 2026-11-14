@@ -3,7 +3,11 @@ module: ietf-bmp
      +--rw monitoring-stations
         +--rw monitoring-station* [id]
            +--rw bmp-data
-              +--rw initiation-message?   string
+              +--rw initiation-information
+              |  +--rw string*   string
+              +--rw peer-up-information
+              |  +--rw string*        string
+              |  +--rw admin-label*   string
               +--rw statistics-report!
               |  +--rw statistics-interval    uint32
               +--rw route-monitoring

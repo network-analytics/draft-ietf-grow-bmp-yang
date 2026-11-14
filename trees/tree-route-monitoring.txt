@@ -10,22 +10,27 @@ module: ietf-bmp
                     |     +--rw id                  -> /ni:network-instances/network-instance/name
                     |     +--rw enabled?            boolean
                     |     +--rw adj-rib-in-pre
+                    |     |  +--rw enabled?            boolean
                     |     |  +--rw address-families
                     |     |     +--rw address-family* [id]
                     |     |           ...
                     |     +--rw adj-rib-in-post
+                    |     |  +--rw enabled?            boolean
                     |     |  +--rw address-families
                     |     |     +--rw address-family* [id]
                     |     |           ...
                     |     +--rw local-rib
+                    |     |  +--rw enabled?            boolean
                     |     |  +--rw address-families
                     |     |     +--rw address-family* [id]
                     |     |           ...
                     |     +--rw adj-rib-out-pre
+                    |     |  +--rw enabled?            boolean
                     |     |  +--rw address-families
                     |     |     +--rw address-family* [id]
                     |     |           ...
                     |     +--rw adj-rib-out-post
+                    |        +--rw enabled?            boolean
                     |        +--rw address-families
                     |           +--rw address-family* [id]
                     |                 ...
@@ -34,22 +39,27 @@ module: ietf-bmp
                           +--rw id                  identityref
                           +--rw enabled?            boolean
                           +--rw adj-rib-in-pre
+                          |  +--rw enabled?            boolean
                           |  +--rw address-families
                           |     +--rw address-family* [id]
                           |           ...
                           +--rw adj-rib-in-post
+                          |  +--rw enabled?            boolean
                           |  +--rw address-families
                           |     +--rw address-family* [id]
                           |           ...
                           +--rw local-rib
+                          |  +--rw enabled?            boolean
                           |  +--rw address-families
                           |     +--rw address-family* [id]
                           |           ...
                           +--rw adj-rib-out-pre
+                          |  +--rw enabled?            boolean
                           |  +--rw address-families
                           |     +--rw address-family* [id]
                           |           ...
                           +--rw adj-rib-out-post
+                             +--rw enabled?            boolean
                              +--rw address-families
                                 +--rw address-family* [id]
                                       ...

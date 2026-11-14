@@ -8,14 +8,14 @@
           <station-address>192.0.2.1</station-address>
           <station-port>57992</station-port>
           <monitored-router-address>192.0.2.2</monitored-router-address>
+          <initial-delay>10</initial-delay>
+          <backoff>
+            <simple-exponential>
+              <initial-backoff>50</initial-backoff>
+              <maximum-backoff>600</maximum-backoff>
+            </simple-exponential>
+          </backoff>
         </active>
-        <initial-delay>10</initial-delay>
-        <backoff>
-          <simple-exponential>
-            <initial-backoff>50</initial-backoff>
-            <maximum-backoff>600</maximum-backoff>
-          </simple-exponential>
-        </backoff>
       </connection>
     </monitoring-station>
   </monitoring-stations>

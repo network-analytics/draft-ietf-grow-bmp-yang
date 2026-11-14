@@ -91,13 +91,4 @@ module ietf-bmp-ni-deviations {
     }
   }
 
-
-  // Deviation: network-instance-name in route-monitoring-stats (state data)
-  deviation "/bmp:bmp/bmp:monitoring-stations/bmp:monitoring-station/bmp:session-stats/bmp:route-monitoring-stats/bmp:network-instances-stats/bmp:network-instance/bmp:network-instance-name" {
-    description
-      "Change type to string instead of leafref to network-instance name (state data).";
-    deviate replace {
-      type string;
-    }
-  }
 }

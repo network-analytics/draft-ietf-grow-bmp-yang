@@ -99,9 +99,11 @@ module ietf-bmp {
      RFC 9293: Transmission Control Protocol (TCP) Specification.
      RFC 9069: Support for Local RIB in the BGP Monitoring
      Protocol (BMP).
-     RFC 9648: YANG Data Model for TCP.";
+     RFC 9648: YANG Data Model for TCP.
+     RFC 9736: The BGP Monitoring Protocol (BMP) Peer Up
+     Message Namespace.";
 
-  revision 2026-10-28 {
+  revision 2026-11-13 {
     description
       "initial version";
     reference
@@ -280,6 +282,54 @@ module ietf-bmp {
             description
               "Optional local port for the active connection.";
           }
+          leaf initial-delay {
+            type uint32;
+            units "seconds";
+            default "0";
+            description
+              "Initial delay before connecting to the monitoring
+               station.
+               Useful for allowing BGP sessions to stabilize
+               before starting BMP.";
+          }
+          container backoff {
+            description
+              "Configures the backoff strategy after a connection
+               retry";
+            reference
+              "RFC7854 Section 3.2";
+            choice backoff-options {
+              description
+                "Options for backoff strategies";
+              reference
+                "RFC7854 Section 3.2";
+              case simple-exponential {
+                description
+                  "Simple exponential backoff with limits.";
+                container simple-exponential {
+                  description
+                    "Simple exponential backoff with limits.
+                     Starts with the initial backoff and doubles
+                     the backoff after every retry until reaching the
+                     maximum backoff.";
+                  leaf initial-backoff {
+                    type uint32;
+                    units "seconds";
+                    default "30";
+                    description
+                      "Initial backoff time";
+                  }
+                  leaf maximum-backoff {
+                    type uint32;
+                    units "seconds";
+                    default "720";
+                    description
+                      "Maximum backoff time";
+                  }
+                }
+              }
+            }
+          }
         }
       }
       case passive {
@@ -289,7 +339,15 @@ module ietf-bmp {
         container passive {
           description
             "Parameters for passively accepting
-             a connection from the monitoring station.";
+             a connection from the monitoring station.
+             An omitted network-instance defaults to the
+             global network instance.
+             An omitted station-port matches any port.
+
+             A passive connection MUST match at most one
+             monitoring-station entry. A configuration that could
+             cause an incoming connection to match more than one
+             monitoring-station entry MUST be rejected.";
           leaf network-instance {
             type leafref {
               path "/ni:network-instances/ni:network-instance/"
@@ -311,7 +369,7 @@ module ietf-bmp {
             description
               "Optional value identifying the origin port of the
                connection. If provided, it MUST match the receiving
-               connection.";
+               connection; if omitted, it matches any origin port.";
           }
           choice local-endpoint {
             mandatory true;
@@ -391,6 +449,12 @@ module ietf-bmp {
     description
       "Configuration containers for RIBs under the main
        BMP container.";
+    leaf enabled {
+      type boolean;
+      default "true";
+      description
+        "Enables route monitoring messages for this RIB.";
+    }
     container address-families {
       description
         "List of address families for route monitoring.";
@@ -439,9 +503,9 @@ module ietf-bmp {
               description
                 "Peer identifier.";
               leaf id {
-                type string;
+                type inet:ip-address;
                 description
-                  "Identifier of the peer.";
+                  "Remote IP address of the BGP peer.";
               }
               leaf enabled {
                 type boolean;
@@ -565,6 +629,12 @@ module ietf-bmp {
       reference
         "RFC9069: Support for Local RIB in the BGP Monitoring
          Protocol (BMP), Section 3.";
+      leaf enabled {
+        type boolean;
+        default "true";
+        description
+          "Enables route monitoring messages for this RIB.";
+      }
       container address-families {
         description
           "List of address families to enable for local-rib.";
@@ -578,6 +648,13 @@ module ietf-bmp {
             }
             description
               "Address family id to enable for local-rib";
+          }
+          leaf enabled {
+            type boolean;
+            default "true";
+            description
+              "Enables route monitoring messages for this address
+               family.";
           }
           uses route-monitoring-peer-grouping;
         }
@@ -730,67 +807,69 @@ module ietf-bmp {
                  see leaf pmtud for reference.";
             }
           }
-          leaf initial-delay {
-            type uint32;
-            units "seconds";
-            default "0";
-            description
-              "Initial delay before connecting to the monitoring
-               station.
-               Useful for allowing BGP sessions to stabilize
-               before starting BMP.";
-          }
-          container backoff {
-            description
-              "Configures the backoff strategy after a connection
-               retry";
-            reference
-              "RFC7854 Section 3.2";
-            choice backoff-options {
-              description
-                "Options for backoff strategies";
-              reference
-                "RFC7854 Section 3.2";
-              case simple-exponential {
-                description
-                  "Simple exponential backoff with limits.";
-                container simple-exponential {
-                  description
-                    "Simple exponential backoff with limits.
-                     Starts with the initial backoff and doubles
-                     the backoff after every retry until reaching the
-                     maximum backoff.";
-                  leaf initial-backoff {
-                    type uint32;
-                    units "seconds";
-                    default "30";
-                    description
-                      "Initial backoff time";
-                  }
-                  leaf maximum-backoff {
-                    type uint32;
-                    units "seconds";
-                    default "720";
-                    description
-                      "Maximum backoff time";
-                  }
-                }
-              }
-            }
-          }
         }
         container bmp-data {
           description
             "Configuration of BMP data sent to the monitoring
              station.";
-          leaf initiation-message {
-            type string;
+          container initiation-information {
             description
-              "User-defined message to append to the
-               initiation message.";
+              "Configuration of Initiation Information TLVs sent
+               in Initiation messages. Multiple Type 0 String values
+               MAY be configured and their configured order MUST be
+               preserved. Type 1 sysDescr and Type 2 sysName values
+               are populated by the implementation as required by
+               RFC 7854 and RFC 9736.";
             reference
-              "RFC7854:  BGP Monitoring Protocol,
-               Section 4.3 and 4.4";
+              "RFC 9736: The BGP Monitoring Protocol (BMP)
+               Peer Up Message Namespace, Section 3.1.";
+            leaf-list string {
+              type string;
+              ordered-by user;
+              description
+                "Value of an Initiation Information TLV Type 0
+                 String.";
+            }
+          }
+          container peer-up-information {
+            description
+              "Configuration of Peer Up Information TLVs sent in
+               Peer Up messages to this monitoring station.
+               Configured Type 0 String and Type 4 Admin Label
+               values apply to Peer Up messages sent to this
+               monitoring station. Multiple values of each type MAY
+               be configured and their configured order MUST be
+               preserved. Assignment of Admin Labels to
+               individual BGP peers is
+               implementation-specific, as described in RFC 8671,
+               and is not modeled by this module.
+
+               Type 3 VRF/Table Name is not configured by this
+               container. It is populated by the implementation
+               from the applicable VRF or table context as specified
+               in RFC 9069.";
+            reference
+              "RFC 9736: The BGP Monitoring Protocol (BMP)
+               Peer Up Message Namespace, Section 3.3.
+               RFC 8671: Support for Adj-RIB-Out in the BGP
+               Monitoring Protocol (BMP), Section 6.3.1.
+               RFC 9069: Support for Local RIB in the BGP Monitoring
+               Protocol (BMP).";
+            leaf-list string {
+              type string;
+              ordered-by user;
+              description
+                "Value of a Peer Up Information TLV Type 0
+                 String.";
+            }
+            leaf-list admin-label {
+              type string;
+              ordered-by user;
+              description
+                "Value of a Peer Up Information TLV Type 4 Admin
+                 Label included in Peer Up messages sent to this
+                 monitoring station.";
+            }
           }
           container statistics-report {
             presence "Enable BMP statistics report.";
@@ -839,9 +918,9 @@ module ietf-bmp {
                 description
                   "List of peers";
                 leaf id {
-                  type string;
+                  type inet:ip-address;
                   description
-                    "Peer id";
+                    "Remote IP address of the BGP peer.";
                 }
                 leaf enabled {
                   type boolean;
@@ -851,12 +930,12 @@ module ietf-bmp {
                      network instance, address family, and RIB.";
                 }
                 leaf total-route-mnt-updated-prefixes-per-peer {
-                  type uint64;
+                  type yang:counter64;
                   description
                     "Number of prefixes updated for this peer.";
                 }
                 leaf total-route-mnt-withdraw-prefixes-per-peer {
-                  type uint64;
+                  type yang:counter64;
                   description
                     "Number of prefixes withdrawn for this peer.";
                 }
@@ -875,13 +954,13 @@ module ietf-bmp {
                  within the RIB.";
             }
             leaf total-route-monitoring-updated-prefixes-per-af {
-              type uint64;
+              type yang:counter64;
               description
                 "Number of prefixes updated for this address
                  family.";
             }
             leaf total-route-monitoring-withdraw-prefixes-per-af {
-              type uint64;
+              type yang:counter64;
               description
                 "Number of prefixes withdrawn for this address
                  family.";
@@ -920,10 +999,10 @@ module ietf-bmp {
                 "Indicates if any Route Monitoring messages are
                  currently enabled for the RIB.";
             }
-            leaf total-route-mirroring-messages-per-rib {
-              type uint64;
+            leaf total-route-monitoring-messages-per-rib {
+              type yang:counter64;
               description
-                "Number of route-mirroring messages sent for
+                "Number of route-monitoring messages sent for
                  this RIB.";
             }
           }
@@ -947,69 +1026,83 @@ module ietf-bmp {
                established.";
           }
           leaf total-route-monitoring-messages {
-            type uint64;
+            type yang:counter64;
             description
               "Number of route-monitoring messages sent.";
           }
           leaf total-statistics-messages {
-            type uint64;
+            type yang:counter64;
             description
               "Number of statistics messages sent.";
           }
           leaf total-peer-down-messages {
-            type uint64;
+            type yang:counter64;
             description
               "Number of peer-down messages sent.";
           }
           leaf total-peer-up-messages {
-            type uint64;
+            type yang:counter64;
             description
               "Number of peer-up messages sent.";
           }
           leaf total-initiation-messages {
-            type uint64;
+            type yang:counter64;
             description
               "Number of initiation messages sent";
           }
           leaf total-route-mirroring-messages {
-            type uint64;
+            type yang:counter64;
             description
               "Number of route-mirroring messages sent.";
           }
           leaf total-termination-messages {
-            type uint64;
+            type yang:counter64;
             description
               "Number of termination messages sent.";
           }
-          container route-monitoring-stats {
+          container network-instances-stats {
             description
-              "Statistics of route monitoring messages disaggregated
-               by RIB and peers where applicable.";
-            container network-instances-stats {
+              "Statistics per network-instance.";
+            list network-instance {
+              key "network-instance-name";
               description
-                "Stats per network-instance";
-              list network-instance {
-                key "network-instance-name";
-                description
-                  "Network instance stats list";
-                leaf network-instance-name {
+                "Network instance stats list";
+              leaf network-instance-name {
+                type union {
                   type leafref {
                     path "/ni:network-instances/ni:network-instance/"
                        + "ni:name";
                   }
-                  description
-                    "Name of the network instance.";
+                  type enumeration {
+                    enum global {
+                      description
+                        "Global network instance when the
+                         implementation does not expose an explicit
+                         name.";
+                    }
+                  }
                 }
+                description
+                  "Name of the network instance. If the
+                   implementation does not expose a name for the
+                   global network instance, the value 'global' is
+                   used.";
+              }
+              container route-monitoring-stats {
+                description
+                  "Statistics of route monitoring messages
+                   disaggregated by RIB and peers where
+                   applicable.";
                 leaf enabled {
                   type boolean;
                   description
                     "Indicates if route monitoring messages are
                      currently enabled for the network instance.";
                 }
-                leaf total-route-mirroring-messages-per-ni {
-                  type uint64;
+                leaf total-route-monitoring-messages-per-ni {
+                  type yang:counter64;
                   description
-                    "Number of route-mirroring messages sent for
+                    "Number of route-monitoring messages sent for
                      this network instance.";
                 }
                 container ribs-stats {
@@ -1061,6 +1154,17 @@ module ietf-bmp {
                     uses bmp-rib-stats-grouping;
                     uses bmp-rib-with-peers-stats-grouping;
                   }
+                }
+              }
+              container route-mirroring-stats {
+                description
+                  "Statistics of route mirroring messages for
+                   this network instance.";
+                leaf total-route-mirroring-messages-per-ni {
+                  type yang:counter64;
+                  description
+                    "Number of route-mirroring messages sent for
+                     this network instance.";
                 }
               }
             }
